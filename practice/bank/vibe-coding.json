@@ -1,0 +1,456 @@
+{
+  "topic": "vibe-coding",
+  "title": "Vibe Coding & Specs",
+  "questions": [
+    {
+      "id": "vibe-coding-001",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Andrej Karpathy coined the phrase \"vibe coding\" in February 2025, describing a way of working where you \"forget that the code even exists\". What was he doing when he said it?",
+      "code": null,
+      "options": [
+        "Describing a way of working he was enjoying, not proposing a methodology",
+        "Proposing a methodology that teams should adopt for production code",
+        "Warning that the practice would leave teams with systems they could not maintain",
+        "Announcing a tool that made written specifications unnecessary"
+      ],
+      "answer": 0,
+      "explanation": "The original remark described a mode he was enjoying, not a method anyone should follow. The industry adopted it wholesale afterwards, and the cost data came from that adoption rather than from the mode itself."
+    },
+    {
+      "id": "vibe-coding-002",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Vibe coding and spec-driven development are both correct approaches. Given that, what is the actual skill?",
+      "code": null,
+      "options": [
+        "Knowing both well enough to switch between them in the middle of a task",
+        "Defaulting to spec-driven and relaxing only when a deadline demands it",
+        "Choosing whichever mode produces a running application fastest",
+        "Telling which kind of task you are on, before you start rather than after"
+      ],
+      "answer": 3,
+      "explanation": "Neither mode is the responsible one in general; each is right for different tasks. The judgement is recognising the task's stakes, reversibility and lifespan up front, because by the time a wrong choice becomes visible its decisions are baked in."
+    },
+    {
+      "id": "vibe-coding-003",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Which of these is NOT a task where vibe coding is the sensible choice?",
+      "code": null,
+      "options": [
+        "A prototype built to learn one thing and then deleted the same week",
+        "A one-off script over a throwaway copy of some data, run twice and then deleted",
+        "A demo where working on stage is the whole of the requirement",
+        "A data-handling service a colleague will maintain for years"
+      ],
+      "answer": 3,
+      "explanation": "Vibe coding suits work where being wrong is cheap because the artefact is disposable: prototypes, throwaway tooling, demos, exploring an unfamiliar stack. A long-lived service holding real data that somebody else maintains is the opposite case — the cost of being wrong lands on other people for years, and a spec is cheap by comparison."
+    },
+    {
+      "id": "vibe-coding-004",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Surveys of US developers report that about 92% use AI coding tools daily, about 29% say they trust the output, and about 48% always review it before committing. Read together, what is the finding?",
+      "code": null,
+      "options": [
+        "Trust is low because the tools are mostly used for trivial, low-risk tasks",
+        "Developers ship code they say they do not trust, often without reviewing it",
+        "Review rates are high enough to compensate for the low level of trust",
+        "Daily use is overstated, since people who distrust a tool rarely use it daily"
+      ],
+      "answer": 1,
+      "explanation": "The contradiction is the finding: they do not trust it, and they ship it anyway. Fewer than half always review before committing, so a 1.7× rate of major issues is not surprising. The figures are directional, but the gap between stated trust and behaviour is the point."
+    },
+    {
+      "id": "vibe-coding-005",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Industry surveys report figures such as 1.7× the major issues in AI-generated code and roughly 45% of samples carrying an OWASP Top-10 vulnerability. How should those numbers be treated?",
+      "code": null,
+      "options": [
+        "As precise measurements, since they come from multiple independent studies",
+        "As unreliable, since surveys that cite each other cannot show a real trend",
+        "As meaningless until reproduced in a controlled experiment",
+        "As evidence of a direction, without trusting the decimal places"
+      ],
+      "answer": 3,
+      "explanation": "The figures come from industry surveys of varying rigour that recycle one another, so the precision is fiction. The direction — that adoption outran governance — is not in dispute. Being able to say \"I believe the trend, not the decimal\" is itself an engineering skill."
+    },
+    {
+      "id": "vibe-coding-006",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Technical debt is the future cost of shortcuts taken in code. Comprehension debt applies the same metaphor, but what is borrowed against?",
+      "code": null,
+      "options": [
+        "Test coverage — code shipped before its tests were written",
+        "Documentation — code shipped before anyone described it",
+        "Understanding — code a machine wrote that nobody read",
+        "Time — code shipped before the deadline it was written for"
+      ],
+      "answer": 2,
+      "explanation": "Comprehension debt is the future cost of understanding code a machine wrote and nobody read. Missing documentation or tests are symptoms; the thing actually borrowed is the understanding you would have gained by writing or reading the code yourself."
+    },
+    {
+      "id": "vibe-coding-007",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What is a haunted codebase?",
+      "code": null,
+      "options": [
+        "A system with so many failing tests that nobody dares run the suite",
+        "A working system that the team responsible for it no longer understands",
+        "A codebase abandoned by its original author and left unmaintained",
+        "A project where generated code has been mixed with hand-written code"
+      ],
+      "answer": 1,
+      "explanation": "The defining feature is that it works — and nobody is confident changing it. It is what comprehension debt looks like when the bill arrives, and it long predates AI tools; anyone who has inherited their own code from a year ago has met one."
+    },
+    {
+      "id": "vibe-coding-008",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "What is the relationship between AI coding tools and comprehension debt?",
+      "code": null,
+      "options": [
+        "AI tools created the problem; before them, code was always understood by whoever wrote it",
+        "AI tools eliminate it, because the assistant can always re-explain code it generated",
+        "AI tools have no effect on it; comprehension debt depends only on team turnover",
+        "AI tools accelerated a problem that already existed whenever code went unread"
+      ],
+      "answer": 3,
+      "explanation": "Teams inherited haunted codebases — often from their own past selves — long before assistants existed. What changed is the rate: generated code arrives faster than anyone reads it. Re-asking the tool to explain helps only while it still understands a codebase you never read."
+    },
+    {
+      "id": "vibe-coding-009",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "When does a vibe-coded project typically start to hurt?",
+      "code": null,
+      "options": [
+        "Immediately, because generated code of any size rarely runs first time",
+        "Day one is fine; the pain starts when you must change something",
+        "Only when a tool that was the wrong choice for the stack was used",
+        "It does not hurt at all, provided the generated tests keep passing"
+      ],
+      "answer": 1,
+      "explanation": "Day one is usually euphoric, because the demo works. The cost lands when you must change code you did not write and do not understand, by which point its decisions are baked in. Passing generated tests says nothing about whether you can change it."
+    },
+    {
+      "id": "vibe-coding-010",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "By about day 90, teams report a fifth to a third of sprint capacity going on bugs traceable to generated code. What makes a cost that arrives on this timescale particularly hard to manage?",
+      "code": null,
+      "options": [
+        "It cannot be felt accruing, only arriving: the signal comes long after the decision",
+        "It is spread across many small bugs, so no single fix ever makes a visible difference",
+        "It falls on the maintainers rather than the original authors, who have usually moved on",
+        "It is impossible to attribute to specific generated code, so nobody can prioritise it"
+      ],
+      "answer": 0,
+      "explanation": "The feedback arrives long after the decision. Day one gives no warning because the demo works, so nothing prompts a change of approach until the capacity is already being spent. The figure is indicative rather than precise, but the delay is the mechanism that matters."
+    },
+    {
+      "id": "vibe-coding-011",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Spec-driven development is said to change what you review. What becomes the artefact under review, and why is that an improvement?",
+      "code": null,
+      "options": [
+        "The intent rather than the implementation: one page of spec is easier to judge than 800 lines of generated code",
+        "The tests rather than the code: a test suite is shorter than the code and a model cannot make it pass by accident",
+        "The reasoning rather than the output: a model's explanation of its steps exposes mistakes the code conceals",
+        "The diff rather than the whole file: a diff is exactly as large as the change and hides nothing unrelated"
+      ],
+      "answer": 0,
+      "explanation": "Writing a spec, having the agent plan against it and reviewing that plan moves scrutiny from the implementation to the intent. One page of intent can genuinely be read and judged; 800 lines of generated code usually get skimmed. Reviewing tests or diffs is still review of the implementation."
+    },
+    {
+      "id": "vibe-coding-012",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "This is the spec-driven workflow. Which step is the one most often skipped, and what does skipping it do to the process?",
+      "code": "01  Write the spec\n02  Agent produces a plan\n03  You review the plan\n04  Then it implements",
+      "options": [
+        "Step 01 — without a written spec the agent falls back to guessing the intent",
+        "Step 02 — without a plan the implementation cannot be broken into tasks",
+        "Step 03 — skipping the plan review turns it into vibe coding with extra paperwork",
+        "Step 04 — leaving implementation to the agent means nobody understands the code"
+      ],
+      "answer": 2,
+      "explanation": "Reviewing the plan is the only step where a human checks the intent before any code exists, and it is the step people skip. Without it the spec is written but never enforced, which is vibe coding plus a markdown file."
+    },
+    {
+      "id": "vibe-coding-013",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Why is a spec that nobody reads described as worse than having no spec at all?",
+      "code": null,
+      "options": [
+        "It manufactures confidence: the ceremony feels like rigour without providing any",
+        "It costs time to write, and that time would have caught bugs if spent reviewing code",
+        "It becomes outdated as the code changes, and then actively misleads new developers",
+        "It commits the team to a design before the requirements are properly understood"
+      ],
+      "answer": 0,
+      "explanation": "With no spec, everyone knows nothing has been checked. An unread spec lets the team believe the intent was reviewed when it was not — ceremony that feels like rigour is not rigour. The other options describe real costs of specs, but not the reason an unread one is worse than none."
+    },
+    {
+      "id": "vibe-coding-014",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "You are about to build a weekend prototype that you fully intend to delete. Which mode fits, and why?",
+      "code": null,
+      "options": [
+        "Spec-driven, because it is always the responsible choice whenever generated code is involved",
+        "Vibe coding, because you do not know what you want yet and building it is how you find out",
+        "Spec-driven with a very short spec, so that the discipline is kept without most of the ceremony",
+        "Neither; a prototype that small should be written by hand to keep it understood"
+      ],
+      "answer": 1,
+      "explanation": "You cannot specify what you have not yet understood; sometimes building the thing is the requirements gathering. Writing a spec for something you will delete on Sunday is the over-correction, and it is as much a mistake as vibe coding something you keep."
+    },
+    {
+      "id": "vibe-coding-015",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "\"The failure is not vibe coding.\" What is the failure?",
+      "code": null,
+      "options": [
+        "Using a prompt-first tool at all instead of writing the code by hand",
+        "Vibe coding with a prompt too short to constrain what was generated",
+        "Vibe coding something you then keep, rather than throwing it away",
+        "Vibe coding without asking the tool to generate tests as well"
+      ],
+      "answer": 2,
+      "explanation": "Vibe coding is excellent for disposable work. The mistake is keeping the result — turning an exploration you never understood into something that has to be maintained. Neither a longer prompt nor generated tests changes that."
+    },
+    {
+      "id": "vibe-coding-016",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A project will be built over ten weeks, demonstrated at the end, and defended in person. Which mode should it use?",
+      "code": null,
+      "options": [
+        "Vibe coding throughout, because the deadline is real and speed matters most",
+        "Spec-driven throughout, because the stakes are too high for exploration",
+        "Vibe code the exploration, then specify the parts you decide to keep",
+        "Whichever mode the team knows best, as long as the result works"
+      ],
+      "answer": 2,
+      "explanation": "Mode is chosen per task, not per project. Explore by building to find out what you are making, then write the page before committing to an architecture. Picking one mode for the whole project — in either direction — is the mistake."
+    },
+    {
+      "id": "vibe-coding-017",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "\"If you have to defend it in person, anything you cannot explain is something you should have specified.\" What does this imply about deciding what to specify?",
+      "code": null,
+      "options": [
+        "Specify only the parts other people will read, since reviewers ask about interfaces rather than about internals",
+        "Specify every part in advance, since any of it could be questioned when the work is defended in person",
+        "Specify nothing in advance, since a defence is best prepared by reading the finished code afterwards",
+        "Specify the parts you would have to explain, since writing them down is what forces you to understand them"
+      ],
+      "answer": 3,
+      "explanation": "The test is whether you could explain it. Explore freely, then before committing to an architecture write the page for the parts you are keeping — the act of specifying is what forces the understanding. Specifying everything is the over-correction; specifying nothing leaves you defending code you never understood."
+    },
+    {
+      "id": "vibe-coding-018",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "You are writing your own rule for when a task should move from vibe coding to spec-driven development. Which set of axes is the useful one?",
+      "code": null,
+      "options": [
+        "How reversible it is, how well you can test it, how long it will live, and who pays if it is wrong",
+        "How many lines it needs, which language it is written in, which tool built it, and how fast it must run",
+        "How new the stack is, how many prompts it took, how many bugs it shipped with, and how it is deployed",
+        "How much it costs to run, how many users it has, how it is licensed, and who wrote the prompt"
+      ],
+      "answer": 0,
+      "explanation": "Stakes, reversibility, lifespan and who bears the cost of a mistake are what separate disposable work from work that must be specified. Line count, language and the tool used do not change whether being wrong is cheap."
+    },
+    {
+      "id": "vibe-coding-019",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A prompt-first tool has produced a to-do application and it runs without errors. What does that tell you about whether it is fit to ship?",
+      "code": null,
+      "options": [
+        "Running is the minimum, not the evidence; you still have to read what it does",
+        "Running is sufficient, because a runtime error is the only way generated code fails",
+        "Running proves the requirements were met, provided the prompt listed them all",
+        "Running shows the tool understood the task, so the rest of its output can be trusted"
+      ],
+      "answer": 0,
+      "explanation": "Judging a generated app by whether it runs is a common mistake. Reading what you shipped reliably turns up something you would not ship — unvalidated input, dependencies you cannot name — none of which stops the app from running."
+    },
+    {
+      "id": "vibe-coding-020",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "You build the same to-do app in three different prompt-first tools. Why write the prompt once beforehand and use it unchanged in all three?",
+      "code": null,
+      "options": [
+        "So the tools cannot learn from one another's output within the session",
+        "So only the tool varies, keeping it a comparison rather than three anecdotes",
+        "So the prompt stays short enough to fit within each tool's input limit",
+        "So the timing of each build is not distorted by a longer or shorter prompt"
+      ],
+      "answer": 1,
+      "explanation": "Holding the prompt constant is what separates what is true of the approach from what is true of one product. Improving the prompt between tools turns a comparison into three separate anecdotes; if you must change it, record that you did and why."
+    },
+    {
+      "id": "vibe-coding-021",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "This brief is given unchanged to three prompt-first tools. Which requirement is the one most likely to be missed on the first attempt, and why does it matter?",
+      "code": "A to-do application. Add a task, mark it done, delete it,\nand the list survives a page refresh.",
+      "options": [
+        "\"Delete it\" — removal is the operation tools most often leave out of a first build",
+        "\"Mark it done\" — changing state is harder to generate than adding or deleting",
+        "\"Add a task\" — without validation the first build usually cannot accept text",
+        "\"Survives a page refresh\" — persistence is what separates a demo from an app"
+      ],
+      "answer": 3,
+      "explanation": "At least one tool will usually produce an app that loses its list on refresh until asked again. Persistence is the requirement that turns a demo into an application, which is why it has to be checked explicitly rather than assumed from the fact that the page works."
+    },
+    {
+      "id": "vibe-coding-022",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "You spend fifteen minutes reading the input-handling code of a generated to-do app and find this handler. What should worry you most?",
+      "code": "form.addEventListener(\"submit\", (e) => {\n  e.preventDefault();\n  const text = input.value;\n  tasks.push({ id: Date.now(), text: text, done: false });\n  list.innerHTML += \"<li>\" + text + \"</li>\";\n  localStorage.setItem(\"tasks\", JSON.stringify(tasks));\n});",
+      "options": [
+        "`Date.now()` is used as the id, so two tasks added in the same millisecond collide",
+        "`localStorage` is rewritten on every submit, which will be slow for long lists",
+        "Whatever the user typed goes straight onto the page and into storage, unvalidated",
+        "The handler is on `form` rather than the button, so pressing Enter also submits"
+      ],
+      "answer": 2,
+      "explanation": "Unvalidated input is the usual suspect: anything that goes from a form straight into storage or straight back onto the page is the classic vulnerability class, and roughly 45% of generated samples carry one. The id collision is real but minor; the other two are not problems at all."
+    },
+    {
+      "id": "vibe-coding-023",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Reading an app you generated an hour ago, you find a line you cannot explain, ask the assistant what it does, and its answer differs from what you had assumed. What has this measured?",
+      "code": null,
+      "options": [
+        "A hallucination — the assistant is guessing about code it did not itself generate",
+        "Prompt quality — the original prompt left that behaviour entirely under-specified",
+        "Comprehension debt — the gap between what you assumed the line did and what it does",
+        "Tool drift — the tool's later explanation no longer matches its own earlier output"
+      ],
+      "answer": 2,
+      "explanation": "That gap is comprehension debt measured directly, on code you created an hour ago. It does not take months to accrue; it exists the moment code you did not read enters the codebase, and this is the cheapest way to see it."
+    },
+    {
+      "id": "vibe-coding-024",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "You estimate what it would take to add task editing to the generated app you understand least, then compare that against writing the whole app yourself. Your honest answer is that using the tool was still faster. What should you conclude?",
+      "code": null,
+      "options": [
+        "The estimate is wrong, since comprehension debt always outweighs the time the tool saved",
+        "The exercise failed, because it was meant to show that vibe coding costs more than it saves",
+        "The app is small enough that comprehension debt does not really apply to it",
+        "The trade is now visible: the tool saved time, and the cost of the saving can be seen"
+      ],
+      "answer": 3,
+      "explanation": "There is no correct answer and \"shorter\" is often the honest one — these tools genuinely save time. The point is to make the trade visible, not to conclude that it is bad. The debt still applies to small apps; the estimate simply shows how much of it you took on and what it bought."
+    },
+    {
+      "id": "vibe-coding-025",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Asked how you would add a feature to a generated app you never read, you answer \"I would just ask the tool to add it\". What does that strategy depend on?",
+      "code": null,
+      "options": [
+        "The tool being the same product and version that generated the original code",
+        "The tool still understanding a codebase it wrote and you did not read",
+        "The feature being small enough to describe completely in a single prompt",
+        "The original prompt having been saved so that it can be extended"
+      ],
+      "answer": 1,
+      "explanation": "It is a legitimate strategy, but it relocates the understanding into the tool rather than removing the need for it. It works only while the tool can still make sense of the code — and you have no independent way of checking its changes, because you never read what it wrote."
+    },
+    {
+      "id": "vibe-coding-026",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "A one-page spec is written before any tool is opened. What is missing from this one, and why does the omission matter?",
+      "code": "# spec.md\n\n## What it does\nA to-do list. Add a task, mark it done, delete it.\nThe list survives a page refresh.\n\n## Data\nOne array of tasks: { id, text, done }\n\n## Acceptance criteria\n1. A task added via the form appears in the list\n2. A task marked done is still done after a refresh\n3. A deleted task is still gone after a refresh",
+      "options": [
+        "A \"does not do\" section — bounding the work is most of the value of the spec",
+        "A technology choice — without a named framework the plan cannot be judged",
+        "A user-interface sketch — acceptance criteria cannot be tested without one",
+        "A dependency list — the agent will otherwise pick libraries you do not know"
+      ],
+      "answer": 0,
+      "explanation": "A spec with no \"does not do\" section is not finished. Stating what the app explicitly will not do is what stops the agent adding things you never asked for and what makes its plan checkable against your intent. Framework and dependencies are plan-level decisions, not spec-level ones."
+    },
+    {
+      "id": "vibe-coding-027",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Your one-page spec described a single-user to-do list with no accounts and no server. The assistant returns this plan. What should you do next?",
+      "code": "## Plan\n1. Scaffold the app with a component framework\n2. Add user accounts so each person has their own list\n3. Store tasks in the browser so they survive a refresh\n4. Add, complete and delete tasks\n5. Sync the list to a cloud database",
+      "options": [
+        "Let it implement, then strip the accounts and sync out of the finished code, where the extra scope is concrete",
+        "Correct the plan against the spec before any code exists, since that is the cheapest place to catch drift",
+        "Rewrite the spec to include accounts and sync, since the assistant has surfaced requirements you missed",
+        "Discard the plan and prompt for code directly, since planning has added scope rather than bounded it"
+      ],
+      "answer": 1,
+      "explanation": "Steps 2 and 5 drift from the spec. A misunderstanding caught in the plan costs a sentence; caught in the code it costs a rewrite; caught in the deployed app it costs far more. Letting it implement first and trimming afterwards is exactly the review step everyone skips."
+    },
+    {
+      "id": "vibe-coding-028",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "A spec must contain acceptance criteria you could actually test. Which of these is the only one that qualifies?",
+      "code": "Acceptance criteria:\n  A. The app should feel fast and be easy to use\n  B. After adding a task and refreshing the page, the task is still listed\n  C. The code should follow best practices\n  D. Users should not run into bugs",
+      "options": [
+        "A, because performance and usability can be measured with the right tools",
+        "B, because it names a concrete action and an observable result to check",
+        "C, because best practices are documented and can be checked against",
+        "D, because the absence of bugs is verified by running the test suite"
+      ],
+      "answer": 1,
+      "explanation": "A criterion you can test names what you do and what you should then observe. \"Feels fast\", \"best practices\" and \"no bugs\" cannot be checked against the running app, so they cannot tell you whether the result matched the spec."
+    },
+    {
+      "id": "vibe-coding-029",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "This comparison was recorded after building the same small to-do app both ways. What is the most defensible reading of it?",
+      "code": "## Vibe vs spec-driven\n\nTime, vibe coding: ......... 25 minutes\nTime, spec-driven: ......... 70 minutes\nWhich produced code you would defend? ....... spec-driven\nWhich for a throwaway prototype? ............ vibe\nWhich for something demonstrated in person? . spec-driven\nWhere did writing the spec change what you built? nowhere I can point to",
+      "options": [
+        "Spec-driven was nearly three times slower, so it is the wrong mode for anything of this size or smaller",
+        "The spec changed nothing about the build, so the process was done wrongly and must be repeated",
+        "The extra time is the cost; on a disposable app it bought nothing, which argues for vibe coding there",
+        "The time difference is noise, since a single run of each mode cannot support any conclusion either way"
+      ],
+      "answer": 2,
+      "explanation": "Spec-driven being slower is not a criticism; it is the cost, and the question is what the cost buys. If it bought nothing on a to-do app, that is a real finding and it is the argument for vibe coding on small disposable work. It says nothing about work that will be maintained — and \"nowhere\" is unusual, since writing it down usually changes something."
+    },
+    {
+      "id": "vibe-coding-030",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "You fill in a table of tasks — a weekend prototype, a feature in work you must demonstrate, something a stranger will maintain, code handling other people's data — and choose the same mode for every row. What does that most likely show?",
+      "code": null,
+      "options": [
+        "Consistency: a single mode applied deliberately is a sign of a mature workflow",
+        "That the tasks were too similar and the table needs more varied examples",
+        "That the mode chosen is the right default and the others are edge cases",
+        "That the boundary has not been found, and the rule needs pushing until it is"
+      ],
+      "answer": 3,
+      "explanation": "Those four tasks differ sharply in reversibility, lifespan and who pays if they are wrong, so a rule that gives them all the same answer has not located its own boundary. Finding that boundary — the condition under which a task switches mode — is the actual output of the exercise, and choosing by habit rather than by task is the mistake it guards against."
+    }
+  ]
+}

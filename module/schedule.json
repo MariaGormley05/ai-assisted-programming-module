@@ -1,0 +1,19 @@
+{
+  "scheduleType": "sem1",
+  "_comment": "The module's ONLY schedule. Every table (README, module overview, the site, the labs page, the Moodle course page) is generated from this file; nothing else in the repo may state a week number or a semester date. There is deliberately no startDate: week 1 is derived each year as six weeks before the Irish October bank holiday (the reading week, row X). Add \"startDate\": \"YYYY-MM-DD\" (a Monday) only if a year breaks that rule. lecture = lectures-and-labs/weekNN/<name>-lecture.md and the site address /<name>/, lab = lectures-and-labs/weekNN/<name>_lab/ and /labs/<name>/ (the week folder comes from the row's week number); an export from the module-schedule-table-builder app (lectureUrl/labUrl) is accepted too.",
+  "weeks": [
+    { "week": "1",  "topic": "Module Introduction",            "lecture": "introduction", "lab": "",            "assessment": "",            "notes": "No labs week 1. Labs start week 2." },
+    { "week": "2",  "topic": "AIAP Overview",                  "lecture": "overview",     "lab": "setup",       "assessment": "PA1 (4%)",    "notes": "" },
+    { "week": "3",  "topic": "Prompting & Context Engineering", "lecture": "prompting",   "lab": "prompting",   "assessment": "PA2 (4%)",    "notes": "" },
+    { "week": "4",  "topic": "Retrieval & Grounding",          "lecture": "rag",          "lab": "rag",         "assessment": "PA3 (4%)",    "notes": "" },
+    { "week": "5",  "topic": "MCP",                            "lecture": "mcp",          "lab": "mcp",         "assessment": "PA4 (4%)",    "notes": "" },
+    { "week": "6",  "topic": "Coding Agents",                  "lecture": "agents",       "lab": "agents",      "assessment": "PA5 (4%)",    "notes": "" },
+    { "week": "X",  "topic": "",                               "lecture": "",             "lab": "",            "assessment": "",            "notes": "Reading week" },
+    { "week": "7",  "topic": "",                               "lecture": "",             "lab": "",            "assessment": "MCQ 1 (32%)", "notes": "Held during the lab slot" },
+    { "week": "8",  "topic": "Security of AI-Generated Code",  "lecture": "security",     "lab": "security",    "assessment": "PA6 (4%)",    "notes": "" },
+    { "week": "9",  "topic": "CLI Coding Agents",              "lecture": "cli-agents",   "lab": "cli-agents",  "assessment": "PA7 (4%)",    "notes": "" },
+    { "week": "10", "topic": "CI/CD & Evals",                  "lecture": "cicd",         "lab": "cicd",        "assessment": "PA8 (4%)",    "notes": "" },
+    { "week": "11", "topic": "Vibe Coding & Spec-Driven",      "lecture": "vibe-coding",  "lab": "vibe-coding", "assessment": "PA9 (4%)",    "notes": "" },
+    { "week": "12", "topic": "",                               "lecture": "",             "lab": "",            "assessment": "MCQ 2 (32%)", "notes": "Held during the lab slot" }
+  ]
+}

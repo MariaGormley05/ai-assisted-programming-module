@@ -1,0 +1,35 @@
+name: current-week
+
+on:
+  schedule:
+    - cron: '4 0 * * 1'   # Mondays 00:04 UTC (00:04/01:04 Irish time)
+  workflow_dispatch:
+
+jobs:
+  update-banner:
+    # Only in the module's own repo. This job COMMITS to the repo it runs
+    # in, and a student's copy from the template has Actions enabled, so
+    # without this it would rewrite their README every Monday.
+    if: github.repository == 'danielcregg/ai-assisted-programming'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update the current-week banner and the week tables
+        run: python3 scripts/update_current_week.py
+
+      - name: Commit and push if changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- README.md lectures-and-labs/README.md; then
+            echo "Banner already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md lectures-and-labs/README.md
+          git commit -m "chore: update current teaching week banner"
+          git push

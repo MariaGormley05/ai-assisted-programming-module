@@ -1,0 +1,65 @@
+name: course-sync
+
+# Runs in a STUDENT's copy of the template, every night, so corrections to
+# the lectures, lab instructions, README, Codespace configuration and lab
+# starter files reach their repo whether or not they ever open a Codespace.
+# It runs the module repo's CURRENT copy of the same script a Codespace runs
+# on attach (scripts/update-course-content.sh), so a fix to the sync itself
+# reaches every student's repo the same night. A file the student edited, created or
+# deleted themselves is always kept, so their own work is never touched.
+#
+# The script's "what did you last receive" baseline lives in a gitignored
+# file in a Codespace; a fresh checkout here has no such file, so this
+# workflow keeps the same baseline as the ref refs/course-sync/baseline in
+# the student's repo and pushes it back after every run. Without that, every
+# previously-synced file would look student-edited on the second night and
+# never update again.
+#
+# In the module's own repo there is nothing to sync from: the job is skipped.
+
+on:
+  schedule:
+    - cron: '5 1 * * *'   # 01:05 UTC nightly (02:05 Irish summer time, 01:05 in winter)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.repository != 'danielcregg/ai-assisted-programming'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # the script's first-run baseline is the repo's root commit
+
+      - name: Remember the baseline from the last run
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin '+refs/course-sync/baseline:refs/course-sync/baseline' 2>/dev/null \
+            && echo "baseline: $(git rev-parse --short refs/course-sync/baseline)" \
+            || echo "first run: no baseline yet"
+          # The full module history, so the baseline commit's files are readable.
+          git remote add upstream https://github.com/danielcregg/ai-assisted-programming.git
+          git fetch --quiet upstream main
+
+      - name: Sync the course content
+        # scripts/ is outside the sync (a bash script must not be overwritten
+        # while it runs), so the copy frozen into this repo when it was created
+        # is never used here: the module repo's current copy is.
+        run: |
+          set -euo pipefail
+          git show upstream/main:scripts/update-course-content.sh > "$RUNNER_TEMP/update-course-content.sh"
+          bash "$RUNNER_TEMP/update-course-content.sh" --strict
+
+      - name: Push the sync commit and the baseline
+        run: |
+          set -euo pipefail
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            git push origin HEAD:main
+            echo "Pushed the course-update commit." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Already up to date." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          git push --force --quiet origin refs/course-sync/baseline:refs/course-sync/baseline

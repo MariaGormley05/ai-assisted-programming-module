@@ -1,0 +1,441 @@
+{
+  "topic": "rag",
+  "title": "Retrieval & Grounding",
+  "questions": [
+    {
+      "id": "rag-001",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A company has 40,000 internal documents that the model has never seen, and a user asks a question answered in one of them. What is the standard way to get a correct answer?",
+      "code": null,
+      "options": [
+        "Fine-tune the model on the documents so that it learns their contents",
+        "Retrain the model with the documents added to its training data",
+        "Find the relevant piece at question time and put it in the prompt",
+        "Summarise every document once and keep the summaries in the system prompt"
+      ],
+      "answer": 2,
+      "explanation": "You do not teach the model your documents; you supply the facts and let the model do the reasoning. Training is expensive, slow and goes stale the moment a document changes, whereas retrieval is cheap, instant and always current."
+    },
+    {
+      "id": "rag-002",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A retrieval pipeline splits documents into chunks, embeds each chunk, embeds the question, finds the nearest chunks, and then builds a prompt. Which of these steps is the only one that involves the language model that writes the answer?",
+      "code": null,
+      "options": [
+        "Splitting the documents into overlapping chunks of a sensible size",
+        "Embedding each chunk as a vector and storing it beside its text",
+        "Finding the chunks whose vectors lie nearest to the question's vector",
+        "Putting the nearest chunks into the prompt and generating"
+      ],
+      "answer": 3,
+      "explanation": "Only the final step involves the language model. Everything before it is ordinary information retrieval, which is why most problems in such a system turn out to be search problems rather than model problems."
+    },
+    {
+      "id": "rag-003",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "In a retrieval system, what is an embedding?",
+      "code": null,
+      "options": [
+        "A compressed copy of a chunk that the index can decompress back into the original text when needed",
+        "A vector of numbers representing what a text means, placed so that similar meanings land near each other",
+        "A list of the most distinctive keywords in a chunk, stored so that queries can be matched exactly",
+        "A hash of the chunk's contents, stored so that the index can detect and skip duplicate documents"
+      ],
+      "answer": 1,
+      "explanation": "An embedding puts meaning in space: 'car' and 'automobile' land near each other although they share no letters. That is what keyword search cannot do, and it is the reason a query worded differently from the document still finds it."
+    },
+    {
+      "id": "rag-004",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "Two searches over a corpus of programming notes returned the results shown. The second query shares almost no words with the chunk it found. What explains the match?",
+      "code": "Query: \"what is a variable\"\n  0.81  introduction_to_programming.txt  \"A variable is a named location...\"\n\nQuery: \"how do I store a value under a name\"\n  0.78  introduction_to_programming.txt  \"A variable is a named location...\"",
+      "options": [
+        "The query and the chunk were embedded by meaning, and their meanings are close whatever words they use",
+        "The search matched on the shared words `a` and `name`, which appear in both the query and the start of the chunk",
+        "The index remembered the first query's result and reused it for the next query it received",
+        "The chunk is the first in its file, so the search returns it whenever nothing else scores higher"
+      ],
+      "answer": 0,
+      "explanation": "This is the whole justification for embeddings. A keyword search would find nothing useful for the second query, while meaning-based search returns the same top chunk with a similar score. If the two result sets had been completely different, the first thing to check is that the query was embedded with the same model as the chunks."
+    },
+    {
+      "id": "rag-005",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "When splitting documents into chunks, why split on word boundaries rather than at a fixed number of characters?",
+      "code": null,
+      "options": [
+        "Character counts are slower to compute than word counts on long documents",
+        "Embedding models reject any input that does not end at a full stop",
+        "Word-based splitting produces chunks of exactly equal length, which the index requires",
+        "A chunk that ends mid-word embeds badly and reads worse when it reaches the prompt"
+      ],
+      "answer": 3,
+      "explanation": "A fixed character count will regularly cut a word in half. The fragment then embeds badly, and when it is retrieved it arrives in the prompt as broken text. Splitting on words costs nothing and avoids both problems."
+    },
+    {
+      "id": "rag-006",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "The corpus contains only notes about programming. What does this result demonstrate?",
+      "code": "Query: \"how do I bake sourdough\"\n  0.21  introduction_to_programming.txt  \"A variable is a named location...\"\n  0.18  data_structures_basics.txt       \"Variables can hold references...\"",
+      "options": [
+        "The index is corrupted, because a working search returns an empty list for a query it cannot answer",
+        "The embedding model has no representation of cooking, so it fell back to returning the first two chunks in the index",
+        "Nearest-neighbour search always returns something, so the low scores are the only sign nothing relevant exists",
+        "The documents must mention baking somewhere, since otherwise no chunk could have scored above zero"
+      ],
+      "answer": 2,
+      "explanation": "There is no built-in notion of 'nothing here is relevant'; a search returns its `k` closest chunks regardless. The scores are the only signal, which is why a score threshold matters and why the generation step must be allowed to say it does not know."
+    },
+    {
+      "id": "rag-007",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A grounding prompt tells the model to answer only from the supplied context. Why must it also say explicitly that the model may reply `I don't know`?",
+      "code": null,
+      "options": [
+        "Models are trained never to admit ignorance, so a reply of that kind is blocked unless the prompt explicitly authorises it",
+        "`I don't know` is rare in training data, so without permission a confident answer is the likelier completion",
+        "Retrieval returns an empty list when nothing matches, so the model needs a reply to use for that case",
+        "The phrase ends the response early, which keeps the answer short and the cost of the request low"
+      ],
+      "answer": 1,
+      "explanation": "The permission is load-bearing. Without it, the most plausible continuation when the context does not contain the answer is a fluent answer from training — precisely the failure grounding is meant to prevent. Having permitted it, you still have to check that the model actually uses it."
+    },
+    {
+      "id": "rag-008",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What does the phrase 'lost in the middle' describe?",
+      "code": null,
+      "options": [
+        "A model attending less reliably to material in the middle of a very long input than at either end",
+        "A chunker skipping the middle section of a long document because it falls between two chunk boundaries",
+        "A search returning the top-ranked and bottom-ranked chunks but silently dropping the middle-ranked ones",
+        "A fact split across a chunk boundary so that it can be retrieved from neither of the neighbouring chunks"
+      ],
+      "answer": 0,
+      "explanation": "It is one of the honest limits of pasting everything into the prompt: position in a long context affects how reliably the model uses the text. Together with dilution and cost, it is why 'just paste it all' is not automatically the right answer either."
+    },
+    {
+      "id": "rag-009",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "When a large corpus is queried many times, the cost of pasting everything into every request eventually exceeds the cost of retrieval. Roughly where is that crossover?",
+      "code": null,
+      "options": [
+        "Around a couple of dozen pages",
+        "Around a couple of hundred pages",
+        "Around a couple of thousand pages",
+        "Around a couple of hundred thousand pages"
+      ],
+      "answer": 2,
+      "explanation": "A couple of thousand pages is the number to reason with. Below it, pasting the corpus is usually simpler and at least as accurate; above it, sending everything on every request costs more than maintaining an index."
+    },
+    {
+      "id": "rag-010",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What does it mean for an answer to be grounded?",
+      "code": null,
+      "options": [
+        "The answer has been checked by a second model before being returned to the user",
+        "The answer was produced at a low temperature, so it repeats exactly on every run",
+        "The answer comes from the model's training data rather than from text in the prompt",
+        "The answer is anchored to text you supplied, and you can show which text supported it"
+      ],
+      "answer": 3,
+      "explanation": "Grounding has two properties: the answer rests on supplied text rather than on what the model half-remembers, and you can point at the text — the citation. The citation is what lets anyone check the answer, and it is the property organisations most often buy retrieval for."
+    },
+    {
+      "id": "rag-011",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Retrieval became the standard way to work with large documents some years ago. Why, and why is that reason weaker today?",
+      "code": null,
+      "options": [
+        "Windows then held a few thousand tokens, so retrieval was the only option; windows now hold hundreds of thousands",
+        "Models then could not read plain text files directly, whereas modern models accept whole files as attachments",
+        "Embedding APIs were free then while generation was expensive, and the prices have since reversed",
+        "Models then could only answer from their training data, whereas modern models can be fine-tuned on new documents in minutes"
+      ],
+      "answer": 0,
+      "explanation": "Retrieval was born of a constraint that has largely lifted. With windows of hundreds of thousands to millions of tokens, many corpora can simply be pasted in — no chunking, no embeddings, no database to maintain. Retrieval remains a trade-off against scale, cost, freshness and citation, not a default."
+    },
+    {
+      "id": "rag-012",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Five documents were split into chunks of roughly 200 words with about 40 words of overlap. Why is the shortest chunk only 118 words?",
+      "code": "Loaded 5 documents\nProduced 34 chunks\n  shortest: 118 words\n  longest:  200 words",
+      "options": [
+        "The chunker drops the final 82 words of each document so that no chunk crosses a file boundary",
+        "A document's last chunk holds whatever words remain after the earlier chunks were taken",
+        "The 40-word overlap is subtracted twice from chunks that sit between two neighbours",
+        "The embedding model truncated that chunk to its maximum input length of 118 words"
+      ],
+      "answer": 1,
+      "explanation": "Documents are not multiples of the chunk size, so the final chunk of a file is simply the remainder. A short final chunk is normal and harmless; it is fragments that have lost their own subject that retrieve badly."
+    },
+    {
+      "id": "rag-013",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Neighbouring chunks were printed to check the chunker. What does this output confirm, and why is it wanted?",
+      "code": "Overlap check: chunk 0 ends \"...a variable is a named\" /\n               chunk 1 begins \"a variable is a named location...\"",
+      "options": [
+        "Chunk 1 duplicates chunk 0 in full, which doubles the index size and should be fixed",
+        "The chunker split in the middle of a sentence, which is a bug that will corrupt the embeddings of both chunks",
+        "Neighbouring chunks share their boundary words, so a fact spanning the boundary survives in at least one",
+        "The two chunks came from different documents, which shows the loader read all five files"
+      ],
+      "answer": 2,
+      "explanation": "Overlap exists so that a sentence sitting on a chunk boundary is not cut in half. Without it, a fact split across two chunks may be retrievable from neither. Splitting mid-sentence is expected — the overlap is what makes it harmless."
+    },
+    {
+      "id": "rag-014",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "What do the numbers `0.81` and `0.64` represent?",
+      "code": "Query: \"what is a variable\"\n  0.81  introduction_to_programming.txt  \"A variable is a named location...\"\n  0.64  data_structures_basics.txt       \"Variables can hold references...\"",
+      "options": [
+        "The fraction of the query's words that appear somewhere in the text of each retrieved chunk",
+        "The language model's confidence that each chunk contains a correct answer to the question asked",
+        "The position of each chunk within its source document, as a fraction of the way through the file",
+        "How near each chunk's embedding is to the query's embedding, with higher meaning closer in meaning"
+      ],
+      "answer": 3,
+      "explanation": "The score is the similarity between two embeddings and nothing more: no language model has read the chunk, and the score says the texts mean similar things, not that the chunk answers the question. A chunk can score highly and still be the wrong one, which is why retrieval quality has to be measured separately."
+    },
+    {
+      "id": "rag-015",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A retrieval system runs without a single error, yet every query returns chunks that have nothing to do with it. Which mistake most characteristically produces this?",
+      "code": null,
+      "options": [
+        "The chunk size is far too large, so every chunk that comes back is dominated by unrelated text",
+        "The queries are embedded with a different model from the one that embedded the chunks",
+        "The index was never rebuilt after the documents were last edited, so every result is stale",
+        "The prompt forgot to permit `I don't know`, so the model answers from its training data instead"
+      ],
+      "answer": 1,
+      "explanation": "Mixing two embedding models in one index is a silent and baffling bug: everything 'works', and the results are nonsense, because vectors from different models are not comparable. Always embed chunks and queries with the same model — and if two result sets that should agree are completely different, check this first."
+    },
+    {
+      "id": "rag-016",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A prompt already contains the one document that answers a question. You add three loosely related documents as well, and the answer gets worse. What happened?",
+      "code": null,
+      "options": [
+        "The marginally relevant text competed with the relevant part for attention — more tokens is not more understanding",
+        "The model reads documents in order and stops at the first that looks complete, so it never reached the relevant one",
+        "The extra documents pushed the prompt past a hidden limit, so the beginning of the context was silently truncated",
+        "The model averaged the four documents into a single summary and the specific fact was lost in the process"
+      ],
+      "answer": 0,
+      "explanation": "This is dilution, one of the honest limits of long context. Adding text that is only marginally relevant can make an answer worse, not better, and cost and latency scale with everything sent. It is a reason retrieval still matters even where the whole corpus would fit."
+    },
+    {
+      "id": "rag-017",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "The same question was run against an index rebuilt at two chunk sizes. Both found the right chunk. Why is neither a good setting?",
+      "code": "| Chunk size | Right chunk found? | Noise | Notes                                    |\n|------------|--------------------|-------|------------------------------------------|\n| 50 words   | yes                | low   | \"it must be declared before use\" — it?   |\n| 800 words  | yes                | high  | answer present, buried in unrelated text |",
+      "options": [
+        "At 50 words the chunk has lost its own subject; at 800 the answer arrives buried in text that costs tokens and dilutes attention",
+        "At 50 words the index has too many entries to search quickly; at 800 the embedding model refuses inputs of that length",
+        "At 50 words each chunk is too short for the embedding model to accept; at 800 the chunks are too long to overlap with their neighbours",
+        "At 50 words the similarity scores become too noisy to trust; at 800 the scores are inflated by the sheer number of words"
+      ],
+      "answer": 0,
+      "explanation": "Finding the chunk is not the whole job. A fragment that has lost its own subject cannot be used even when it is retrieved, and a page-sized chunk wastes tokens and dilutes the model's attention on the one relevant sentence. That is why both extremes fail and the middle has to be measured."
+    },
+    {
+      "id": "rag-018",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A retrieval system gives confident, well-cited answers that were correct a month ago but are wrong today. What is the most likely cause?",
+      "code": null,
+      "options": [
+        "The chunks are too small, so the answers have lost the context around them",
+        "The generation model has begun hallucinating, and a larger model is needed",
+        "The index was not rebuilt after the documents changed, so it is stale",
+        "The queries are being embedded with a different model from the chunk index"
+      ],
+      "answer": 2,
+      "explanation": "A stale index answers last month's question correctly. Retrieval only ever sees what was indexed, so when the documents change the index must be rebuilt — forgetting this is one of the common operational failures, and it looks like a model problem when it is not."
+    },
+    {
+      "id": "rag-019",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Users of a retrieval-backed assistant report that 'the AI is wrong' — it gives confident answers that do not match the documents. Where should you look first?",
+      "code": null,
+      "options": [
+        "At the generation model — swap in a larger one and see whether the reports stop",
+        "At the retrieval step — check which chunks were returned for the failing questions",
+        "At the temperature setting — lower it so the answers become more deterministic",
+        "At the chunk overlap — increase it so that fewer facts are split across boundaries"
+      ],
+      "answer": 1,
+      "explanation": "If retrieval returns the wrong chunks, everything downstream is confidently wrong and the system looks like it has a model problem when it has a search problem. Most 'the AI is wrong' reports in such systems are search bugs, so the returned chunks are the first thing to inspect."
+    },
+    {
+      "id": "rag-020",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Does grounding a model in retrieved documents eliminate hallucination?",
+      "code": null,
+      "options": [
+        "Yes — once the answer is anchored to real documents, the model has nothing left to invent",
+        "No — it makes no difference, because the model gives supplied context no more weight than memory",
+        "No — it makes it worse, because every retrieved chunk is more text for the model to misquote",
+        "No, but it reduces it a lot — the model can still misuse what it was given or answer from training"
+      ],
+      "answer": 3,
+      "explanation": "Retrieval reduces hallucination substantially and does not remove it. The model can misread a retrieved chunk, blend two chunks into a claim neither made, or — when retrieval returns nothing useful and it was not permitted to say so — fall back on training data."
+    },
+    {
+      "id": "rag-021",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "When tuning a retrieval system, what most distinguishes engineering from guessing?",
+      "code": null,
+      "options": [
+        "A set of questions with known answers to test every change against",
+        "A proper vector database in place of an in-memory list of vectors and their text",
+        "A larger embedding model that produces vectors with more dimensions per chunk",
+        "A longer context window on the model that generates the final answer"
+      ],
+      "answer": 0,
+      "explanation": "Chunk size, overlap, `k` and score thresholds all change what comes back, and without known-answer questions you cannot tell whether a change helped. Almost nobody builds the evaluation set, and it is the difference between measuring and hoping."
+    },
+    {
+      "id": "rag-022",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Before deciding whether to skip retrieval and paste everything into the prompt, you estimate the size of the corpus. Is the arithmetic sound, and what does the result imply for a model whose window holds hundreds of thousands of tokens?",
+      "code": "Whole corpus: 5 documents, about 6,000 words\nEstimated tokens: 6,000 / 0.75 = 8,000",
+      "options": [
+        "The arithmetic is wrong — a token is bigger than a word, so the corpus is nearer 4,500 tokens — but it fits either way",
+        "The arithmetic is right — a token is about three-quarters of a word — and 8,000 tokens fits with room to spare",
+        "The arithmetic is right, but 8,000 tokens is far too much to send with every question, so retrieval is required",
+        "The arithmetic is wrong — the divisor should be 1.5 — and even the corrected 4,000 tokens is too large for one prompt"
+      ],
+      "answer": 1,
+      "explanation": "Words divided by 0.75 is a close enough estimate: tokens are smaller than words, so there are more of them. Eight thousand tokens is a small fraction of a modern window, which is why five short documents are a case for long context rather than for chunking, embedding and searching."
+    },
+    {
+      "id": "rag-023",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Retrieval earns its place over simply pasting a corpus into the prompt on several grounds. Which of these is NOT one of them?",
+      "code": null,
+      "options": [
+        "The corpus is too large to fit in the context window",
+        "The data changes constantly and answers must stay current",
+        "Every answer must cite the source document it came from",
+        "The model reasons more carefully over a few short chunks"
+      ],
+      "answer": 3,
+      "explanation": "Scale, cost at scale, freshness and citation are what retrieval offers. Reasoning quality is not on the list: retrieval can only lose information a full read would have had, so a corpus that fits is usually answered at least as well by pasting the whole thing."
+    },
+    {
+      "id": "rag-024",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "You build a working retrieval pipeline over five short documents. Then you paste all five into the prompt with no retrieval step, ask the same questions, and the pasted version answers at least as well. What should you conclude?",
+      "code": null,
+      "options": [
+        "The pipeline is broken somewhere, because a correctly built retrieval system should always beat a raw paste",
+        "This corpus never needed retrieval — it fits in the window, and retrieval can only lose what a full read would have had",
+        "The embedding model is too weak for this corpus, and a larger model with more dimensions per vector would reverse the result",
+        "The chunk size was wrong, and rerunning the comparison at a smaller size would let the pipeline win"
+      ],
+      "answer": 1,
+      "explanation": "Long context winning here is the expected result, not a failure. Retrieval earns its place on scale, cost, freshness and citation, and none of those apply to five files that fit in the prompt. The real question the comparison sets up is at what corpus size the result would flip."
+    },
+    {
+      "id": "rag-025",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A coding assistant answers detailed questions about a large repository, yet it maintains no vector database of the code. How is that possible?",
+      "code": null,
+      "options": [
+        "It was fine-tuned on the repository when it was first installed, so the code is in its weights",
+        "It keeps the entire repository in its context window at all times and re-reads the whole of it for each question",
+        "It searches the files and reads the relevant ones on demand — the same retrieval problem, solved with search",
+        "It embeds each file on every keystroke, so the index exists but is never written to disk"
+      ],
+      "answer": 2,
+      "explanation": "This is agentic retrieval: grep and read, rather than chunk and embed. The problem is identical — find the relevant piece and put it in the prompt — and search is a perfectly good way to find it. Embeddings are one solution to retrieval, not the definition of it."
+    },
+    {
+      "id": "rag-026",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Most production systems now retrieve a generous but bounded set of chunks, let a long-context model read all of it, and answer with citations. What does each half of this hybrid contribute?",
+      "code": null,
+      "options": [
+        "Retrieval bounds what is sent and supplies citations; the long-context read over that set avoids betting on a few top chunks",
+        "Retrieval removes the need for a prompt entirely; the long-context model then rewrites the chunks into one coherent document",
+        "Retrieval fine-tunes the model on the corpus overnight; the long-context read then verifies that the fine-tuning took effect",
+        "Retrieval caches every earlier answer; the long-context model then reads only the questions it has not seen before"
+      ],
+      "answer": 0,
+      "explanation": "It is hybrid, not either/or. Retrieval handles scale, cost and citation by keeping the input bounded and sourced; the long-context read over a generous set recovers much of what a strict top-`k` cut would have lost. The two halves cover each other's failure modes."
+    },
+    {
+      "id": "rag-027",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "The context holds only programming notes, yet the model still returns a confident sourdough recipe. Which adjustment should you try first?",
+      "code": "Answer using only the context below. If the context does not\ncontain the answer, say \"I don't know\".\n\nContext:\n{retrieved chunks}\n\nQuestion: How do I bake sourdough?",
+      "options": [
+        "Raise the similarity threshold so that no chunks are returned, leaving the model nothing to answer from",
+        "Add more chunks to the context so that the model has enough material to notice the topic is absent",
+        "Switch from embedding search to keyword search, which will correctly return nothing for `sourdough`",
+        "Make the instruction blunter, and move it to after the context rather than leaving it before the chunks"
+      ],
+      "answer": 3,
+      "explanation": "The permission to say `I don't know` is load-bearing, but where it sits matters too: an instruction placed before a long context is easier for the model to lose than one placed after it. Returning no chunks does not fix it — when retrieval yields nothing useful, the fallback is an answer from training."
+    },
+    {
+      "id": "rag-028",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A team tunes chunk size to 200 words on one set of documents, gets good answers to their three test questions, and adopts 200 words as the standard setting for every future corpus. What is wrong with that?",
+      "code": null,
+      "options": [
+        "Nothing — 200 words is roughly a paragraph, which is the size that works best whatever the documents are",
+        "200 words is too small — a page-sized chunk would carry enough context for any corpus they meet later",
+        "There is no universally correct size — it depends on the documents, so each new corpus needs measuring",
+        "Three questions is enough to decide, but the size should be rounded to a power of two to suit the index"
+      ],
+      "answer": 2,
+      "explanation": "A paragraph is a good starting point, not a law. The right size depends on how the documents are written, and the only way to know is to run known-answer questions against the new corpus. Measuring is the skill; the number that came out last time is just where to start."
+    },
+    {
+      "id": "rag-029",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Two relevant chunks were retrieved, each accurate on its own, yet the answer states something neither chunk says. Which failure is this?",
+      "code": null,
+      "options": [
+        "Bad retrieval — the wrong chunks were returned, so the answer had nothing correct to draw on",
+        "Blending — the model combined two chunks into a claim that neither of them actually made",
+        "A stale index — the chunks describe an older version of the documents than the question assumes",
+        "Dilution — the second chunk distracted the model from the first, so it answered from training instead"
+      ],
+      "answer": 1,
+      "explanation": "Grounding reduces hallucination without removing it, and blending is one of the ways it survives: each chunk is correct, the synthesis is not. It is a model-side failure, distinct from the search-side failures of returning the wrong chunks or a stale index, and citation is what lets a reader catch it."
+    }
+  ]
+}

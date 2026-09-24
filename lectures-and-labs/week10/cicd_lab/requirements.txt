@@ -1,0 +1,3 @@
+Flask>=3.0
+# The sample app's test, and the tests you add, run under pytest.
+pytest>=7.4.0

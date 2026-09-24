@@ -1,0 +1,16 @@
+# Normalise line endings. The repo is authored on Windows and run on Linux
+# (Codespaces, CI), so without this the checkouts disagree.
+* text=auto eol=lf
+
+# Shell scripts MUST be LF. scripts/update-course-content.sh runs as the
+# devcontainer's postAttachCommand inside a Linux container: with CRLF the
+# shebang line ends in \r and the kernel reports "bad interpreter", which
+# surfaces to a student as their Codespace failing to open properly.
+*.sh text eol=lf
+
+# Binary assets git must not try to normalise.
+*.png binary
+*.jpg binary
+*.pdf binary
+*.mp4 binary
+*.wav binary

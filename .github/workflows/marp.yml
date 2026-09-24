@@ -1,0 +1,134 @@
+name: marp
+concurrency: marp
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Pages is deployed straight from this workflow (no gh-pages branch): the
+# built site is uploaded as an artifact and published by actions/deploy-pages.
+# Nothing lands in git, so the copies students make from this template
+# inherit only the source, and the deployment history lives in the
+# github-pages environment with rollback, instead of as commits nobody reads.
+# Least privilege by default: the build job only reads the repo. The Pages
+# write + OIDC token are granted to the deploy job alone, so the job that
+# runs marp, npm and the build scripts cannot publish to the site even if
+# something it executes tries to.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # Only ever run in the module's own repo. Students copy this repo from
+    # the template, and a template copy has Actions ENABLED (unlike a fork),
+    # so without this guard their first push would run this workflow, fail
+    # at the Pages deploy they have not configured, and mail them a red X.
+    if: github.repository == 'danielcregg/ai-assisted-programming'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          # 3.12, to match .devcontainer/devcontainer.json. The lab gate's
+          # promise is "this material runs for a student", so it has to run on
+          # the interpreter the student's Codespace actually has. Change both
+          # together or the promise stops being true.
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # 22, to match the devcontainer for the same reason as Python above.
+          node-version: 22
+
+      - name: Install gate dependencies
+        run: |
+          set -euo pipefail
+          # pyyaml: verify_snippets parses ```yaml fences. Without it every
+          # yaml fence is reported as a failure rather than skipped, which is
+          # deliberate -- a missing parser must not look like a clean run.
+          # markdown-it-py: build_lab_pages renders lab READMEs (CommonMark, so
+          # fenced code inside numbered steps renders as it does on GitHub).
+          # pytest: verify_labs runs the labs' own tests.
+          python -m pip install --quiet pyyaml markdown-it-py pytest
+
+      - name: Install lab dependencies
+        run: |
+          set -euo pipefail
+          # Every lab's requirements must install: a lab that cannot be set up is
+          # a red build, not a quietly skipped test. (A lab that needs a live API
+          # key still has its tests skipped by verify_labs; that is a separate,
+          # named exception, not an install failure.)
+          for req in lectures-and-labs/*/*_lab/requirements.txt lectures-and-labs/*/*_lab/*/requirements.txt; do
+            [ -f "$req" ] || continue
+            echo "::group::$req"
+            python -m pip install --quiet -r "$req"
+            echo "::endgroup::"
+          done
+
+      - name: Gates - safety, links, snippets, labs, structure, portability, notes, schedule
+        run: |
+          set -euo pipefail
+          python scripts/safety_audit.py
+          python scripts/check_links.py
+          python scripts/verify_snippets.py
+          python scripts/verify_labs.py
+          python scripts/check_practice_bank.py
+          python scripts/check_lab_structure.py
+          python scripts/check_deck_portability.py
+          python scripts/check_speaker_notes.py
+          python scripts/check_schedule.py
+
+      - name: Install Marp CLI
+        run: npm install -g @marp-team/marp-cli@4.5.0
+
+      - name: Render decks and build the site
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          # build_index.py reads module/schedule.json (already validated by
+          # check_schedule.py), writes the landing page, the published
+          # schedule.json the Moodle course page reads, and redirect stubs for
+          # the old week-numbered deck URLs.
+          python scripts/build_index.py build
+          cp module/moodle-schedule-loader.html build/moodle-schedule-loader.html
+          python scripts/build_lab_pages.py build
+          mkdir -p build/practice
+          cp -R practice/. build/practice/
+          # Each week's <topic>-lecture.md -> build/<topic>/index.html + slides.pdf;
+          # the site address comes from the schedule, not the folder name. PDF
+          # only: Marp's pptx export wraps each slide as an image, so it offers
+          # nothing the PDF doesn't, while adding ~6 MB per deck to every deploy.
+          python scripts/render_decks.py build
+          touch build/.nojekyll   # serve the output as-is; no Jekyll pass
+
+      - name: Upload rendered decks as a downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-decks
+          path: build/
+
+      - name: Package the site for Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build/
+
+  deploy:
+    needs: build
+    if: github.repository == 'danielcregg/ai-assisted-programming'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write        # publish the artifact
+      id-token: write     # OIDC token deploy-pages exchanges for that right
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,14 @@
+# Embeddings run locally: all-MiniLM-L6-v2 is downloaded on first use (about
+# 90 MB) and needs no key. Only the generation half (sections 3-5) calls a
+# hosted model, through the OpenAI-compatible API most providers offer; the
+# key, base URL and model name come from .env (see .env.example).
+#
+# Lower bounds rather than exact pins. The old pins (numpy 1.24,
+# sentence-transformers 2.2) predate Python 3.12 and no longer install.
+sentence-transformers>=5.0
+chromadb>=1.0
+openai>=1.0
+python-dotenv>=1.0
+numpy>=2.0
+pytest>=8
+black>=24

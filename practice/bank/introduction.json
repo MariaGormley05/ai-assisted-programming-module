@@ -1,0 +1,426 @@
+{
+  "topic": "introduction",
+  "title": "Module Introduction",
+  "questions": [
+    {
+      "id": "introduction-001",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What does a course on AI-assisted programming actually set out to teach, given that the tools change every few months?",
+      "code": null,
+      "options": [
+        "The current menus and shortcuts of the most popular assistant",
+        "How to direct an assistant and how to judge what it hands back",
+        "How to build and fine-tune a language model of your own",
+        "Which assistant is fastest, measured on a fixed set of benchmarks"
+      ],
+      "answer": 1,
+      "explanation": "The tools are the part that changes; the judgement transfers. A tour of one product's menus would be out of date within a year, while knowing how to specify a task, supply the right context, and check what comes back is what still matters."
+    },
+    {
+      "id": "introduction-002",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "An assistant writes a function for you and you commit it. Who is accountable for that code?",
+      "code": null,
+      "options": [
+        "The company that trained the model, since its output caused the defect",
+        "Nobody until it fails, because generated code is understood to be provisional",
+        "You, because your name is on the commit",
+        "The reviewer who approved the pull request, and only them"
+      ],
+      "answer": 2,
+      "explanation": "The uncomfortable part of the trade: the assistant is fast, but you are accountable for code you did not write. Speed moved; responsibility did not."
+    },
+    {
+      "id": "introduction-003",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Industry surveys report that most developers use AI coding tools daily, that under a third trust the output, and that fewer than half always review it before committing. How should those figures be taught?",
+      "code": null,
+      "options": [
+        "As precise measurements that fix how much to trust any given tool",
+        "As claims that cancel each other out and so can be ignored",
+        "As proof that reviewing generated code is no longer worth doing",
+        "As a direction, not decimal points, because the surveys vary in rigour and recycle each other"
+      ],
+      "answer": 3,
+      "explanation": "The provenance matters as much as the numbers: they come from surveys of varying rigour that quote one another. The direction is sound, meaning heavy use, low trust, and patchy review, but the precision is not."
+    },
+    {
+      "id": "introduction-004",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "One survey says 29% of developers trust generated code and another says 48% always review it. Which conclusion do those two figures actually support?",
+      "code": null,
+      "options": [
+        "Most developers both distrust the code and ship it unchecked, which is the joint conclusion",
+        "Reviewing generated code raises the defect rate",
+        "Developers who trust the code are the ones who review it",
+        "Two separate facts: most do not trust it, and most do not always review it"
+      ],
+      "answer": 3,
+      "explanation": "Two percentages from separate questions cannot be combined into a claim about the same people. Each figure stands on its own; the joint claim that a majority both distrusts and ships unchecked is not something the surveys establish."
+    },
+    {
+      "id": "introduction-005",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Must you understand every line an assistant writes before you ship it?",
+      "code": null,
+      "options": [
+        "Yes, and any other practice is professional negligence",
+        "No, nobody does, so no review of any kind is needed",
+        "No, but the review has to move somewhere real, such as tests, types and checks that must pass",
+        "Yes, which is why generated code should be limited to trivial functions that anyone can check at a glance"
+      ],
+      "answer": 2,
+      "explanation": "Almost nobody reads every line, and pretending otherwise is dishonest. What changed is where the review lives: from reading each line to checking the behaviour, and from your eyes to tests and other checks that must pass."
+    },
+    {
+      "id": "introduction-006",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A team stops reading generated code line by line but has no tests for it. What has happened to their level of checking?",
+      "code": null,
+      "options": [
+        "It has moved up a level, from lines to behaviour",
+        "It has stayed the same, since reviews were never thorough anyway",
+        "It has improved, because the assistant checks its own output",
+        "It has stopped: with no tests, nothing is verifying the code at all"
+      ],
+      "answer": 3,
+      "explanation": "The trade only works if the verification is real. Dropping line-by-line reading is fine when tests, types and checks take over; dropping it with nothing in its place is not a new level of review, it is the absence of one."
+    },
+    {
+      "id": "introduction-007",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Which phrase describes the practice of prompting for code, running it, and shipping it without really reading it?",
+      "code": null,
+      "options": [
+        "Vibe coding",
+        "Context engineering",
+        "Spec-driven development",
+        "Pair programming"
+      ],
+      "answer": 0,
+      "explanation": "Vibe coding is prompt it, run it, ship it, barely read it. It can be the right mode for a throwaway script and the wrong one for anything that has to be maintained, which is why the term is worth knowing rather than just mocking."
+    },
+    {
+      "id": "introduction-008",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "What does the term comprehension debt describe?",
+      "code": null,
+      "options": [
+        "The future cost of understanding code that a machine wrote and nobody read",
+        "The interest a company pays when it licenses a model instead of training one",
+        "The time a new developer needs to learn an unfamiliar programming language",
+        "The gap between how fast an assistant types and how fast a human can read"
+      ],
+      "answer": 0,
+      "explanation": "It is the technical-debt argument applied to understanding rather than to code. Speed today is borrowed against the day someone has to change code nobody understood in the first place."
+    },
+    {
+      "id": "introduction-009",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A system works, but the team that maintains it no longer understands how. What is that called?",
+      "code": null,
+      "options": [
+        "A spec-driven system",
+        "A legacy migration",
+        "A haunted codebase",
+        "A vibe-coded prototype"
+      ],
+      "answer": 2,
+      "explanation": "A haunted codebase is a working system that its own team no longer understands. Most developers have inherited one from their past selves; assistants make it possible to build one much faster."
+    },
+    {
+      "id": "introduction-010",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Context engineering is described as a shift. From what, to what?",
+      "code": null,
+      "options": [
+        "From how you ask, to what you put in front of the model",
+        "From writing code by hand, to describing it in plain language",
+        "From using one assistant, to comparing several on each task",
+        "From reviewing output, to trusting a model that has been tested"
+      ],
+      "answer": 0,
+      "explanation": "The wording of a request matters less than what the model can actually see: the file, the error, the failing test. Rewording cannot fix missing information, so the craft moved from the phrasing to the context."
+    },
+    {
+      "id": "introduction-011",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Spec-driven development is presented as a reaction against another practice. What is the core of the idea?",
+      "code": null,
+      "options": [
+        "Let the assistant choose the architecture, then document what it built",
+        "Ban assistants from production code and use them only for tests",
+        "Write the specification first, then let the assistant implement it",
+        "Generate several implementations and keep whichever passes the most tests"
+      ],
+      "answer": 2,
+      "explanation": "It is the backlash against vibe coding: decide what should exist, write it down, and then have the assistant build to it. The decisions become yours, and the code can be wrong against something."
+    },
+    {
+      "id": "introduction-012",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "An assistant produces a function that is character-for-character identical to one in an open-source project with a licence requiring derived work to be open-sourced. You paste it into a closed-source product. What is the position?",
+      "code": null,
+      "options": [
+        "The tool wrote it, so no licence applies to the copy",
+        "Nothing applies unless the original author notices",
+        "Only the model's provider is bound by the original licence, since it trained on the code",
+        "The licence may apply, because it follows the code rather than the typist"
+      ],
+      "answer": 3,
+      "explanation": "A licence attaches to the code. Reproducing it through a tool does not strip it, and the idea that a tool typed it is not a defence anyone has established. The law is unsettled in places, but that principle is not."
+    },
+    {
+      "id": "introduction-013",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "The court cases about training models on public code are still being argued. What is the recommended attitude towards that?",
+      "code": null,
+      "options": [
+        "Wait for a ruling before using an assistant on anything commercial",
+        "Assume the cases will go against the tool makers and avoid generated code",
+        "Assume they will go in the tool makers' favour and treat every suggestion as free of any licence",
+        "Do not build habits on how they come out; treat generated code as code of unknown origin"
+      ],
+      "answer": 3,
+      "explanation": "Whatever the courts decide about training data, the habit that survives every outcome is the same: generated code is code of unknown origin, which you can stand over once you have read and tested it, or you cannot ship."
+    },
+    {
+      "id": "introduction-014",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Word-for-word reproduction of well-known code by an assistant is rare but real. What practical step follows from that?",
+      "code": null,
+      "options": [
+        "Find out whether your assistant's setting that blocks suggestions matching public code is on",
+        "Search the web for every function the assistant writes before using it, and keep a record of what you found",
+        "Only accept suggestions shorter than ten lines",
+        "Rename every identifier so the copy can no longer be recognised"
+      ],
+      "answer": 0,
+      "explanation": "Most assistants can block suggestions that match public code, and the setting is worth knowing about. Renaming identifiers changes nothing about where the code came from, and web-searching every function is not a habit anyone keeps."
+    },
+    {
+      "id": "introduction-015",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What is typing into a hosted assistant most usefully compared to?",
+      "code": null,
+      "options": [
+        "Writing in a local text editor",
+        "Talking to a colleague at the next desk",
+        "Emailing the text to a company",
+        "Saving a file to an encrypted drive"
+      ],
+      "answer": 2,
+      "explanation": "A hosted assistant is a service: everything you type leaves your machine for the provider's servers. Whether it is kept or trained on depends on the plan and its settings, but it has left either way."
+    },
+    {
+      "id": "introduction-016",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Which of these must never go into a prompt, regardless of what the plan promises?",
+      "code": null,
+      "options": [
+        "Credentials, other people's personal data, and code you have no right to share",
+        "A stack trace from your own program, including the file paths and line numbers it mentions",
+        "A function you wrote yourself last week",
+        "The name of the framework your project uses"
+      ],
+      "answer": 0,
+      "explanation": "Plans differ in what they keep and what they train on, so the three absolutes do not depend on the plan: no credentials, no personal data belonging to other people, and no code you are not entitled to share."
+    },
+    {
+      "id": "introduction-017",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "What decides whether a hosted assistant keeps your conversation and uses it for training?",
+      "code": null,
+      "options": [
+        "The programming language you are asking about",
+        "Whether you are signed in when you type",
+        "The plan you are on and its data setting",
+        "The length of the conversation"
+      ],
+      "answer": 2,
+      "explanation": "Consumer plans commonly keep conversations and may train on them unless told not to; business plans commonly promise not to. Nothing about the tool's name tells you which, so the setting is the thing to read."
+    },
+    {
+      "id": "introduction-018",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "You are working on your employer's code. Which assistant may it go into?",
+      "code": null,
+      "options": [
+        "Any assistant with a business plan, whoever pays for it",
+        "Only the tool the employer licensed",
+        "Any assistant, provided you delete the conversation afterwards",
+        "Whichever assistant gives the best answers for that language"
+      ],
+      "answer": 1,
+      "explanation": "The employer chose and licensed a tool under terms that cover their code. Pasting the same code into a personal account, however good the answers, sends it somewhere those terms do not reach."
+    },
+    {
+      "id": "introduction-019",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Running a model locally is described as a trade. What is traded for what?",
+      "code": null,
+      "options": [
+        "Cost for speed: local models are cheaper but slower",
+        "Convenience for accuracy: local models need no sign-in but hallucinate more than hosted ones",
+        "Portability for power: local models work offline but need a workstation",
+        "Privacy for capability: everything stays on your machine, but the model is weaker"
+      ],
+      "answer": 3,
+      "explanation": "A local model keeps every prompt on your own machine, which settles the confidentiality question outright. What you give up is capability, so it is named as a trade to consider, not as the recommendation."
+    },
+    {
+      "id": "introduction-020",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "One lab needs an API key. Where does the key go, and where does it never go?",
+      "code": null,
+      "options": [
+        "Into a settings file that is committed so the whole group can use it; never into a prompt or a chat",
+        "Into an ignored environment file that is read at runtime; never into code, a commit, or a prompt",
+        "Into the prompt at the start of each session; never into a file",
+        "Into a comment at the top of the script; never into a commit"
+      ],
+      "answer": 1,
+      "explanation": "A key lives in an environment file that git ignores and code reads at runtime. It is never a literal in code, never committed, and never typed into a conversation: nothing in the labs needs a secret in a prompt."
+    },
+    {
+      "id": "introduction-021",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Why are students told to copy the template repository rather than fork it?",
+      "code": null,
+      "options": [
+        "A fork of a public repository cannot be made private, so the work would be public",
+        "Forks cannot receive corrections to the course material later, while copies made from the template can",
+        "Forks count against the free allowance of cloud development environments",
+        "A fork would give every student write access to the original repository"
+      ],
+      "answer": 0,
+      "explanation": "A fork of a public repository can never be made private, which would publish every student's work and list the whole class on the original's fork network. A copy made from the template is a fresh, private repository."
+    },
+    {
+      "id": "introduction-022",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What is a Codespace, as used for the labs?",
+      "code": null,
+      "options": [
+        "A shared server the whole class logs into with one account",
+        "A full development environment that runs in the browser, with nothing to install",
+        "A desktop editor that must be installed and configured on your own laptop before the first lab",
+        "A read-only viewer for the repository's files"
+      ],
+      "answer": 1,
+      "explanation": "A Codespace is a development environment in the browser: the repository, the tools, the language runtime and the assistant, ready without installing anything locally. Each student gets their own."
+    },
+    {
+      "id": "introduction-023",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Why is signing up for the student developer pack the first thing to do before the labs?",
+      "code": null,
+      "options": [
+        "It is required before a repository can be made private",
+        "It replaces the need for a Codespace",
+        "It gives access to a stronger model than any of the paid plans currently offer",
+        "It is free for verified students and unlocks the assistant the labs use"
+      ],
+      "answer": 3,
+      "explanation": "The pack is free for verified students and unlocks the assistant plan the labs rely on. Verification can take days, so leaving it until the first lab means hitting paywalls when everyone else is working."
+    },
+    {
+      "id": "introduction-024",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Why are students asked to change their GitHub username to their real name?",
+      "code": null,
+      "options": [
+        "Usernames with symbols are rejected by the assistant",
+        "It is the account an employer will look at, and repository links get sent all semester",
+        "Cloud development environments only start for accounts that have been verified under a real name",
+        "The template can only be copied by accounts with a real name"
+      ],
+      "answer": 1,
+      "explanation": "It sounds trivial and is not: repository links get shared constantly, and the same account is the one a future employer sees. Start it as you mean to continue."
+    },
+    {
+      "id": "introduction-025",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "The short practical assessments allow AI tools, yet pasting the question into an assistant is not enough to answer them. Why?",
+      "code": null,
+      "options": [
+        "The questions are written in a form that assistants refuse to answer",
+        "Each asks about the lab code in front of you and what it actually does when run",
+        "Assistants are blocked on the assessment platform",
+        "The answers are randomised so no two students get the same one, and each version is checked by hand"
+      ],
+      "answer": 1,
+      "explanation": "The design puts the answer somewhere the model cannot reach from the question text: your copy of the lab code, its behaviour when run, or what is true right now. Doing the lab is the preparation; the assistant on its own is not."
+    },
+    {
+      "id": "introduction-026",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Generated code is reported to carry major issues at roughly 1.7 times the rate of human-written code. What does that figure establish?",
+      "code": null,
+      "options": [
+        "That using an assistant causes the extra defects",
+        "That the assistant's code is 70% wrong",
+        "An association, taught as a direction rather than a measurement",
+        "That human-written code is defect-free by comparison"
+      ],
+      "answer": 2,
+      "explanation": "The comparison is an association from surveys, not a controlled result about causes, and it is taught the same way as every other figure here: as a direction, with its provenance stated, never sharpened into a precise measurement."
+    },
+    {
+      "id": "introduction-027",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Which of these is described as not having got cheap, even though typing code did?",
+      "code": null,
+      "options": [
+        "Deciding what should exist and judging what came back",
+        "Installing the assistant and signing in",
+        "Formatting code consistently across a project of any size, in any language",
+        "Generating a first draft of a function"
+      ],
+      "answer": 0,
+      "explanation": "Typing got cheap. Deciding what should exist, and judging whether what came back is right, did not, and those two are what the rest of the material is about."
+    },
+    {
+      "id": "introduction-028",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A student says: nobody reads every line any more, so reading generated code is a waste of time. What is the flaw?",
+      "code": null,
+      "options": [
+        "Reading every line is still required by most employers",
+        "The review moved from the line to the behaviour; it changed shape, it did not go away",
+        "Assistants now produce code that needs no checking at all, so reading it is genuinely wasted effort",
+        "Only senior developers are allowed to skip reading"
+      ],
+      "answer": 1,
+      "explanation": "Hearing that nobody reads every line as permission to read none of it is the misconception to avoid. The review moved to behaviour, tests and checks; it did not go away, and skipping it with nothing in its place is just not checking."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+The migration removed 23 legacy services and consolidated them into four.
+
+Latency at the 99th percentile improved from 1.4 seconds to 380
+milliseconds. Two incidents occurred during the cutover, both resolved
+within the maintenance window.

@@ -1,0 +1,441 @@
+{
+  "topic": "overview",
+  "title": "Overview & Setup",
+  "questions": [
+    {
+      "id": "overview-001",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "When a coding assistant writes the body of a function you have just named, what is it actually doing?",
+      "code": null,
+      "options": [
+        "Searching a store of code it has seen and returning the closest matching snippet",
+        "Predicting the most plausible next token, over and over, from its context",
+        "Running the function name against installed libraries to find its definition",
+        "Fetching the relevant documentation online and paraphrasing what it finds there"
+      ],
+      "answer": 1,
+      "explanation": "It is not looking anything up: it predicts the next piece of text, appends it, and repeats. The search model is tempting because the output looks retrieved, but it predicts that the tool can only produce code that already exists — which is exactly what hallucination disproves."
+    },
+    {
+      "id": "overview-002",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "An assistant produces an excellent refactor in the morning and confidently fictional code in the afternoon. How are those two outputs related?",
+      "code": null,
+      "options": [
+        "They come from one mechanism, predicting plausible text, with nothing checking for truth",
+        "They come from two modes, retrieval for the good answer and generation for the bad one",
+        "The good answer came from the main model and the bad one from a smaller fallback model",
+        "The good answer was verified against real code before being shown and the bad one was not"
+      ],
+      "answer": 0,
+      "explanation": "Astonishing output and confident nonsense are produced by the same process. Nothing in the model verifies an answer, so the fluency that makes the good answer good is exactly what makes the bad one convincing."
+    },
+    {
+      "id": "overview-003",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "`pandas.read_excel_fast` does not exist. What will a coding assistant most likely do with this prompt?",
+      "code": "Write a function that loads a spreadsheet using pandas.read_excel_fast()",
+      "options": [
+        "Reply that the function does not exist and suggest `pandas.read_excel` instead",
+        "Refuse, because it cannot write code that calls an undefined function",
+        "Write a fluent, well-styled function that calls the fictional name",
+        "Check the pandas documentation online before deciding how to answer"
+      ],
+      "answer": 2,
+      "explanation": "A confident continuation is far more plausible than an admission of ignorance, so the tool writes the code. Expecting it to say \"I don't know\" projects human honesty onto a predictor; that reply is a rare continuation in its training data compared with a confident answer."
+    },
+    {
+      "id": "overview-004",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Generated code calls an API that turns out to be invented. A colleague calls it \"a bug in the tool\" and suggests waiting for a fix. Why is that the wrong response?",
+      "code": null,
+      "options": [
+        "It is a bug, but one confined to older models, so switching product is the real fix",
+        "The name usually does exist, in a newer release of the library that is not yet installed",
+        "The tool flags every uncertain name, so a warning must have been dismissed by someone",
+        "Fabrication is the mechanism working normally, so the job is to notice, not to wait"
+      ],
+      "answer": 3,
+      "explanation": "A hallucination is not a defect awaiting a patch. The process that produces useful, conventional code produces plausible fiction when nothing conventional fits, and no update changes that. The response that works is to recognise the shape of one and check."
+    },
+    {
+      "id": "overview-005",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "An assistant has just generated code calling `pandas.read_excel_fast`. Asked this question in a fresh conversation, it correctly says the function does not exist. What does that show?",
+      "code": "Does pandas.read_excel_fast actually exist?",
+      "options": [
+        "The model learned from the earlier mistake and corrected its own knowledge",
+        "The fresh conversation was routed to a newer and more accurate model",
+        "It had the information all along; nothing in the first prompt made it check",
+        "Direct questions are always answered truthfully, while code requests are not"
+      ],
+      "answer": 2,
+      "explanation": "The first prompt asked for a function, so a plausible function was the continuation. The direct question makes checking the plausible continuation instead. Same model, same knowledge: a different prompt produced a different answer, which is what the exercise is designed to show."
+    },
+    {
+      "id": "overview-006",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Why can you not simply instruct an assistant to \"warn me whenever you are unsure\" and then rely on the absence of warnings?",
+      "code": null,
+      "options": [
+        "Nothing in it checks whether an answer is true, so it does not know what it does not know",
+        "Instructions of that kind are stripped out before the model sees them, for safety reasons",
+        "It would warn on every answer, since a probabilistic model is never fully certain of anything",
+        "It can only warn about syntax it cannot parse, never about facts it has itself invented"
+      ],
+      "answer": 0,
+      "explanation": "The model predicts plausible text; it has no internal measure of truth to compare against. An invented function feels no different from a real one from the inside, so the warning you asked for cannot be reliably produced. Verification has to come from outside: documentation, or running the code."
+    },
+    {
+      "id": "overview-007",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Beyond wasting time, why can a hallucinated package or function name turn into a security problem?",
+      "code": null,
+      "options": [
+        "The assistant keeps suggesting the same name until it is added to a blocklist by the vendor",
+        "Package managers fall back to the closest real name, which may be abandoned and unpatched",
+        "An invented import fails the build silently and masks unrelated errors elsewhere in the code",
+        "An attacker registers the invented name, and the fiction becomes a real, malicious package"
+      ],
+      "answer": 3,
+      "explanation": "Attackers register the names that assistants invent. A developer who accepts the suggestion and installs the dependency then runs whatever was published under it, which makes hallucination an attack surface and not merely a correctness failure."
+    },
+    {
+      "id": "overview-008",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Which tool shape rewrites a selection you describe and shows the result as a diff inside the file?",
+      "code": null,
+      "options": [
+        "Completion",
+        "Edit",
+        "Chat",
+        "Agent"
+      ],
+      "answer": 1,
+      "explanation": "Edit takes a selection and an instruction and rewrites it in place, showing the change as a diff you accept or reject. Completion finishes what you are typing inline, chat answers in a side panel without touching the file, and an agent works out its own steps."
+    },
+    {
+      "id": "overview-009",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Why is it more useful to learn the four tool shapes (completion, chat, edit, agent) than the names of the current products?",
+      "code": null,
+      "options": [
+        "The products are proprietary, so their names cannot appear in teaching material",
+        "Each shape is offered by exactly one product, so the names add nothing",
+        "The shapes are fixed by a specification that every product must follow",
+        "The products change yearly, while the shapes have stayed stable"
+      ],
+      "answer": 3,
+      "explanation": "Products come and go; the categories have not moved. Knowing what a shape is allowed to touch and what you have to review transfers to whatever ships next year, whereas a product tour ages fast."
+    },
+    {
+      "id": "overview-010",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "What is the most useful way to tell the four tool shapes apart?",
+      "code": null,
+      "options": [
+        "By what each is permitted to change, and so by what you have to review",
+        "By the size and training date of the model that sits behind each one",
+        "By whether each one runs locally on your own machine or on a remote server",
+        "By the range of programming languages and frameworks each one supports"
+      ],
+      "answer": 0,
+      "explanation": "Completion proposes text you accept or ignore, chat changes nothing, edit changes a selection, and an agent may change many files and run commands. The review you owe grows with the permission, which is why the distinction matters more than the model underneath."
+    },
+    {
+      "id": "overview-011",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "When trying inline completion for the first time, why start typing a function signature and then accept nothing — just watch?",
+      "code": null,
+      "options": [
+        "Accepting a completion into a brand-new file can corrupt the file's encoding on disk",
+        "A completion is only ever a suggestion and cannot actually be inserted into the file",
+        "The point is to see what it proposes, and what you would have to review before accepting",
+        "The first suggestion it makes is always wrong, and the second one is the one to accept"
+      ],
+      "answer": 2,
+      "explanation": "The exercise is about noticing what each shape is allowed to change and what you review. A completion is a suggestion you read before it enters your code; accepting one without reading it is the habit to avoid, and this is the moment to practise reading."
+    },
+    {
+      "id": "overview-012",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "You give an agent a small goal and let it choose its own steps. What is distinctive about the review you owe afterwards, compared with the other shapes?",
+      "code": null,
+      "options": [
+        "None is needed, because an agent verifies its own work before it reports back to you",
+        "You inspect a finished result after the fact, not a suggestion or a diff beforehand",
+        "You review only the plan it proposed, since the individual steps are purely mechanical",
+        "You review the same diff as with edit, because agents can only change the current file"
+      ],
+      "answer": 1,
+      "explanation": "Completion and edit put a proposal in front of you before anything changes; an agent has already acted by the time you look. With more permitted, more has to be inspected, and it has to be inspected afterwards — which is why the answer to \"what did I review?\" is different for every shape."
+    },
+    {
+      "id": "overview-013",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "Someone records what each tool shape was allowed to change and what they reviewed. Applying the rule \"if two rows have the same answer, look again\", what has been missed?",
+      "code": "| Shape      | Allowed to change | What I reviewed |\n|------------|-------------------|-----------------|\n| Completion | the current file  | the result      |\n| Chat       | nothing           | the answer      |\n| Edit       | the current file  | the result      |\n| Agent      | anything          | the result      |",
+      "options": [
+        "Completion and Edit read identically, yet what you review differs: a suggestion versus a diff",
+        "The Chat row is wrong, because chat is allowed to change files whenever it is explicitly asked to",
+        "The Agent row is wrong, because an agent is restricted to the file that is currently open",
+        "The Completion row is wrong, because a completion is never able to change anything in a file"
+      ],
+      "answer": 0,
+      "explanation": "\"What I reviewed\" is the column people leave vague, and it is the one that separates the shapes: a suggestion before accepting it, a diff, or a finished result inspected afterwards. Writing \"the result\" three times hides exactly the distinction the exercise exists to surface."
+    },
+    {
+      "id": "overview-014",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Boilerplate, translating between formats, first-draft tests, docstrings and regexes are all things an assistant handles well. What do these tasks have in common?",
+      "code": null,
+      "options": [
+        "They are short, so they fit comfortably inside the model's limited context window",
+        "They have been specifically fine-tuned into every coding model on the market",
+        "They contain no real logic, so there is nothing in them for the model to get wrong",
+        "They have conventional answers, which is what a predictor of typical text does best"
+      ],
+      "answer": 3,
+      "explanation": "The unifying property is that the right answer is typical. A predictor of plausible text is excellent at what is, by definition, conventional — and the mirror image is that it struggles wherever the right answer is novel, recent, or specific to you."
+    },
+    {
+      "id": "overview-015",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "An assistant confidently writes code against a library API that was replaced in the library's latest release. Which predictable weakness is this?",
+      "code": null,
+      "options": [
+        "Arithmetic and counting — it miscounted the version numbers",
+        "Recency — training has a cutoff, and libraries move on after it",
+        "Novelty — the new API is too unusual for it to reproduce",
+        "Conventions — it was never shown the project's own style"
+      ],
+      "answer": 1,
+      "explanation": "Training data stops at a cutoff, and what was conventional then is what the model reproduces now. Anything that changed after that point is invisible to it unless the current documentation is placed in the context."
+    },
+    {
+      "id": "overview-016",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "Same tool, same day. Why does prompt B reliably get the better answer?",
+      "code": "A: Write a function to validate an email address.\n\nB: Write a function to validate an email address. We accept anything with an @ and a dot after it — we deliberately do NOT want RFC 5322 compliance. Reject anything over 254 characters.",
+      "options": [
+        "It is longer, and a longer prompt simply gives the model more tokens to work with",
+        "It names a standard, which activates the model's stored knowledge of that standard",
+        "It makes a decision — how strict to be — that the model would otherwise make silently",
+        "It uses capitals for emphasis, which the model treats as a higher-priority instruction"
+      ],
+      "answer": 2,
+      "explanation": "Length is not the reason. Left unspecified, the tool picks a strictness for you, and it picks whatever was most common in its training data. Prompt B hands it a product decision that was yours to make."
+    },
+    {
+      "id": "overview-017",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A developer gives a one-line request, gets code that handles bad input differently from what they wanted, and complains that the tool guessed. What is the fair verdict?",
+      "code": null,
+      "options": [
+        "The tool filled each gap with its training data's commonest choice; the gaps were the developer's",
+        "The tool should have asked, since a good tool always lists the open decisions before writing",
+        "The tool should have implemented every possibility, so that none of the decisions needed making",
+        "The tool should have refused a request that short rather than attempting to act on it at all"
+      ],
+      "answer": 0,
+      "explanation": "A predictor does not stop to ask; it fills every gap with the most plausible choice. Giving a vague ask and then blaming the tool for guessing misreads where the decision sat — the gaps were the developer's to fill."
+    },
+    {
+      "id": "overview-018",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Two generated email validators look almost identical in source. Why run both against these inputs instead of comparing the code?",
+      "code": "a@b\na@b.c\n<a 300-character address>",
+      "options": [
+        "Running the code is the only reliable way to confirm that it parses without a syntax error",
+        "Regular expressions cannot be read reliably by people, so tests must always replace review",
+        "Generated code can carry hidden behaviour that only ever shows up once it is actually executed",
+        "The inputs probe the decisions that were specified, so behaviour is compared rather than style"
+      ],
+      "answer": 3,
+      "explanation": "The comparison that matters is behavioural: what each accepts and rejects. `a@b` has no dot after the `@`, `a@b.c` is minimal but valid, and a 300-character address tests the limit — inputs chosen to expose the decisions a vague prompt made silently."
+    },
+    {
+      "id": "overview-019",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Of two email validators, the second came from a prompt that deliberately asked for less strictness than the usual approach. In what sense is it still the better one?",
+      "code": null,
+      "options": [
+        "It uses a simpler regular expression, and simpler code is better code in the abstract",
+        "Its behaviour matches a decision the requester made, not one the tool made for them",
+        "It is more standards-compliant, because the prompt referred to RFC 5322 explicitly by name",
+        "It is more robust, because a prompt that mentions limits produces stricter checking"
+      ],
+      "answer": 1,
+      "explanation": "Neither is better code in the abstract. The second is better because it reflects a choice made on purpose, whereas the first encodes whatever elaborate pattern the model half-remembered as typical. Note the prompt asked for less strictness, not more, so \"more robust\" gets it backwards."
+    },
+    {
+      "id": "overview-020",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Because an assistant predicts from everything in front of it, which of these is your real steering wheel for changing what it produces?",
+      "code": null,
+      "options": [
+        "The sampling temperature",
+        "The size of the model",
+        "The context it can see",
+        "The length of the request"
+      ],
+      "answer": 2,
+      "explanation": "Change the context and you change the output: the model predicts from everything in front of it, so what you show it is the lever. Length on its own is not the point — a longer request helps only when the extra words carry a decision or information the model was missing."
+    },
+    {
+      "id": "overview-021",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Asked this with no file open or attached, an assistant describes \"a script that checks dependencies and prints a status report\". With the file attached, it names the three actual checks. What changed between the two answers?",
+      "code": "Explain what setup_lab.py does.",
+      "options": [
+        "The model could see the file the second time; it was not smarter, it could see more",
+        "The second request was worded more precisely, so the model made a greater effort",
+        "On the second attempt the model was permitted to search the entire repository for context",
+        "The first answer had been cached from another user's session with a similar file"
+      ],
+      "answer": 0,
+      "explanation": "The first answer is a plausible guess from the filename alone, which is why it is generic. The second names real functions because the file is in the conversation. That difference — guessing from a name versus reading the file — is context engineering in one exercise."
+    },
+    {
+      "id": "overview-022",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A file sits in the repository you have open, yet the assistant answers questions about it generically. What is the most likely reason?",
+      "code": null,
+      "options": [
+        "The file is too long for the model to read in a single pass",
+        "The file uses a language the assistant does not support",
+        "The repository has not been indexed since the last commit",
+        "The file is not in the conversation, so it cannot be seen"
+      ],
+      "answer": 3,
+      "explanation": "The assistant sees what is in the conversation and nothing else; being in the repo is not the same as being in front of the model. Open the file in the editor or attach it explicitly, and the answer becomes specific."
+    },
+    {
+      "id": "overview-023",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "A setup checker prints this. Someone running it decides the failure \"probably does not matter\" because their own code still runs. What is the right response?",
+      "code": "Setup check\n  [ok] Python 3.12\n  [FAIL] Assistant reachable\n  [ok] Lab files present",
+      "options": [
+        "Continue, since Python and the files are present and the assistant is optional for now",
+        "Fix it now; a skipped check costs five minutes today and an hour when it resurfaces later",
+        "Reinstall Python, since the checks run in order and an earlier one must have caused it",
+        "Leave it until an exercise actually fails, then investigate with a real error in hand"
+      ],
+      "answer": 1,
+      "explanation": "Everything that follows assumes a working environment. A failed check that seems unrelated today surfaces as a confusing problem in a later exercise, when it is harder to diagnose and more expensive to fix."
+    },
+    {
+      "id": "overview-024",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Producing code has become cheap. Which of these has stayed expensive?",
+      "code": null,
+      "options": [
+        "Typing out the characters of a conventional implementation",
+        "Producing a first draft of a docstring or a regular expression",
+        "Deciding what should exist, and what \"correct\" means for it",
+        "Translating a working function from one language into another"
+      ],
+      "answer": 2,
+      "explanation": "Typing got cheap; deciding what should exist, supplying the context that makes a good answer possible, and judging what came back did not. Those three are the job now, and it is a more senior job than the one it replaced."
+    },
+    {
+      "id": "overview-025",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "How much faster does an AI coding assistant make a developer?",
+      "code": null,
+      "options": [
+        "It depends heavily on the task, and on code you know well it can make you slower",
+        "About ten times, according to consistent measurements across many kinds of task",
+        "About twice, with the gain roughly the same on every kind of work",
+        "Fastest on debugging, because error messages are the most conventional text of all"
+      ],
+      "answer": 0,
+      "explanation": "Controlled studies find modest, highly task-dependent effects: large gains on boilerplate and unfamiliar territory, small or negative on familiar code. Headline figures like 10× are marketing, and debugging is the easiest place to lose time."
+    },
+    {
+      "id": "overview-026",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Developers in a controlled study report feeling faster on tasks where measurement shows they were slower. Why is this the finding most worth remembering?",
+      "code": null,
+      "options": [
+        "It shows the measurements were flawed, since developers know their own pace best",
+        "It means your own sense of speed is not reliable evidence that the tool is helping",
+        "It shows that assistants only help beginners, who have no baseline to compare against",
+        "It suggests the study used tasks that were too easy to benefit from any assistance"
+      ],
+      "answer": 1,
+      "explanation": "Perceived and actual speed come apart. Fluent output feels productive whether or not it saves time, so the feeling cannot be trusted as a measure; that is what should change behaviour, and it is why the honest answer to \"how much faster\" is \"it depends\"."
+    },
+    {
+      "id": "overview-027",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A generated function is fluent, idiomatically named and well formatted. What does that tell you about whether it is correct?",
+      "code": null,
+      "options": [
+        "Quite a lot: the model produces fluent output only when the underlying answer is well known",
+        "A great deal: fluent output means the answer was found intact in the training data",
+        "Something: correct code tends to be tidier, so good formatting is weak evidence of correctness",
+        "Nothing: fluency is what the model optimises for, and it is equally fluent when wrong"
+      ],
+      "answer": 3,
+      "explanation": "Plausible text is the target, so a fictional function is written with the same polish as a real one — fluent, well-named, correctly styled and completely fictional. Accepting an answer because it reads well is one of the commonest mistakes."
+    },
+    {
+      "id": "overview-028",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Which of these problems is an assistant least able to flag for you, however well it is prompted?",
+      "code": null,
+      "options": [
+        "A missing import in the code it generated",
+        "An off-by-one error in a loop it wrote",
+        "That the task itself was not worth doing",
+        "A misspelt variable name in your request"
+      ],
+      "answer": 2,
+      "explanation": "An assistant asked to solve a problem does not stop to ask whether the problem is worth solving; it will confidently answer a question you should have questioned. Knowing when to stop is one of its predictable failures, so that judgement stays with you."
+    },
+    {
+      "id": "overview-029",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Why is asking an assistant to explain unfamiliar code often worth more than asking it to write code?",
+      "code": null,
+      "options": [
+        "It explains well, and an explanation adds to your understanding rather than standing in for it",
+        "An explanation cannot be hallucinated, because it only describes code that already exists",
+        "Writing code is disabled in most chat panels, so an explanation is the only thing on offer",
+        "An explanation uses fewer tokens than working code and is therefore cheaper to generate"
+      ],
+      "answer": 0,
+      "explanation": "Explaining unfamiliar code at speed is one of the things these tools are genuinely good at, and an explanation leaves you knowing more, whereas accepted code you did not read leaves you knowing less. Explanations can still be wrong, so they are not immune to hallucination."
+    }
+  ]
+}

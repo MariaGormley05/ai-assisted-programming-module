@@ -1,0 +1,15 @@
+Introduction to Programming
+
+Programming is the process of creating instructions for computers to follow. These instructions, written in programming languages, tell the computer exactly what to do step by step. Think of it like writing a recipe - you need to be precise and clear about each step.
+
+Variables and Data Types:
+A variable is like a labeled box that stores information. In Python, you create a variable simply by assigning it a value. For example, "age = 21" creates a variable called age that stores the number 21. Variables can store different types of data including numbers (integers and floats), text (strings), and boolean values (True or False).
+
+Control Structures:
+Programs need to make decisions and repeat actions. This is where control structures come in. If-statements let your program make choices based on conditions. For example, "if age >= 18: print('Adult')" checks if someone is an adult. Loops allow you to repeat code multiple times. A for-loop might iterate through a list of numbers, while a while-loop continues until a condition becomes false.
+
+Functions:
+Functions are reusable blocks of code that perform specific tasks. They help organize your code and avoid repetition. When you define a function in Python, you use the 'def' keyword followed by the function name and parameters. For example, a function that adds two numbers might look like: "def add(a, b): return a + b". You can then call this function whenever you need to add numbers.
+
+Why Learn Programming?
+Programming skills are increasingly valuable across many careers. Whether you want to build websites, analyze data, create games, or automate tasks, programming gives you the power to tell computers what to do. It teaches logical thinking and problem-solving skills that are useful far beyond just writing code.

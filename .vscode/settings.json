@@ -1,0 +1,21 @@
+{
+  "markdown.marp.themes": ["./themes/aiap.css"],
+  "markdown.marp.html": "all",
+  "python.analysis.extraPaths": [
+    "lectures-and-labs/week02/setup_lab",
+    "lectures-and-labs/week03/prompting_lab",
+    "lectures-and-labs/week04/rag_lab",
+    "lectures-and-labs/week05/mcp_lab",
+    "lectures-and-labs/week06/agents_lab",
+    "lectures-and-labs/week08/security_lab",
+    "lectures-and-labs/week09/cli_agents_lab",
+    "lectures-and-labs/week10/cicd_lab",
+    "lectures-and-labs/week11/vibe_coding_lab"
+  ],
+  "editor.minimap.enabled": false,
+  "git.autofetch": true,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true
+  }
+}

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Protocol Demo - Calculator Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        button.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        button.primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button.secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .speed-control label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .speed-control select {
+            padding: 8px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .step-info {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .step-info h3 {
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        .panel {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .panel-header {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .client-panel .panel-header {
+            color: #0066cc;
+        }
+
+        .server-panel .panel-header {
+            color: #28a745;
+        }
+
+        .message-box {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .message-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-box.sending {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .message-label {
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .request .message-label {
+            color: #0066cc;
+        }
+
+        .response .message-label {
+            color: #28a745;
+        }
+
+        .message-content {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            border-left: 3px solid #dee2e6;
+        }
+
+        .request .message-content {
+            border-left-color: #0066cc;
+        }
+
+        .response .message-content {
+            border-left-color: #28a745;
+        }
+
+        .json-key {
+            color: #0066cc;
+        }
+
+        .json-string {
+            color: #d14;
+        }
+
+        .json-number {
+            color: #099;
+        }
+
+        .json-boolean {
+            color: #690;
+        }
+
+        .arrow-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            display: none;
+        }
+
+        .arrow-container.active {
+            display: block;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-top: 30px solid transparent;
+            border-bottom: 30px solid transparent;
+            position: absolute;
+            animation: slideArrow 1s ease-in-out infinite;
+        }
+
+        .arrow-right {
+            border-left: 40px solid #0066cc;
+            left: 0;
+        }
+
+        .arrow-left {
+            border-right: 40px solid #28a745;
+            right: 0;
+        }
+
+        @keyframes slideArrow {
+            0%, 100% { opacity: 0.3; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(10px); }
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .explanation {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation h4 {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .explanation p {
+            color: #664d03;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .completion-badge {
+            display: none;
+            background: #28a745;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin: 20px;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-badge.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .arrow-container {
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 MCP Protocol Interactive Demo</h1>
+            <p>Watch how the Model Context Protocol enables communication between Client and Server</p>
+        </header>
+
+        <div class="controls">
+            <div class="button-group">
+                <button class="primary" id="startBtn" onclick="startDemo()">▶ Start Demo</button>
+                <button class="secondary" id="pauseBtn" onclick="pauseDemo()" disabled>⏸ Pause</button>
+                <button class="secondary" id="resetBtn" onclick="resetDemo()">↻ Reset</button>
+            </div>
+            <div class="speed-control">
+                <label for="speed">Speed:</label>
+                <select id="speed">
+                    <option value="2000">Slow</option>
+                    <option value="1000" selected>Normal</option>
+                    <option value="500">Fast</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <div class="step-info" id="stepInfo">
+            <h3>Ready to Start</h3>
+            <p>Click "Start Demo" to see the complete MCP protocol flow for the calculator server.</p>
+        </div>
+
+        <div class="main-content">
+            <div class="panel client-panel">
+                <div class="panel-header">🖥️ MCP Client</div>
+                <div id="clientMessages"></div>
+            </div>
+
+            <div class="arrow-container" id="arrowContainer">
+                <div class="arrow arrow-right" id="arrowRight"></div>
+                <div class="arrow arrow-left" id="arrowLeft"></div>
+            </div>
+
+            <div class="panel server-panel">
+                <div class="panel-header">⚙️ MCP Server (Calculator)</div>
+                <div id="serverMessages"></div>
+            </div>
+        </div>
+
+        <div class="explanation" id="explanation" style="display: none;">
+            <h4>What's Happening?</h4>
+            <p id="explanationText"></p>
+        </div>
+
+        <div class="completion-badge" id="completionBadge">
+            🎉 Demo Complete! You've seen the full MCP protocol flow.
+        </div>
+
+        <footer>
+            <p><strong>Atlantic Technological University</strong> - AI Assisted Programming Lab</p>
+            <p>Part 1: Understanding MCP Communication</p>
+        </footer>
+    </div>
+
+    <script>
+        const steps = [
+            {
+                step: 1,
+                title: "Step 1: Initialize Connection",
+                description: "The client sends an initialize request to establish the connection and exchange capabilities.",
+                clientMessage: {
+                    type: "request",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "method": "initialize",
+                        "params": {
+                            "protocolVersion": "2024-11-05",
+                            "capabilities": {},
+                            "clientInfo": {
+                                "name": "mcp-client",
+                                "version": "1.0.0"
+                            }
+                        }
+                    }
+                },
+                serverMessage: {
+                    type: "response",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "result": {
+                            "protocolVersion": "2024-11-05",
+                            "capabilities": {
+                                "tools": {}
+                            },
+                            "serverInfo": {
+                                "name": "calculator-server",
+                                "version": "1.0.0"
+                            }
+                        }
+                    }
+                },
+                explanation: "The initialize handshake is the first step in any MCP connection. The client announces itself and its capabilities, and the server responds with its own capabilities. This establishes what features are available in this session."
+            },
+            {
+                step: 2,
+                title: "Step 2: Discover Available Tools",
+                description: "The client requests a list of all tools (functions) that the server can execute.",
+                clientMessage: {
+                    type: "request",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 2,
+                        "method": "tools/list"
+                    }
+                },
+                serverMessage: {
+                    type: "response",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 2,
+                        "result": {
+                            "tools": [
+                                {
+                                    "name": "add",
+                                    "description": "Add two numbers together",
+                                    "inputSchema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "a": {"type": "number"},
+                                            "b": {"type": "number"}
+                                        },
+                                        "required": ["a", "b"]
+                                    }
+                                },
+                                {
+                                    "name": "multiply",
+                                    "description": "Multiply two numbers",
+                                    "inputSchema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "a": {"type": "number"},
+                                            "b": {"type": "number"}
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "divide",
+                                    "description": "Divide two numbers",
+                                    "inputSchema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "a": {"type": "number"},
+                                            "b": {"type": "number"}
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                explanation: "Tool discovery is crucial for dynamic integration. The server tells the client exactly what operations are available and what parameters each tool needs. The inputSchema uses JSON Schema to define the expected input format, enabling automatic validation."
+            },
+            {
+                step: 3,
+                title: "Step 3: Execute Add Tool",
+                description: "The client calls the 'add' tool with parameters a=15 and b=7.",
+                clientMessage: {
+                    type: "request",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 3,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "add",
+                            "arguments": {
+                                "a": 15,
+                                "b": 7
+                            }
+                        }
+                    }
+                },
+                serverMessage: {
+                    type: "response",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 3,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "Result: 15 + 7 = 22"
+                                }
+                            ]
+                        }
+                    }
+                },
+                explanation: "Tool execution demonstrates the core MCP pattern: the client sends a tools/call request with the tool name and arguments, the server executes the operation, and returns the result wrapped in a content array. This pattern allows for multiple content types (text, images, etc.)."
+            },
+            {
+                step: 4,
+                title: "Step 4: Execute Multiply Tool",
+                description: "The client calls the 'multiply' tool with parameters a=8 and b=6.",
+                clientMessage: {
+                    type: "request",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 4,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "multiply",
+                            "arguments": {
+                                "a": 8,
+                                "b": 6
+                            }
+                        }
+                    }
+                },
+                serverMessage: {
+                    type: "response",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 4,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "Result: 8 × 6 = 48"
+                                }
+                            ]
+                        }
+                    }
+                },
+                explanation: "Multiple tool calls can be made in the same session. Each request has a unique ID, allowing the client to match responses to requests even when operations run asynchronously. The server maintains its state and context throughout the session."
+            },
+            {
+                step: 5,
+                title: "Step 5: Execute Divide Tool",
+                description: "The client calls the 'divide' tool with parameters a=100 and b=4.",
+                clientMessage: {
+                    type: "request",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 5,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "divide",
+                            "arguments": {
+                                "a": 100,
+                                "b": 4
+                            }
+                        }
+                    }
+                },
+                serverMessage: {
+                    type: "response",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 5,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "Result: 100 ÷ 4 = 25.0"
+                                }
+                            ]
+                        }
+                    }
+                },
+                explanation: "The divide operation completes the demonstration of the calculator's basic functionality. Notice how the protocol remains consistent across different operations - same request/response structure, just different tool names and parameters."
+            },
+            {
+                step: 6,
+                title: "Step 6: Error Handling",
+                description: "The client attempts division by zero to demonstrate error handling.",
+                clientMessage: {
+                    type: "request",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 6,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "divide",
+                            "arguments": {
+                                "a": 10,
+                                "b": 0
+                            }
+                        }
+                    }
+                },
+                serverMessage: {
+                    type: "response",
+                    data: {
+                        "jsonrpc": "2.0",
+                        "id": 6,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "Error: Cannot divide by zero"
+                                }
+                            ]
+                        }
+                    }
+                },
+                explanation: "Good MCP servers handle errors gracefully. Instead of crashing or returning an error response code, this server returns a normal result with an error message. This allows the client to handle errors in a consistent way and provide helpful feedback to users."
+            }
+        ];
+
+        let currentStep = 0;
+        let isPaused = false;
+        let demoInterval;
+        let animationSpeed = 1000;
+
+        function syntaxHighlight(json) {
+            if (typeof json !== 'string') {
+                json = JSON.stringify(json, null, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                let cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        function addMessage(container, message, isClient) {
+            const messageBox = document.createElement('div');
+            messageBox.className = `message-box ${message.type}`;
+            
+            const label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = message.type === 'request' ? 
+                (isClient ? '→ Sending Request' : '← Receiving Request') :
+                (isClient ? '← Receiving Response' : '→ Sending Response');
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = syntaxHighlight(message.data);
+            
+            messageBox.appendChild(label);
+            messageBox.appendChild(content);
+            container.appendChild(messageBox);
+            
+            // Trigger animation
+            setTimeout(() => {
+                messageBox.classList.add('visible');
+            }, 50);
+            
+            return messageBox;
+        }
+
+        function showArrow(direction) {
+            const container = document.getElementById('arrowContainer');
+            const rightArrow = document.getElementById('arrowRight');
+            const leftArrow = document.getElementById('arrowLeft');
+            
+            container.classList.add('active');
+            
+            if (direction === 'right') {
+                rightArrow.style.display = 'block';
+                leftArrow.style.display = 'none';
+            } else {
+                rightArrow.style.display = 'none';
+                leftArrow.style.display = 'block';
+            }
+            
+            setTimeout(() => {
+                container.classList.remove('active');
+            }, animationSpeed);
+        }
+
+        function updateStepInfo(step) {
+            const stepInfo = document.getElementById('stepInfo');
+            stepInfo.innerHTML = `
+                <h3>${step.title}</h3>
+                <p>${step.description}</p>
+            `;
+        }
+
+        function updateExplanation(text) {
+            const explanation = document.getElementById('explanation');
+            const explanationText = document.getElementById('explanationText');
+            explanationText.textContent = text;
+            explanation.style.display = 'block';
+        }
+
+        function updateProgress() {
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        async function executeStep(step) {
+            updateStepInfo(step);
+            updateProgress();
+            
+            const clientMessages = document.getElementById('clientMessages');
+            const serverMessages = document.getElementById('serverMessages');
+            
+            // Show client request
+            const clientBox = addMessage(clientMessages, step.clientMessage, true);
+            clientBox.classList.add('sending');
+            showArrow('right');
+            
+            await sleep(animationSpeed);
+            
+            // Show server response
+            const serverBox = addMessage(serverMessages, step.serverMessage, false);
+            serverBox.classList.add('sending');
+            showArrow('left');
+            
+            await sleep(animationSpeed / 2);
+            
+            // Update explanation
+            updateExplanation(step.explanation);
+            
+            await sleep(animationSpeed / 2);
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function startDemo() {
+            if (currentStep >= steps.length) {
+                resetDemo();
+                return;
+            }
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('pauseBtn').disabled = false;
+            isPaused = false;
+            
+            while (currentStep < steps.length && !isPaused) {
+                await executeStep(steps[currentStep]);
+                currentStep++;
+                
+                if (currentStep >= steps.length) {
+                    document.getElementById('completionBadge').classList.add('show');
+                    document.getElementById('startBtn').textContent = '↻ Restart';
+                    document.getElementById('startBtn').disabled = false;
+                    document.getElementById('pauseBtn').disabled = true;
+                }
+            }
+        }
+
+        function pauseDemo() {
+            isPaused = true;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+            document.getElementById('startBtn').textContent = '▶ Continue';
+        }
+
+        function resetDemo() {
+            currentStep = 0;
+            isPaused = false;
+            
+            document.getElementById('clientMessages').innerHTML = '';
+            document.getElementById('serverMessages').innerHTML = '';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('completionBadge').classList.remove('show');
+            document.getElementById('progress').style.width = '0%';
+            
+            document.getElementById('stepInfo').innerHTML = `
+                <h3>Ready to Start</h3>
+                <p>Click "Start Demo" to see the complete MCP protocol flow for the calculator server.</p>
+            `;
+            
+            document.getElementById('startBtn').textContent = '▶ Start Demo';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = true;
+        }
+
+        document.getElementById('speed').addEventListener('change', function(e) {
+            animationSpeed = parseInt(e.target.value);
+        });
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            console.log('MCP Demo Ready');
+        });
+    </script>
+</body>
+</html>

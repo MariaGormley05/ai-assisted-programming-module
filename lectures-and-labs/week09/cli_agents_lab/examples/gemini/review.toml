@@ -1,0 +1,18 @@
+# A Gemini CLI custom command. To install it, copy this file to
+#   .gemini/commands/review.toml
+# inside the folder you start gemini in. Then:
+#   /review                        review the uncommitted changes
+#   /review focus on error handling
+#
+# Read it before you install it: the !{...} line runs a shell command on
+# your machine (Gemini asks you first) and pastes its output into the prompt.
+
+description = "Review my uncommitted changes like a strict colleague."
+prompt = """
+Review the diff below. List bugs first, then risky changes, then style.
+Name the file and line for each point. Do not edit any file.
+
+!{git diff}
+
+Extra focus, if any: {{args}}
+"""

@@ -1,0 +1,4 @@
+# Packages this lab imports: DIY 2 loads pandas, and setup_lab.py checks
+# that both are installed.
+numpy
+pandas
