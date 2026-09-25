@@ -76,7 +76,7 @@ only.
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
 | 1 | Module Introduction | [slides](lectures-and-labs/week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
-| **➡️ 2** | AIAP Overview | [slides](lectures-and-labs/week02/overview-lecture.md) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
+| **➡️ 2** | AIAP Overview | [slides](lectures-and-labs/week02/overview-lecture.pdf) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
 | 3 | Prompting & Context Engineering | [slides](lectures-and-labs/week03/prompting-lecture.md) | [lab](lectures-and-labs/week03/prompting_lab/README.md) |
 | 4 | Retrieval & Grounding | [slides](lectures-and-labs/week04/rag-lecture.md) | [lab](lectures-and-labs/week04/rag_lab/README.md) |
 | 5 | MCP | [slides](lectures-and-labs/week05/mcp-lecture.md) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
@@ -122,7 +122,9 @@ own. They recur through the labs, so you meet each one more than once:
   derived from the October bank holiday every year.
 - **Lectures and labs** live together, one folder per week, under
   `lectures-and-labs/weekNN/`: the deck is `<topic>-lecture.md` (Marp
-  markdown) and the lab is `<topic>_lab/`. The week number names the
+  markdown) or, in the PowerPoint pilot, `<topic>-lecture.pptx` with its
+  PDF and text copy exported beside it by `scripts/export_decks.py`; the
+  lab is `<topic>_lab/`. The week number names the
   folder and nothing else; the site keeps topic addresses, taken from the
   schedule. All ten decks are written. Every deck is
   self-contained and names no lecturer or institution, so any week can be

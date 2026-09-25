@@ -55,8 +55,10 @@ withholding — by teaching while you help:
 (`week01` … `week12`, plus `week06b-reading-week`), listed with links in
 `lectures-and-labs/README.md`. A week's lecture is `<topic>-lecture.md`
 (Marp markdown — the teaching is in the prose, the fenced code, and the
-`<!-- Speaker notes: ... -->` comments); its lab is `<topic>_lab/README.md`
-beside the code the student edits. A rendered, easier-to-read version of
+`<!-- Speaker notes: ... -->` comments), or a PowerPoint deck,
+`<topic>-lecture.pptx`, whose every slide and speaker note is also in
+`<topic>-lecture.notes.md` beside it: read that one. Its lab is
+`<topic>_lab/README.md` beside the code the student edits. A rendered, easier-to-read version of
 everything is at https://danielcregg.is-a.dev/ai-assisted-programming/.
 
 **Their work is theirs.** Edit the files they are working in. Leave decks,
@@ -90,7 +92,9 @@ that sign-in lives in the agent's own configuration, never in the repo.
   `weekNNb-reading-week`, right after week NN, so it sorts in place). A
   teaching week holds `<topic>-lecture.md` (the Marp deck, THE canonical
   lecture; `<topic>` is the row's `lecture` name, which is also the deck's
-  site address) and, in a lab week, `<topic>_lab/` (the row's `lab` name
+  site address), or instead a PowerPoint deck `<topic>-lecture.pptx` with
+  its generated `.pdf` and `.notes.md` (see "PowerPoint lectures" below),
+  and, in a lab week, `<topic>_lab/` (the row's `lab` name
   with hyphens as underscores, so it is an importable Python package
   name): `README.md` (the instructions students follow) plus the starter
   code. MCQ weeks and the reading week hold only a `README.md` explainer.
@@ -287,6 +291,37 @@ cohorts.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
+### PowerPoint lectures (a pilot since September 2026: the overview lecture)
+
+A week may be taught from a PowerPoint deck instead of a Marp one,
+`<topic>-lecture.pptx` (the module owner builds them with the
+powerpoint-maker skill: the stock Office look, code in dark
+syntax-coloured boxes, every bullet revealed on click). Everything above
+about content still holds (the deck flow below, portability, notes written
+for an AI first, the misconception on every Predict slide), with the
+notes in PowerPoint's notes pane.
+
+CI runs on Linux and cannot open a deck, so two files are generated beside
+it on Windows and committed with it. Neither is ever edited by hand:
+
+- `<topic>-lecture.pdf`: the slides exactly as PowerPoint prints them. The
+  site shows it.
+- `<topic>-lecture.notes.md`: every slide's text and speaker notes as
+  markdown in the shape of a Marp deck. The snippet, notes and portability
+  gates read it, the site prints it under the PDF, and it is what an
+  assistant should read to learn what the lecture says.
+
+`python scripts/export_decks.py` writes both (with the deck closed:
+PowerPoint locks a deck it has open). The text copy records the SHA-256 of
+the deck, of the PDF and of its own text, and `check_schedule.py` fails
+when any of them stops matching: a deck saved since its export, or a text
+copy edited by hand. A code box's alt text names its language
+(`Code, python`); add `, no-parse` to exempt a deliberately incomplete
+snippet, as `<!-- no-parse -->` does above a fence. The lecture's page on
+the site shows the PDF, a download of the deck, a link to Microsoft's web
+viewer (experimental: Microsoft does not support it for production use),
+and every slide's text with its notes.
+
 ### Deck flow — every topic deck, same shape
 
 Lectures are **two-hour** slots. The shape mirrors the sibling OOC module
@@ -422,6 +457,11 @@ keeping the formula above and `check_lab_structure.py` green.
 
 - To change a lecture: edit its week's `<topic>-lecture.md` and push —
   CI re-renders the deck and republishes the site.
+- To change a PowerPoint lecture: edit the `.pptx` in PowerPoint, close
+  it, run `python scripts/export_decks.py`, and commit the deck with the
+  `.pdf` and `.notes.md` it rewrites. Never edit the `.notes.md`: it is
+  regenerated from the deck, and `check_schedule.py` fails if it was
+  touched.
 - To add a lab: create `<topic>_lab/` in its week's folder with a
   `README.md` to the formula above plus starter code, name it in the row's
   `lab`, and add `"<topic>"` to `CONFORMING` in
@@ -452,7 +492,7 @@ Ten run on every push. Before any push, all must pass:
     python scripts/check_lab_structure.py    # every lab follows the formula
     python scripts/check_deck_portability.py # every deck is liftable to another course
     python scripts/check_speaker_notes.py    # notes are AI-usable; predicts name the misconception
-    python scripts/check_schedule.py         # the schedule is stated once, and every view agrees with it
+    python scripts/check_schedule.py         # the schedule is stated once, every view agrees, pptx exports are current
     python scripts/build_index.py build      # week <-> deck <-> lab structure holds
 
 - `verify_snippets.py` is this repo's replacement for OOC's `javac` gate.
