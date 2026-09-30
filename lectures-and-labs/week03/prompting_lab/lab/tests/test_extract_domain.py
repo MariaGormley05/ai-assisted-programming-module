@@ -1,24 +1,19 @@
-"""Task 8 — Tests-first exercise (student file)
+"""DIY 7: tests first. Replace the placeholder below with your own tests for
+extract_domain(url) in lab/code/domains.py, BEFORE anything implements it.
 
-Write the tests for `extract_domain(url: str) -> str` here *before* implementing
-the function in `lab/code/domains.py`. Your tests should cover:
+Four cases:
 
 - `https://sub.example.com/path` -> `example.com`
 - `http://example.co.uk` -> `example.co.uk`
 - `https://localhost` -> raises ValueError
-- Empty string -> raises ValueError
+- an empty string -> raises ValueError
 
-Add additional edge cases if desired. Run tests with:
+Run them with:
 
-    python -m pytest lab/tests -q
-
-When your tests are written, implement `extract_domain` to make them pass.
+    python -m pytest lab/tests/test_extract_domain.py -q
 """
 
-def test_student_writes_tests():
-    """Placeholder test to remind students to create tests-first.
 
-    This intentionally fails or is skipped by instructors depending on the
-    lab setup; students should replace this placeholder with real tests.
-    """
+def test_student_writes_tests():
+    """A placeholder that fails on purpose until you replace it."""
     raise NotImplementedError("Replace this placeholder with tests for extract_domain")

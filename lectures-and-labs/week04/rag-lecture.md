@@ -374,7 +374,7 @@ it is an invention. -->
 
 * The model is asked to repeat the label it used — nothing more
 
-<p class="reply">A variable is a named location in memory used to store a value.
+<p class="reply">A variable is like a labeled box that stores information.
 [source: introduction_to_programming.txt]</p>
 
 <div class="callout">
@@ -522,8 +522,8 @@ on its own. -->
 
 | Text | Becomes |
 |---|---|
-| "what is a variable" | 384 numbers (the lab's model; the count is per model): 0.021, −0.114, 0.087, … |
-| "A variable is a named location…" | 384 numbers, pointing **almost the same way** |
+| "what is a variable" | 384 numbers (the lab's model; the count is per model): 0.057, 0.04, −0.052, … |
+| "A variable is like a labeled box…" | 384 numbers, pointing **almost the same way** |
 | "Bubble sort compares neighbours…" | 384 numbers, pointing **somewhere else** |
 
 * Trained so texts that **mean the same** produce arrows pointing the same way
@@ -768,8 +768,9 @@ it, it is an engineering decision.
 cannot answer well, however good the embeddings are. The corpus is the
 five programming documents, k = 3.
 
-The wrong answer to expect is "how do I store a value under a name",
-picked because it shares no words with the text that answers it. The
+The wrong answer to expect is "how can my code remember a number for
+later", picked because it shares no words with the sentence that answers
+it. The
 faulty model is still keyword matching: students have heard that
 embeddings match meaning and not yet believed it. A second group picks
 the sourdough question, on the model that hardness means distance from
@@ -784,7 +785,7 @@ of it. -->
 Same five programming documents, k = 3.
 
 * "What is a variable?"
-* "How do I store a value under a name?"
+* "How can my code remember a number for later?"
 * "Which topics do these five documents cover?"
 * "How do I bake sourdough?"
 
@@ -807,7 +808,7 @@ question is the strongest argument for pasting it. -->
 | Question | Answer lives in | Top-3 retrieval |
 |---|---|---|
 | "What is a variable?" | one chunk | fine |
-| "How do I store a value under a name?" | one chunk, other words | fine — embeddings' job |
+| "How can my code remember a number for later?" | one chunk, other words | fine — embeddings' job |
 | "How do I bake sourdough?" | nowhere | fine — the threshold's job |
 | "Which topics do these documents cover?" | **every document** | **cannot** — 3 chunks ≠ 5 docs |
 

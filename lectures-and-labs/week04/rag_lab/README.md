@@ -107,7 +107,7 @@ badly and reads worse when it reaches the prompt.
 ```text
 Embedded 14 chunks
 Vector dimensionality: 384
-Query vector (first 5): [0.021, -0.114, 0.087, 0.043, -0.009]
+Query vector (first 5): [0.057, 0.04, -0.052, 0.08, -0.1]
 Dimensions match: True
 ```
 
@@ -133,7 +133,7 @@ Work in `part3_retrieval.py`.
    returns the `top_k` closest chunks, each with its similarity score and
    the file it came from.
 2. Run it for `"what is a variable"`.
-3. Run it for `"how do I store a value under a name"` — **different
+3. Run it for `"how can my code remember a number for later"` — **different
    words, same meaning**.
 4. Compare the two result sets.
 
@@ -141,18 +141,28 @@ Work in `part3_retrieval.py`.
 
 ```text
 Query: "what is a variable"
-  0.81  introduction_to_programming.txt  "A variable is a named location..."
-  0.64  data_structures_basics.txt       "Variables can hold references..."
+  0.42  introduction_to_programming.txt    "Introduction to Programming Programming is the..."
+  0.26  introduction_to_programming.txt    "through a list of numbers, while..."
+  0.21  database_fundamentals.txt          "Database Fundamentals A database is an..."
 
-Query: "how do I store a value under a name"
-  0.78  introduction_to_programming.txt  "A variable is a named location..."
+Query: "how can my code remember a number for later"
+  0.31  introduction_to_programming.txt    "Introduction to Programming Programming is the..."
+  0.25  introduction_to_programming.txt    "through a list of numbers, while..."
+  0.13  database_fundamentals.txt          "Database Fundamentals A database is an..."
 ```
 
 <details><summary>Hint</summary>
 
 Step 3 is the whole justification for embeddings. The second query shares
-almost no words with the text it should find — keyword search would return
-nothing useful, and meaning-based search returns the same top chunk.
+no words with the sentence that answers it ("A variable is like a labeled
+box that stores information"), so keyword search has nothing to match — yet
+it returns the same three chunks in the same order.
+
+The scores look low, and that is normal: a similarity is not a percentage.
+The top chunk's preview starts "Introduction to Programming" because the
+definition sits a few sentences into a 200-word chunk that also covers
+loops and functions, and every other topic in a chunk dilutes its score
+(DIY 6 tests that).
 
 If the two result sets are completely different, check you are embedding
 the query with the same model as the chunks.
@@ -176,9 +186,11 @@ system does when nothing is relevant.
 It still returns chunks. Nearest-neighbour search always has a nearest
 neighbour — there is no built-in notion of "nothing here is relevant".
 
-The scores are the only signal, which is why a **score threshold** matters
-and why the next section has to give the model permission to say it does
-not know.
+The scores are the only signal, which is why a **score threshold** matters:
+part 3 keeps hits scoring 0.20 or more and prints how many survive. None of
+the sourdough hits do, while both variable questions keep their best
+chunks. It is also why the next section has to give the model permission to
+say it does not know.
 
 </details>
 
@@ -201,12 +213,16 @@ Work in `part4_generation.py`.
 
 ```text
 Q: What is a variable?
-A: A variable is a named location in memory used to store a value.
-   [source: introduction_to_programming.txt]
+A: A variable is like a labeled box that stores information [source: introduction_to_programming.txt].
+   retrieved from: introduction_to_programming.txt, database_fundamentals.txt
 
 Q: How do I bake sourdough?
-A: I don't know — the provided context does not cover this.
+A: I don't know - the provided context does not cover this.
+   retrieved from: algorithms_overview.txt, web_development_intro.txt
 ```
+
+The wording of the first answer will vary from run to run. The
+`[source: …]` label and the exact refusal should not.
 
 <details><summary>Hint</summary>
 

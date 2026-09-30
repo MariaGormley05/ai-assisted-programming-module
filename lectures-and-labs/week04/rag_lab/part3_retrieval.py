@@ -31,8 +31,9 @@ def semantic_search(query, collection, model, top_k=3):
 
     Returns:
         List of (chunk_text, source, similarity) tuples, best first.
-        ChromaDB reports a DISTANCE (lower is closer); convert it with
-        similarity = 1 / (1 + distance) so that higher means closer.
+        Part 2 built the index with cosine distance, so ChromaDB reports
+        distance = 1 - cosine similarity (lower is closer). Convert it back
+        with similarity = 1 - distance, so that higher means closer.
     """
     # TODO: Exercise 3.1
     # 1. query_embedding = model.encode(query)
@@ -44,7 +45,7 @@ def semantic_search(query, collection, model, top_k=3):
     #      results['documents'][0]   -> the chunk texts
     #      results['metadatas'][0]   -> dicts with the 'source' filename
     #      results['distances'][0]   -> distances (lower = closer)
-    # 4. Return [(text, source, 1 / (1 + distance)), ...]
+    # 4. Return [(text, source, 1 - distance), ...]
     #
     # GitHub Copilot Prompt: "Query a ChromaDB collection with an embedding and return text, metadata source and similarity for the top k hits"
 
@@ -52,7 +53,7 @@ def semantic_search(query, collection, model, top_k=3):
     pass  # Remove this line when you add your code
 
 
-def filter_by_relevance(results, min_similarity=0.5):
+def filter_by_relevance(results, min_similarity=0.2):
     """
     Keep only the hits whose similarity clears a threshold.
 
@@ -66,6 +67,11 @@ def filter_by_relevance(results, min_similarity=0.5):
     Nearest-neighbour search ALWAYS returns something (DIY 4). The score is
     the only signal that nothing relevant was found, and this threshold is
     where you act on it.
+
+    0.2 is calibrated on this corpus with questions whose answers are known:
+    a question the documents answer tops out around 0.3 to 0.45, a question
+    they do not answer stays under 0.1. A score is not a percentage, and a
+    threshold only means something for the model and corpus it was set on.
     """
     # TODO: Exercise 3.2
     # Return the tuples whose similarity >= min_similarity
@@ -131,7 +137,7 @@ def main():
     # DIY 3: same meaning, different words. DIY 4: nothing relevant at all.
     queries = [
         "what is a variable",
-        "how do I store a value under a name",
+        "how can my code remember a number for later",
         "how do I bake sourdough",
     ]
 
@@ -139,9 +145,9 @@ def main():
         results = semantic_search(query, collection, model, top_k=3)
         display_results(query, results)
         if results:
-            kept = filter_by_relevance(results, min_similarity=0.5)
+            kept = filter_by_relevance(results, min_similarity=0.2)
             if kept is not None:
-                print(f"  kept after threshold 0.50: {len(kept)} of {len(results)}")
+                print(f"  kept after threshold 0.20: {len(kept)} of {len(results)}")
             context = manage_context_window(results, max_tokens=500)
             if context:
                 print(f"  context window: ~{len(context) // 4} tokens")

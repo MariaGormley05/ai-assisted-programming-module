@@ -22,7 +22,7 @@ _What did the overlap check show?_
 
 **"what is a variable"** - top hit, score and source: ___
 
-**"how do I store a value under a name"** - top hit, score and source: ___
+**"how can my code remember a number for later"** - top hit, score and source: ___
 
 _Same meaning, different words: did both queries find the same chunk?_
 

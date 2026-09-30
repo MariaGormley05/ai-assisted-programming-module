@@ -137,7 +137,13 @@ def store_in_chromadb(chunks, embeddings, sources, collection_name=COLLECTION):
     # 1. client = chromadb.PersistentClient(path="./chroma_db")
     # 2. Delete the collection if it already exists (wrap in try/except),
     #    so every run starts fresh -- DIY 6 depends on that
-    # 3. collection = client.create_collection(name=collection_name)
+    # 3. collection = client.create_collection(
+    #        name=collection_name,
+    #        configuration={"hnsw": {"space": "cosine"}},
+    #    )
+    #    Cosine compares the DIRECTION of two embeddings, the usual choice for
+    #    text. ChromaDB then reports 1 - cosine as the distance, which part 3
+    #    turns back into a similarity.
     # 4. collection.add(
     #        documents=chunks,
     #        embeddings=embeddings.tolist(),
