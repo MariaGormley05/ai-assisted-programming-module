@@ -4,11 +4,12 @@ Everything for each week of the module is here, one folder per week, in
 order. A teaching week's folder holds:
 
 - **`<topic>-lecture.md`**: that week's lecture slides (for example
-  `prompting-lecture.md`). In a Codespace it opens as slides; in VS Code on
+  `rag-lecture.md`). In a Codespace it opens as slides; in VS Code on
   your own computer, install *Marp for VS Code* and open the preview.
-  A week taught from PowerPoint has **`<topic>-lecture.pptx`** instead,
-  with the slides as a PDF (`<topic>-lecture.pdf`) and every slide's text
-  and speaker notes (`<topic>-lecture.notes.md`) beside it.
+  A week taught from PowerPoint has **`<topic>-lecture.pptx`** instead.
+  To look at its slides, use the week's *slides* link on the module site:
+  that page also has every slide's text, which is the link to give an AI
+  assistant (it cannot read a `.pptx` file).
 - **`<topic>_lab/`**: the lab, with its **`README.md`** (the instructions)
   and the starter code you work in. Your own code goes in that folder too.
 
@@ -19,8 +20,8 @@ happens that week.
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
 | 1 | Module Introduction | [slides](week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
-| **➡️ 2** | AIAP Overview | [slides](week02/overview-lecture.pdf) | [lab](week02/setup_lab/README.md) |
-| 3 | Prompting & Context Engineering | [slides](week03/prompting-lecture.md) | [lab](week03/prompting_lab/README.md) |
+| 2 | AIAP Overview | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/overview/) | [lab](week02/setup_lab/README.md) |
+| **➡️ 3** | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](week03/prompting_lab/README.md) |
 | 4 | Retrieval & Grounding | [slides](week04/rag-lecture.md) | [lab](week04/rag_lab/README.md) |
 | 5 | MCP | [slides](week05/mcp-lecture.md) | [lab](week05/mcp_lab/README.md) |
 | 6 | Coding Agents | [slides](week06/agents-lecture.md) | [lab](week06/agents_lab/README.md) |

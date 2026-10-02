@@ -54,10 +54,11 @@ withholding — by teaching while you help:
 **Where the content is.** One folder per week under `lectures-and-labs/`
 (`week01` … `week12`, plus `week06b-reading-week`), listed with links in
 `lectures-and-labs/README.md`. A week's lecture is `<topic>-lecture.md`
-(Marp markdown — the teaching is in the prose, the fenced code, and the
-`<!-- Speaker notes: ... -->` comments), or a PowerPoint deck,
-`<topic>-lecture.pptx`, whose every slide and speaker note is also in
-`<topic>-lecture.notes.md` beside it: read that one. Its lab is
+(Marp markdown — the teaching is in the slides' prose and fenced code), or
+a PowerPoint deck, `<topic>-lecture.pptx`. A `.pptx` cannot be read as
+text: that lecture's page on the module site (the week's *slides* link)
+shows the slides and every slide's text, so read that page, or ask the
+student to paste the slide in question. Its lab is
 `<topic>_lab/README.md` beside the code the student edits. A rendered, easier-to-read version of
 everything is at https://danielcregg.is-a.dev/ai-assisted-programming/.
 
@@ -93,7 +94,7 @@ that sign-in lives in the agent's own configuration, never in the repo.
   teaching week holds `<topic>-lecture.md` (the Marp deck, THE canonical
   lecture; `<topic>` is the row's `lecture` name, which is also the deck's
   site address), or instead a PowerPoint deck `<topic>-lecture.pptx` with
-  its generated `.pdf` and `.notes.md` (see "PowerPoint lectures" below),
+  nothing beside it (see "PowerPoint lectures" below),
   and, in a lab week, `<topic>_lab/` (the row's `lab` name
   with hyphens as underscores, so it is an importable Python package
   name): `README.md` (the instructions students follow) plus the starter
@@ -129,8 +130,8 @@ that sign-in lives in the agent's own configuration, never in the repo.
   Moodle assessment bank.
 - The site is PUBLIC: https://danielcregg.is-a.dev/ai-assisted-programming/.
   Treat everything here as publishable: anything pushed is live within
-  minutes, and speaker-note comments ship inside the rendered HTML where
-  anyone can read them.
+  minutes, and an HTML comment in a deck ships inside the rendered HTML
+  where anyone can read it.
 
 ## All ten decks are written
 
@@ -140,8 +141,8 @@ deck can neither vanish from the site nor sit half-created with CI green.
 
 The 2025 PowerPoints in the module owner's OneDrive are **superseded, not
 sources**. The decks here were authored, not transcribed: the originals
-averaged ~1,300 words an hour, carried zero speaker notes and 2024
-statistics, and several were materially wrong by 2026.
+averaged ~1,300 words an hour, carried 2024 statistics, and several were
+materially wrong by 2026.
 
 ### What each deck carries, and must keep carrying
 
@@ -187,8 +188,9 @@ statistics, and several were materially wrong by 2026.
 figures (92% daily use / 29% trust / 48% always review / 1.7× defects /
 ~45% OWASP). These come from surveys of varying rigour that recycle each
 other. They are taught as **direction, not decimal points**, and the
-speaker notes say so out loud. Do not add a statistic to a deck without
-that caveat attached, and do not sharpen these into false precision.
+slide that quotes them says so. Do not add a statistic to a deck without
+that caveat on the same slide, and do not sharpen these into false
+precision.
 
 ## Conventions (guaranteed repo-wide)
 
@@ -233,55 +235,16 @@ that caveat attached, and do not sharpen these into false precision.
   keypress in the HTML presentation), `- ` = shown immediately. Fragment
   build-up slides; leave reference slides (agendas, summaries, tables)
   immediate.
-### Speaker notes are primarily FOR AN AI, not for a presenter
+### No speaker notes: every slide stands on its own
 
-This is the single highest-value convention in the repo and the easiest to
-get wrong. Notes live in `<!-- Speaker notes: ... -->` comments at the TOP
-of the slide, straight after the `---`.
+Decks carry **no speaker notes**, in PowerPoint's notes pane or as
+`<!-- Speaker notes: ... -->` comments in a Marp deck. The module owner
+never used them, and all 393 were removed on 1 October 2026. What a slide
+means is on the slide: a reader with only the slide in front of them,
+student or assistant, must be able to follow it. If a point needs
+explaining, explain it on the slide or give it a slide of its own; do not
+add a note.
 
-**Who reads them, in priority order:**
-
-1. **An assistant helping a student** who is stuck on this slide. It can
-   already infer what the code does. What it cannot infer is what a
-   learner *characteristically gets wrong here* — and without that it
-   explains the right answer to someone who needed the wrong one
-   diagnosed.
-2. **An assistant reading the deck** to answer questions about the
-   material, needing the slide's intent rather than its bullets.
-3. **A presenter**, who gets pacing and weight as a by-product.
-
-Reader 3 is a by-product. Do not write for reader 3 first.
-
-**So a note carries:**
-
-- `~H:MM` cumulative elapsed time, matching the sibling OOC module's
-  format — `~0:20` means twenty minutes in, **not** twenty seconds.
-- **The concept the slide is actually testing**, stated so an assistant
-  could teach from it without the slide.
-- **The misconception** — the specific wrong answer to expect and the
-  faulty mental model that produces it. **Mandatory on every `Predict:`
-  slide**, and enforced by `scripts/check_speaker_notes.py`.
-- What it connects to: which earlier idea it pays off, which later one it
-  sets up, whether it maps onto an assessment.
-
-**What a note is NOT:**
-
-- Not stage direction. "Ask for hands", "take a vote", "expect
-  photographs", "put it on the board" are worth at most a clause, and
-  most notes should have none. An assistant cannot use any of it, and it
-  crowds out what it can use.
-- Not a restatement of the slide's own bullets.
-
-**The asymmetry that justifies all of this:** the slide states the *right*
-answer. It never states the wrong one — and the wrong one is the entire
-reason a predict slide exists. A student who got it wrong does not need
-the correct answer repeated; they need to know *which* mistaken model
-produced theirs. Write that down and an assistant stops explaining and
-starts diagnosing.
-
-Notes **ship inside the rendered HTML** and are readable by anyone viewing
-source, so write them publishable: nothing about individual students or
-cohorts.
 - Decks are SELF-CONTAINED and reusable: never reference other weeks or
   the module schedule, and never name an institution, a lecturer, a VLE
   or a course code — any lecturer in any college must be able to present
@@ -291,36 +254,32 @@ cohorts.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
-### PowerPoint lectures (a pilot since September 2026: the overview lecture)
+### PowerPoint lectures (since September 2026: the overview and prompting lectures)
 
 A week may be taught from a PowerPoint deck instead of a Marp one,
 `<topic>-lecture.pptx` (the module owner builds them with the
-powerpoint-maker skill: the stock Office look, code in dark
-syntax-coloured boxes, every bullet revealed on click). Everything above
-about content still holds (the deck flow below, portability, notes written
-for an AI first, the misconception on every Predict slide), with the
-notes in PowerPoint's notes pane.
+powerpoint-maker skill: code in dark syntax-coloured boxes, prompts and
+replies in labelled boxes). Everything above about content still holds:
+the deck flow below, portability, no speaker notes.
 
-CI runs on Linux and cannot open a deck, so two files are generated beside
-it on Windows and committed with it. Neither is ever edited by hand:
+**The deck is the only source, and nothing derived from it is committed.**
+Edit it any way you like (PowerPoint, PowerPoint for the web, or
+python-pptx for an assistant) and commit the `.pptx`; on GitHub you can
+upload it over the old one. Nothing else needs doing, and nothing runs on
+Windows. On every push the site workflow reads the deck itself, slide by
+slide, through `scripts/deck_text.py` (python-pptx): the gates check its
+text and code boxes (snippets, portability), and the site publishes it
+with a page that shows it in **Microsoft's web viewer** (free, no download
+or account; Microsoft does not support it for production use, so the page
+also offers the deck as a download) and every slide's text below.
 
-- `<topic>-lecture.pdf`: the slides exactly as PowerPoint prints them. The
-  site shows it.
-- `<topic>-lecture.notes.md`: every slide's text and speaker notes as
-  markdown in the shape of a Marp deck. The snippet, notes and portability
-  gates read it, the site prints it under the PDF, and it is what an
-  assistant should read to learn what the lecture says.
-
-`python scripts/export_decks.py` writes both (with the deck closed:
-PowerPoint locks a deck it has open). The text copy records the SHA-256 of
-the deck, of the PDF and of its own text, and `check_schedule.py` fails
-when any of them stops matching: a deck saved since its export, or a text
-copy edited by hand. A code box's alt text names its language
-(`Code, python`); add `, no-parse` to exempt a deliberately incomplete
-snippet, as `<!-- no-parse -->` does above a fence. The lecture's page on
-the site shows the PDF, a download of the deck, a link to Microsoft's web
-viewer (experimental: Microsoft does not support it for production use),
-and every slide's text with its notes.
+To read a deck as text yourself, e.g. as an assistant that cannot open a
+`.pptx`: `python scripts/deck_text.py <deck>.pptx`. There is no PDF and no
+text copy. A code box's alt text names its language (`Code, python`); add
+`, no-parse` to exempt a deliberately incomplete snippet, as
+`<!-- no-parse -->` does above a fence. A box named `Prompt …`, `Reply …`
+or `Callout …` comes through as a quote, and a chart as its alt text, so
+write a chart's data into its alt text.
 
 ### Deck flow — every topic deck, same shape
 
@@ -342,19 +301,17 @@ so a student moving between them never has to relearn where things are:
       -> common mistakes / honest limits
       -> Summary            <- ALWAYS last, no resources slide after it
 
-Timing notes run from ~0:01 to about ~1:45, which leaves the break and
-questions inside the slot; `check_speaker_notes.py` accepts hours 0 and 1.
-Part 2 is not padding: it is where the mechanism gets explained rather
+The times leave the break and questions inside the slot. Part 2 is not
+padding: it is where the mechanism gets explained rather
 than named, and where the room does something with its hands. Do not add
 a statistic or a dated claim to fill time — reuse a figure the deck or its
 lab already carries, or make the point without one.
 
 **Predict beats** are the load-bearing part. A slide poses something and
 the room commits to an answer out loud *before* the reveal; answers are
-`* ` bullets so they appear after the class has committed. Every predict
-slide's speaker note must name **the wrong answer to expect and the
-faulty reasoning behind it** — the slide already states the right answer,
-and the misconception is the thing an AI reading the deck cannot infer.
+`* ` bullets so they appear after the class has committed. The reveal
+states the right answer, and when one wrong answer is the common one, the
+reveal names it and the faulty reasoning behind it, on the slide.
 
 The introduction is the one exception: a two-act deck (the argument, then
 logistics), about an hour long by design, still hook-first and Summary-last.
@@ -425,8 +382,10 @@ example.
   awkward addresses and counts where they disagree) rather than asking
   the student to compare by eye and write it down. When a lab runs
   short, extend a task rather than adding a write-up: the same prompt
-  put to two or three other models from the model picker, framed as a
-  hunt ("which one can you catch out?"), is the cheapest extension.
+  again in two or three fresh conversations, framed as a hunt ("does it
+  make the same choices twice?"), is the cheapest extension. Never make
+  a step depend on choosing a model: students on the Copilot student
+  plan cannot switch models.
 - **Surprises that teach either way.** Model behaviour moves every few
   months, so a DIY must land whichever way the model behaves — anchor it
   on something the student checks themselves (`hasattr`, `wc -l`,
@@ -449,19 +408,19 @@ example.
 - **Sized to two hours.** Let the exercises run to about 110 minutes
   including Codespace start-up.
 
-Labs written before this rule (prompting, agents, vibe-coding) still carry
+Labs written before this rule (agents, vibe-coding) still carry
 `REFLECTION.md` exercises; bring each into line when it is next edited,
-keeping the formula above and `check_lab_structure.py` green.
+keeping the formula above and `check_lab_structure.py` green. The
+prompting lab was rewritten to it after the setup lab, with one `check.py`
+that makes every comparison in the lab.
 
 ## Editing rules
 
 - To change a lecture: edit its week's `<topic>-lecture.md` and push —
   CI re-renders the deck and republishes the site.
-- To change a PowerPoint lecture: edit the `.pptx` in PowerPoint, close
-  it, run `python scripts/export_decks.py`, and commit the deck with the
-  `.pdf` and `.notes.md` it rewrites. Never edit the `.notes.md`: it is
-  regenerated from the deck, and `check_schedule.py` fails if it was
-  touched.
+- To change a PowerPoint lecture: edit the `.pptx` and commit it (or
+  upload it on GitHub). That is all: the site workflow reads the deck,
+  checks it and publishes it.
 - To add a lab: create `<topic>_lab/` in its week's folder with a
   `README.md` to the formula above plus starter code, name it in the row's
   `lab`, and add `"<topic>"` to `CONFORMING` in
@@ -479,10 +438,21 @@ keeping the formula above and `check_lab_structure.py` green.
   its old URL still resolves.
 - Never edit the published HTML — it is generated. Edit the Markdown source
   and let CI rebuild.
+- To change the sync that carries all of this into students' copies
+  (`scripts/update-course-content.sh`): run
+  `bash scripts/test-course-sync.sh` before and after. It is not one of
+  the gates; it builds a small module repo and a student's copy in a
+  temporary folder and replays Codespace opens and nightly runs. A copy
+  keeps the `scripts/` folder and the workflows it was made with, so an
+  existing copy gets a new script only in its nightly run (that workflow
+  fetches the script from here), while its Codespace runs the old one for
+  good; the tests run those old scripts against the new one's results. A
+  workflow file here may be edited freely: the nightly run records its
+  baseline with the copy's own workflow files, never this repo's.
 
 ## The gates
 
-Ten run on every push. Before any push, all must pass:
+Nine run on every push. Before any push, all must pass:
 
     python scripts/safety_audit.py           # credentials, student data, bad paths
     python scripts/check_links.py            # every relative link and anchor resolves
@@ -491,8 +461,7 @@ Ten run on every push. Before any push, all must pass:
     python scripts/check_practice_bank.py    # practice bank is well-formed
     python scripts/check_lab_structure.py    # every lab follows the formula
     python scripts/check_deck_portability.py # every deck is liftable to another course
-    python scripts/check_speaker_notes.py    # notes are AI-usable; predicts name the misconception
-    python scripts/check_schedule.py         # the schedule is stated once, every view agrees, pptx exports are current
+    python scripts/check_schedule.py         # the schedule is stated once, every view agrees
     python scripts/build_index.py build      # week <-> deck <-> lab structure holds
 
 - `verify_snippets.py` is this repo's replacement for OOC's `javac` gate.
@@ -507,8 +476,9 @@ Ten run on every push. Before any push, all must pass:
   syntax without live credentials, and it prints that limit on every run
   rather than letting a green tick imply otherwise.
   `PLACEHOLDER_TESTS` names test files that are *expected to fail* —
-  student scaffolding (`prompting`), or a real test over a planted bug
-  (`cli-agents`, where an agent is pointed at it). If one starts passing,
+  student scaffolding (`prompting`'s tests-first placeholder), or a real
+  test over a planted bug (`prompting`'s order test, and `cli-agents`,
+  where an agent is pointed at it). If one starts passing,
   a worked solution has reached the public repo and the gate says so.
 - `check_links.py` matters more here than in OOC: the lab READMEs run
   10k–30k characters with their own tables of contents, and they arrived

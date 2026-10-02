@@ -50,8 +50,11 @@ nothing is handed in.
 *Fresh conversation* means press the `+` at the top of the chat panel
 first. The files the tasks change are in `lab/code/`, and any of them can
 be put back as you received it with `git restore`, which the steps use.
-Several tasks end with a **hunt**: the same prompt on two or three other
-models from the model picker, to see which one you can catch out.
+Several tasks end with a **hunt**: the same prompt again in a fresh
+conversation, to see whether the assistant makes the same choices twice.
+The Copilot student plan does not let you choose the model, and the hunts
+do not need to: the same model can answer the same prompt differently
+from one conversation to the next.
 
 ---
 
@@ -90,11 +93,11 @@ becomes something like `irelands-best`. Simple, until you look closely.
 4. Read the rows where the two disagree: each is a decision the first
    prompt left open that something made anyway. Then read the rows where
    they agree. Is every one of those what you would have chosen?
-5. **The hunt.** Switch model and, in a fresh conversation in
-   **Interactive**, send the step 1 prompt again into `slug_c.py`; then a
-   third model into `slug_d.py`, and run the checker
-   on all four; it takes any number of names. Which model would you trust
-   to name your blog posts?
+5. **The hunt.** In a fresh conversation in **Interactive**, send the
+   step 1 prompt again with the file name changed to `slug_c.py`; then
+   once more, in another fresh conversation, into `slug_d.py`. Run the
+   checker on all four; it takes any number of names. Did the same prompt
+   make the same choices every time?
 
 **What you should have**
 
@@ -151,6 +154,11 @@ early. Fixing it needs one changed line.
    git diff lab/code/receipt.py
    ```
 
+   If the diff is longer than the terminal, git shows it in a scrolling
+   viewer and your prompt disappears. Scroll with the arrow keys, then
+   press `q` to get back to the prompt. If `q` does nothing, you are in the
+   Vim editor: press `Esc`, type `:q` and press Enter.
+
 4. Put the file back as it was, and ask narrowly this time:
 
    ```bash
@@ -164,10 +172,10 @@ early. Fixing it needs one changed line.
    > comments.
 
    Run the two commands from step 3 again.
-5. **The hunt.** `git restore` the file and give the step 2 prompt to two
-   other models, each in a fresh conversation in **Interactive**,
-   restoring between them. Which one changed the most, and
-   what did it change that you never asked for?
+5. **The hunt.** `git restore` the file and give the step 2 prompt twice
+   more, each in a fresh conversation in **Interactive**, restoring
+   between them. Did it change the same lines each time, and what did it
+   change that you never asked for?
 
 **Expected output**
 
@@ -189,7 +197,7 @@ Every item counted.
 Measured in September 2026 through three vendors' APIs, the vague prompt
 changed 1 line with one model, 3 with another, and 11 then 4 with a third
 on two runs: a rewritten loop, new comments, the whole file sent back.
-Through five models from the Copilot picker it changed 1 to 4 lines. The
+In Copilot chat, five current models changed 1 to 4 lines with it. The
 narrow prompt changed exactly one line every time it was tried. None of
 them added type hints or error handling; the old warning that assistants
 rewrite everything is folklore. The real point is smaller and sharper:
@@ -251,9 +259,9 @@ decisions, and some of them depend on facts that are not in the code.
    Run `python check.py rates` again. Did it ask you anything first? If
    it got today's rate right without asking, look at the list above its
    answer: what did it open to find out what you wanted?
-7. **The hunt.** Step 6 with two other models, each in a fresh
-   conversation in **Interactive**, restoring between them. Does any of
-   them ask a question before it caches?
+7. **The hunt.** Step 6 twice more, each in a fresh conversation in
+   **Interactive**, restoring between them. Does it ask a question before
+   it caches on any of the runs?
 
 **Expected output**
 
@@ -276,8 +284,8 @@ decisions your answers settled.
 <details><summary>Hint</summary>
 
 Given "add caching", an assistant does not stop to ask: it fills the gaps
-and carries on. In a September 2026 test, five models from the Copilot
-picker were given the step 6 prompt, and all five built a cache that keeps
+and carries on. In a September 2026 test, five current models were given
+the step 6 prompt, and all five built a cache that keeps
 every answer forever (`lru_cache`, `functools.cache`, or a plain
 dictionary), so today's rate stayed at its first value all evening. Given
 the answers from step 4, all three models tried built the cache the
@@ -330,8 +338,9 @@ flaw, and some ordinary untidiness.
    > Change nothing else.
 
    Then run `python check.py uploads` again.
-6. **The hunt.** The step 1 prompt, fresh conversation, **Plan**, on the
-   smallest model in the picker. Does it find the flaw without a persona?
+6. **The hunt.** The step 1 prompt twice more, each in a fresh
+   conversation in **Plan**. Does the plain review find the flaw every
+   time, without a persona?
 
 **What you should have**
 
@@ -355,8 +364,8 @@ throws the folder away entirely: `os.path.join` keeps only the last
 absolute part.
 
 A persona sets what the model attends to and how it talks, not what it
-knows. In a September 2026 test, five models from the Copilot picker all
-named the flaw in the plain review, and all five again with the persona.
+knows. In a September 2026 test, five current models all named the flaw
+in the plain review, and all five again with the persona.
 If yours did the same, the persona changed the tone; if only the persona
 found it, it changed where the model looked. Either way the model learned
 nothing new about security from being told it was an expert, and the
@@ -389,8 +398,8 @@ lists. It passes the example in its own docstring.
    python check.py batches
    ```
 
-5. **The hunt.** The step 1 prompt on the smallest model in the picker,
-   fresh conversation, **Plan**. Does it still find the bug without being
+5. **The hunt.** The step 1 prompt twice more, each in a fresh
+   conversation in **Plan**. Does it find the bug every time without being
    told to reason?
 
 **Expected output**
@@ -446,10 +455,10 @@ spot than a wrong conclusion.
    python check.py csv lab/data/people_prose.csv lab/data/people_shown.csv
    ```
 
-4. **The hunt.** The step 1 prompt on two other models, fresh
-   conversations in **Interactive**, into `people_prose2.csv` and
-   `people_prose3.csv`. Check
-   them all. Which model breaks a row?
+4. **The hunt.** The step 1 prompt twice more, each in a fresh
+   conversation in **Interactive**, with the file name changed to
+   `people_prose2.csv` and then `people_prose3.csv`. Check them all. Does
+   any run break a row?
 
 **What you should have**
 
@@ -503,7 +512,7 @@ model can see, which matters more.
 
 4. Run the tests yourself.
 5. **The hunt.** Put back only the implementation (your tests stay), then
-   switch model and ask without mentioning your tests:
+   ask again without mentioning your tests:
 
    ```bash
    git restore lab/code/domains.py
@@ -579,9 +588,9 @@ the code already does, bugs included.
 5. Choosing the key name is your decision, not the model's. Make it,
    switch to **Interactive**, tell it which name to use, and let it apply
    the fix. Run the test.
-6. **The hunt.** The step 2 prompt on two other models, fresh
-   conversations in **Plan**. Which one asks for the code instead of
-   guessing?
+6. **The hunt.** The step 2 prompt twice more, each in a fresh
+   conversation in **Plan**. Does it ask for the code every time, or
+   sometimes guess instead?
 
 **Expected output**
 
@@ -638,8 +647,8 @@ problem, or a knowledge problem?
 4. Delete the TL;DR line from the file and save it. In the **same**
    conversation, ask a follow-up question. Then ask it again in a
    **fresh** conversation. Where does the TL;DR survive?
-5. **The hunt.** Put the TL;DR line back, then ask the step 3 prompt on
-   two other models, fresh conversations in **Plan**. Does every model
+5. **The hunt.** Put the TL;DR line back, then ask the step 3 prompt twice
+   more, each in a fresh conversation in **Plan**. Does every conversation
    obey the file?
    Delete the TL;DR line again when you are done: it applies to every
    conversation you have in this repo.
@@ -689,7 +698,8 @@ a fresh conversation is the way to drop it.
 ## Summary
 
 - A prompt is a **specification**. Every decision you leave out, it makes
-  for you, and other models agreeing does not make the decision right.
+  for you, and getting the same answer twice does not make the decision
+  right.
 - **Non-goals** keep a change small enough to read, and `git diff` shows
   you whether they worked.
 - Ask for **questions before code** when the facts that matter are yours.

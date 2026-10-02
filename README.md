@@ -69,15 +69,15 @@ only.
 ## Module schedule
 
 <!-- current-week:start -->
-> 🗓️ **Current teaching week: 2 — AIAP Overview** (week beginning 21 Sep 2026).
+> 🗓️ **Current teaching week: 3 — Prompting & Context Engineering** (week beginning 28 Sep 2026).
 <!-- current-week:end -->
 
 <!-- schedule-table:start -->
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
 | 1 | Module Introduction | [slides](lectures-and-labs/week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
-| **➡️ 2** | AIAP Overview | [slides](lectures-and-labs/week02/overview-lecture.pdf) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
-| 3 | Prompting & Context Engineering | [slides](lectures-and-labs/week03/prompting-lecture.md) | [lab](lectures-and-labs/week03/prompting_lab/README.md) |
+| 2 | AIAP Overview | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/overview/) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
+| **➡️ 3** | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](lectures-and-labs/week03/prompting_lab/README.md) |
 | 4 | Retrieval & Grounding | [slides](lectures-and-labs/week04/rag-lecture.md) | [lab](lectures-and-labs/week04/rag_lab/README.md) |
 | 5 | MCP | [slides](lectures-and-labs/week05/mcp-lecture.md) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
 | 6 | Coding Agents | [slides](lectures-and-labs/week06/agents-lecture.md) | [lab](lectures-and-labs/week06/agents_lab/README.md) |
@@ -103,8 +103,8 @@ own. They recur through the labs, so you meet each one more than once:
 | You want to… | Practised in |
 |---|---|
 | **Explain** code you did not write | [setup DIY 4](lectures-and-labs/week02/setup_lab/README.md#diy-4-the-file-it-has-never-read), [setup DIY 8](lectures-and-labs/week02/setup_lab/README.md#diy-8-break-a-regex-with-its-help), [agents DIY 1](lectures-and-labs/week06/agents_lab/README.md#diy-1-understand-code-you-did-not-write) |
-| **Debug** from an error or a failing test | [prompting DIY 6](lectures-and-labs/week03/prompting_lab/README.md#diy-6-chain-of-thought-on-a-real-bug), [cli-agents DIY 8](lectures-and-labs/week09/cli_agents_lab/README.md#diy-8-a-script-that-explains-a-failure) |
-| **Write tests**, before or after the code | [prompting DIY 8](lectures-and-labs/week03/prompting_lab/README.md#diy-8-tests-first), [cicd DIY 1](lectures-and-labs/week10/cicd_lab/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](lectures-and-labs/week10/cicd_lab/README.md#diy-5-climb-the-assertion-ladder) |
+| **Debug** from an error or a failing test | [prompting DIY 8](lectures-and-labs/week03/prompting_lab/README.md#diy-8-the-error-without-the-code), [cli-agents DIY 8](lectures-and-labs/week09/cli_agents_lab/README.md#diy-8-a-script-that-explains-a-failure) |
+| **Write tests**, before or after the code | [prompting DIY 7](lectures-and-labs/week03/prompting_lab/README.md#diy-7-tests-first), [cicd DIY 1](lectures-and-labs/week10/cicd_lab/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](lectures-and-labs/week10/cicd_lab/README.md#diy-5-climb-the-assertion-ladder) |
 | **Review** a change you did not watch being made | [agents DIY 2](lectures-and-labs/week06/agents_lab/README.md#diy-2-refactor-with-the-diff-open), [cicd DIY 3](lectures-and-labs/week10/cicd_lab/README.md#diy-3-a-review-step-that-cannot-lie), [vibe-coding DIY 2](lectures-and-labs/week11/vibe_coding_lab/README.md#diy-2-find-something-you-would-not-ship) |
 
 ## Module info
@@ -122,9 +122,11 @@ own. They recur through the labs, so you meet each one more than once:
   derived from the October bank holiday every year.
 - **Lectures and labs** live together, one folder per week, under
   `lectures-and-labs/weekNN/`: the deck is `<topic>-lecture.md` (Marp
-  markdown) or, in the PowerPoint pilot, `<topic>-lecture.pptx` with its
-  PDF and text copy exported beside it by `scripts/export_decks.py`; the
-  lab is `<topic>_lab/`. The week number names the
+  markdown) or `<topic>-lecture.pptx`, the PowerPoint deck as the only
+  source, with nothing derived from it committed (the site build and the
+  gates read it through `scripts/deck_text.py`); the lab is
+  `<topic>_lab/`. Decks carry no speaker notes: every slide stands on its
+  own. The week number names the
   folder and nothing else; the site keeps topic addresses, taken from the
   schedule. All ten decks are written. Every deck is
   self-contained and names no lecturer or institution, so any week can be
@@ -135,10 +137,12 @@ own. They recur through the labs, so you meet each one more than once:
   site they are addressed by topic (`/labs/<topic>/`), so a reshuffled
   schedule renames folders but never a link.
 - **Three GitHub Actions workflows.** `marp` runs on every push to `main`:
-  it runs the ten gates (safety audit, links, snippets, lab code, practice
-  bank, lab and deck structure, speaker notes, schedule, site index), renders every
-  deck to HTML and PDF, builds the lab pages and the practice app, and
-  publishes the site straight to GitHub Pages — nothing is committed back.
+  it runs the nine gates (safety audit, links, snippets, lab code, practice
+  bank, lab and deck structure, schedule, site index), renders every Marp
+  deck to HTML and PDF, publishes each PowerPoint deck with a page that
+  shows it in Microsoft's web viewer, builds the lab pages and the practice
+  app, and publishes the site straight to GitHub Pages — nothing is
+  committed back.
   `current-week` runs every Monday and rewrites the banner above this
   schedule. Both are guarded to run only in this repository, never in a
   student's copy. `course-sync` is the inverse: it runs only in a

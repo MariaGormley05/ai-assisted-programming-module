@@ -9,17 +9,6 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:01. Title. This deck teaches the DECISION before
-the pipeline: retrieve, or don't. Most retrieval lectures teach the
-pipeline and stop; this one starts from whether a problem needs the
-infrastructure at all, because building infrastructure a problem does not
-need is a commoner and costlier mistake than the reverse.
-
-Part 1 is the decision and the shape of the pipeline. Part 2 is the
-mechanism under it: how a few hundred numbers hold meaning, why chunk
-size and overlap change what comes back, and how bounded retrieval and
-long-context reasoning fit together. -->
-
 <!-- _class: lead -->
 
 <span class="kicker">// giving it what it does not know</span>
@@ -27,13 +16,6 @@ long-context reasoning fit together. -->
 # Retrieval and Grounding
 
 ---
-
-<!-- Speaker notes: ~0:02. The hook: a question whose answer is in a
-document the model has never seen. The instinct to dislodge is that the
-model must be TAUGHT the document, by retraining or fine-tuning. That
-instinct dissolves the moment they remember the context window: the model
-can read anything you put in front of it. Do not reveal yet; let the room
-commit to "train it". -->
 
 ## A problem you cannot prompt your way out of
 
@@ -46,16 +28,6 @@ A user asks a question whose answer is in one of them.
 * How do you get it to answer **correctly**?
 
 ---
-
-<!-- Speaker notes: ~0:04. The idea, and the whole two hours in one
-sentence: you do not teach the model your documents, you find the relevant
-piece and put it in the prompt. It reframes the problem from "teach the
-model" to "put the right text in front of it".
-
-The misconception this kills: that answering from private data requires
-training. It does not. Training is expensive, slow, and does not update;
-retrieval is cheap, instant, and always current. The model is the
-reasoning engine and you supply the facts. -->
 
 ## The one idea
 
@@ -72,15 +44,6 @@ and put it in the prompt.**
 
 ---
 
-<!-- Speaker notes: ~0:05. Agenda, naming both halves. Part 1 is the
-decision and the shape: whether you need retrieval at all, then chunk,
-embed, search, ground, and where it goes wrong. Part 2 is the mechanism
-behind each of those: how meaning becomes coordinates, why chunk size and
-overlap change what comes back, how bounded retrieval and long-context
-reasoning fit together, a second worked case, and a short exercise on
-their own laptops. The decision section is what distinguishes this from a
-standard pipeline tour. -->
-
 ## Two hours, two halves
 
 - **Part 1 — the decision, then the pipeline**
@@ -94,16 +57,6 @@ standard pipeline tour. -->
   - How the hybrid fits together, a second worked case, and you try it
 
 ---
-
-<!-- Speaker notes: ~0:07. The decision, and the part most retrieval
-lectures skip. Retrieval was invented for a constraint: when it became
-popular, context windows held a few thousand tokens and retrieval was the
-ONLY way to work with a large document. Windows now hold hundreds of
-thousands to millions of tokens, so for many problems the correct
-architecture is to paste the whole thing in, with no chunking, no
-embeddings and no database to maintain. The misconception here is that
-retrieval is a best practice rather than a workaround for a limit that
-has largely lifted. -->
 
 ## First: do you need it at all?
 
@@ -123,18 +76,6 @@ No chunking, no embeddings, no database to maintain.
 
 ---
 
-<!-- Speaker notes: ~0:09. PREDICT beat 1: the decision applied to a small
-corpus. Five documents of a few thousand words fit comfortably in a modern
-window, and retrieval can only LOSE information a full read would have
-had.
-
-The wrong answer to expect is "chunk, embed, and build a vector database":
-students have been told RAG is what you do with documents, so they reach
-for it reflexively. The faulty model is that RAG is a best practice rather
-than a trade-off against a constraint that has largely lifted. A minority
-pick "fine-tune", which is the training misconception from the opening
-slide surfacing again. -->
-
 ## Predict: five short documents, conversational questions
 
 You have five documents, a few thousand words in total. Users ask open
@@ -147,22 +88,6 @@ questions about them.
 
 ---
 
-<!-- Speaker notes: ~0:12. The reveal and the decision table. This is a
-trade-off table, not a ranking: long context wins on a small corpus with
-conversational questions; retrieval wins on scale, on freshness, and on
-cost at scale. Citation is not retrieval's alone — a full context whose
-documents are labelled can be cited too — but retrieval hands you the
-source of every answer for free, which is why the row leans that way. The
-cost crossover is a rule of thumb, not a constant: around a couple of
-thousand pages when this deck was written, and it moves with token
-prices, prompt caching and how often the corpus is asked. Quote it as an
-order of magnitude, so they have a number to reason with rather than a
-vibe.
-
-Students tend to read the table as "retrieval wins four rows to one" and
-miss that the first row is the commonest situation they will actually
-meet. -->
-
 ## It depends — and here is on what
 
 | Situation | Reach for |
@@ -174,15 +99,6 @@ meet. -->
 | Cost matters at scale | **Retrieval** — crossover ≈ a couple of thousand pages, as a rule of thumb |
 
 ---
-
-<!-- Speaker notes: ~0:15. The honest limits of "just paste it", so nobody
-leaves with the opposite oversimplification. Lost in the middle: models
-attend less reliably to material in the middle of a very long context than
-at either end. Dilution: marginally relevant text competes with the
-relevant part, so adding text can make an answer WORSE. And cost and
-latency scale with everything you send. The misconception is that more
-tokens means more understanding; a long context is a budget, not a
-superpower. -->
 
 ## Long context is not free either
 
@@ -199,17 +115,6 @@ understanding.
 </div>
 
 ---
-
-<!-- Speaker notes: ~0:18. Worked case 1: the opening problem run through
-the decision table. 40,000 documents at even a page each is far past the
-couple-of-thousand-page crossover, users need to know which document an
-answer came from, and the set changes, so this is a retrieval problem on
-three rows of the table.
-
-The step students skip is the first one: scoping. A question about the
-leave policy needs the handbook, not the 40,000; if the subset a question
-actually needs fits the window, paste that subset. Size the corpus a
-QUESTION needs, not the corpus the company owns. -->
 
 ## Worked case: the 40,000 documents
 
@@ -232,14 +137,6 @@ Size the corpus a **question** needs, not the corpus the company owns.
 
 ---
 
-<!-- Speaker notes: ~0:21. The pipeline, now that it has been earned. Five
-steps: split into chunks, embed each chunk, embed the question, find the
-nearest chunks, put them in the prompt. Only the LAST step involves the
-model; steps 1 to 4 are ordinary information retrieval, which is why
-retrieval-augmented generation is mostly a search problem wearing an AI
-hat, and why most of its failures are search failures. The detail of each
-step is part 2's job, and the lab's. -->
-
 ## How retrieval works
 
 <div class="flow">
@@ -256,15 +153,6 @@ step is part 2's job, and the lab's. -->
 
 ---
 
-<!-- Speaker notes: ~0:24. Embeddings, intuition only; the mechanism comes
-in part 2. An embedding puts MEANING in space: "car" and "automobile" land
-near each other even though they share no letters, which is what keyword
-search cannot do and why this works at all.
-
-The misconception to watch for is that search means matching words; the
-table's right-hand column is the whole point, and the lab's retrieval
-exercise reproduces it with two phrasings of one question. -->
-
 ## Embeddings: meaning as coordinates
 
 * A vector of numbers representing **what a piece of text means**
@@ -278,17 +166,6 @@ exercise reproduces it with two phrasings of one question. -->
 
 ---
 
-<!-- Speaker notes: ~0:27. PREDICT beat 2: chunk size, the parameter
-students get wrong most often in the lab.
-
-The wrong answer to expect is "one sentence per chunk, maximum precision".
-The faulty model treats retrieval as lookup, where a smaller unit is always
-a sharper match. In fact a chunk that is too small loses the context that
-makes it meaningful: a sentence saying "it must be replaced every 12
-months" is useless when you cannot tell what "it" is. Too large and the
-relevant sentence is diluted by a page of noise. There is a middle, and
-finding it is empirical. -->
-
 ## Predict: which chunk size retrieves best?
 
 You split a manual into chunks. Which works best?
@@ -299,17 +176,6 @@ You split a manual into chunks. Which works best?
 * The whole document as one chunk
 
 ---
-
-<!-- Speaker notes: ~0:30. The reveal: roughly a paragraph, and more
-importantly WHY both extremes fail. Too small and the chunk loses its own
-subject (the pronoun example). Too large and one relevant sentence arrives
-with a page of noise. Overlap between chunks stops a fact being split down
-the middle.
-
-Then the honest engineering point: there is no universally correct chunk
-size, it depends on the documents, and the only way to know is to measure,
-which is what the lab's experiment does at three sizes. Part 2 explains
-the mechanism behind both failures. -->
 
 ## A paragraph, usually — and here is why
 
@@ -329,16 +195,6 @@ and the only way to know is to **measure**.
 
 ---
 
-<!-- Speaker notes: ~0:33. Grounding: the payoff, and the reason retrieval
-is worth the trouble even where long context would also work. Two
-properties: the answer is anchored to text you supplied rather than to
-what the model half-remembers, and you can SHOW which text.
-
-The prompt on the slide is the shape every grounded system uses: restrict
-the answer to the context, and explicitly permit "I don't know". The
-permission line looks decorative and is not; the next predict beat is
-about it. -->
-
 ## Grounding
 
 * The answer is anchored to text you supplied, not to what the model
@@ -353,18 +209,6 @@ Context: {retrieved chunks}
 Question: {question}</p>
 
 ---
-
-<!-- Speaker notes: ~0:36. What a citation mechanically is: each chunk
-carries a label (which document, and where in it) from the moment it is
-cut, the label travels into the prompt beside the chunk, and the model is
-asked to repeat the label it used. A citation is therefore only as good as
-the labelling: the model does not "know" where text came from, it copies
-the label you attached.
-
-Citation is the property enterprises actually buy, because it turns "the
-AI said" into something a person can check. Students often assume the
-model can cite from memory; it cannot, and a citation with no label behind
-it is an invention. -->
 
 ## What a citation actually is
 
@@ -386,18 +230,6 @@ attached** — so a citation with no label behind it is an invention.
 
 ---
 
-<!-- Speaker notes: ~0:39. PREDICT beat 3, the honest one: does retrieval
-eliminate hallucination?
-
-The wrong answer to expect is "yes, the answer comes from real documents
-now"; it is the claim every vendor makes. The faulty model is that a
-hallucination is a missing-fact problem, so supplying the fact must cure
-it. Retrieval reduces hallucination substantially and does not eliminate
-it: the model can misread a retrieved chunk, blend two chunks, or fall
-back on training data when retrieval returns nothing useful. "I don't
-know" is a rare continuation in training data, so it needs explicit
-permission, which is why the grounding prompt says it out loud. -->
-
 ## Predict: does retrieval eliminate hallucination?
 
 * Yes — the answer comes from real documents now
@@ -406,17 +238,6 @@ permission, which is why the grounding prompt says it out loud. -->
 * It makes it worse
 
 ---
-
-<!-- Speaker notes: ~0:42. The reveal and the model-side failure modes,
-stated specifically because vague warnings do not change behaviour:
-misreading a chunk, blending two chunks into a claim neither made, and
-answering from training when retrieval returned nothing useful.
-
-The last is the important one: without explicit permission to say "I
-don't know", the most plausible continuation of a question is a confident
-answer. And permission is not enough on its own; you have to check that
-the system actually declines, which is what the lab's off-topic question
-is for. -->
 
 ## It reduces it. It does not remove it.
 
@@ -433,16 +254,6 @@ you have to **explicitly permit it** — and then check that it does.
 
 ---
 
-<!-- Speaker notes: ~0:46. The operational failures, distinct from the
-model failures on the previous slide. Retrieval quality is the one that
-surprises people: if step 4 returns the wrong chunks, everything
-downstream is confidently wrong, and the system looks like a model problem
-when it is a search problem.
-
-The misconception is that a wrong answer means a bad model; here it
-usually means a bad search, and the fix is to look at what was retrieved
-before touching the prompt. Part 2 puts a mechanism under each row. -->
-
 ## Where it goes wrong
 
 | Failure | Symptom |
@@ -456,17 +267,6 @@ before touching the prompt. Part 2 puts a mechanism under each row. -->
 <span class="kicker">// most "the AI is wrong" reports here are search bugs</span>
 
 ---
-
-<!-- Speaker notes: ~0:50. The shape most real systems now use, which
-resolves the false either/or the lecture opened with: retrieve a generous,
-bounded set, let a long-context model read all of it, answer with
-citations. Hybrid, not either/or.
-
-Also name agentic retrieval: a coding assistant does not maintain a vector
-database of the repository, it searches and reads files on demand, which
-is the same problem solved with keyword search instead of embeddings.
-Part 2 explains HOW the two halves of the hybrid fit together and walks a
-coding-assistant case. -->
 
 ## What most real systems do now
 
@@ -487,13 +287,6 @@ coding-assistant case. -->
 
 ---
 
-<!-- Speaker notes: ~0:55. Break. Part 1 gave the decision and the shape
-of the pipeline; part 2 explains the mechanism under it: how a list of a
-few hundred numbers can hold meaning, why chunk size and overlap change
-what comes back, and how bounded retrieval and long-context reasoning fit
-together, followed by a second worked case and a short exercise on their
-own laptops. Resume at about 1:05. -->
-
 <!-- _class: lead -->
 
 <span class="kicker">// break</span>
@@ -504,19 +297,6 @@ Part 2 answers: *how* can a few hundred numbers hold meaning — and why
 does that decide what comes back?
 
 ---
-
-<!-- Speaker notes: ~1:05. Part 2 opens with the mechanism under "meaning
-as coordinates". An embedding model reads a piece of text and outputs a
-fixed-length list of numbers; the lab's model produces 384 of them. The
-model was trained so that texts which mean the same thing produce lists
-that point the same way, and unrelated texts point elsewhere. Nearness is
-measured as the angle between two such arrows (cosine similarity) or as a
-distance; some libraries report a similarity where higher is closer,
-others a distance where lower is closer.
-
-The misconception is that the numbers are word counts or keywords in
-disguise. They are learned features, and no single number means anything
-on its own. -->
 
 ## Meaning as coordinates, literally
 
@@ -534,20 +314,6 @@ on its own. -->
 
 ---
 
-<!-- Speaker notes: ~1:08. PREDICT beat 4: what a nearest-neighbour search
-returns when nothing in the corpus is relevant. The corpus is the lab's
-five programming documents; the query is about baking.
-
-The wrong answer to expect is "an empty result, nothing matched". The
-faulty model is the search engine: keyword search returns zero hits when
-no document contains the word, so students assume vector search has a
-zero too. It does not. Nearest-neighbour search ranks every chunk by
-distance and returns the top k, and there is always a nearest chunk;
-relevance is not a concept the search has. A smaller group expects an
-error, on the same faulty model that something in the system checks
-relevance. The only signal is the score, which is why a threshold exists
-and why grounding must permit "I don't know". -->
-
 ## Predict: nothing in the corpus matches
 
 The corpus is five documents about programming. You search for
@@ -559,21 +325,6 @@ The corpus is five documents about programming. You search for
 * One chunk, flagged as a weak match
 
 ---
-
-<!-- Speaker notes: ~1:10. The reveal: three chunks come back, because
-nearest-neighbour search always has a nearest neighbour; there is no
-built-in notion of "nothing here is relevant". The score is the only
-signal, and it is relative: a top score that looks respectable on an
-on-topic query may be the same number a junk query gets. So a real system
-sets a threshold, calibrated on questions with known answers, and treats
-"nothing above the line" as the retrieval result "nothing", which is what
-lets the model say "I don't know" instead of grounding in the
-least-irrelevant chunk.
-
-Check which direction the library's score runs before writing a
-threshold: some report a distance (lower is closer), some a similarity
-(higher is closer), and getting it backwards inverts the filter
-silently. -->
 
 ## There is always a nearest neighbour
 
@@ -595,20 +346,6 @@ closer). Get it backwards and the filter inverts — silently.
 
 ---
 
-<!-- Speaker notes: ~1:12. PREDICT beat 5: the vector space is private to
-the model that produced it. Chunks were embedded with one model; after an
-upgrade, queries are embedded with a different model that happens to
-produce vectors of the same length.
-
-The wrong answer to expect is "it works; an embedding is an embedding,
-meaning is meaning". The faulty model is that the coordinates are
-universal, like latitude and longitude, so any model's arrow for
-"variable" points the same way. They are not: each model learns its own
-axes, and the same dimensionality only means the arithmetic runs without
-complaint. A second wrong answer is "an error", on the faulty model that
-something type-checks the vectors; nothing does. The lab makes them
-confirm dimensionality precisely because the failure is silent. -->
-
 ## Predict: two embedding models, same length
 
 You embedded every chunk with one model. After an upgrade, queries are
@@ -620,18 +357,6 @@ embedded with a **newer** model — same dimensionality, 384 numbers.
 * It works — meaning is meaning
 
 ---
-
-<!-- Speaker notes: ~1:14. The reveal: it runs and the results are
-nonsense. Each model learns its own axes, so a vector from one model is a
-set of coordinates in a space the other model has never seen; comparing
-them is arithmetic on unrelated numbers, and nothing in the pipeline
-checks.
-
-Consequences: one model for chunks AND queries, always; the index is tied
-to the model that built it, so changing the model means re-embedding
-everything; and record which model built an index, because the failure
-looks like "the search got worse" rather than an error. This is the
-commonest silent bug in a retrieval system. -->
 
 ## The space is private to the model
 
@@ -647,17 +372,6 @@ commonest silent bug in a retrieval system. -->
 
 ---
 
-<!-- Speaker notes: ~1:16. The honest counterpoint to part 1's embeddings
-table: keyword search still wins on exact strings. An embedding captures
-the gist of a chunk; the exact spelling of an error code, a function name,
-a version string or a ticket number is blurred, so a query for one of them
-can miss the chunk that contains it verbatim while a plain text match
-finds it instantly. Many real systems run both a keyword search and a
-vector search and merge the rankings.
-
-This also sets up the second worked case: a coding assistant's search is
-keyword search, and it inherits both the strength and the gap. -->
-
 ## Where keyword search still wins
 
 | Query looks like | Better tool | Why |
@@ -671,19 +385,6 @@ keyword search, and it inherits both the strength and the gap. -->
 * Many real systems run **both** and merge the two rankings
 
 ---
-
-<!-- Speaker notes: ~1:18. The mechanism under part 1's "a paragraph,
-usually". A chunk becomes ONE vector, so the vector is the average meaning
-of everything in the chunk. A page-sized chunk about five things points in
-a blurred, in-between direction, so a specific question lands closer to a
-chunk that is only about that thing; that is why the too-large chunk fails
-even when it contains the answer. A one-sentence chunk points precisely,
-but at a sentence whose subject is a pronoun, so the vector is precise
-about the wrong thing and the model receives a fragment it cannot
-interpret.
-
-The misconception is that a larger chunk is "safer" because it contains
-more. It contains more and points less accurately. -->
 
 ## A chunk becomes one point
 
@@ -700,18 +401,6 @@ more. It contains more and points less accurately. -->
 * A tiny chunk is retrieved precisely — and arrives as a fragment the model cannot interpret
 
 ---
-
-<!-- Speaker notes: ~1:20. Overlap, mechanically. Chunks are cut every 200
-words, and each chunk starts 40 words before the previous one ended, so
-the 40 words at every seam appear in both neighbours; those are the lab's
-own settings. A fact that straddles a seam is cut in half in one chunk and
-whole in the next, so it is retrievable from at least one of them; without
-overlap it may be retrievable from neither. The price is that overlapping
-words are embedded and stored twice, which is why overlap is a fraction of
-the chunk and not half of it.
-
-Students often see overlap as duplication to be cleaned up. It is the
-guarantee that no sentence is only ever seen cut. -->
 
 ## Overlap, drawn
 
@@ -730,18 +419,6 @@ guarantee that no sentence is only ever seen cut. -->
 - The price: those 40 words are embedded and stored twice — which is why overlap is a fraction of the chunk, not half of it
 
 ---
-
-<!-- Speaker notes: ~1:22. How you know a chunk size is right: you measure
-it against questions with known answers. Write a handful of questions,
-note the chunk each answer lives in, rebuild the index at several sizes,
-and for each size record whether the right chunk came back and how much
-irrelevant text came with it. That table is the difference between
-engineering and guessing, and almost nobody builds it. The lab does
-exactly this at three sizes; the slide sets up why, not the steps.
-
-The misconception is that chunk size is a configuration default you
-inherit. It is a parameter with failures at both ends, and only a
-measurement tells you where your documents sit. -->
 
 ## How you would know
 
@@ -764,22 +441,6 @@ it, it is an engineering decision.
 
 ---
 
-<!-- Speaker notes: ~1:24. PREDICT beat 6: which question top-k retrieval
-cannot answer well, however good the embeddings are. The corpus is the
-five programming documents, k = 3.
-
-The wrong answer to expect is "how can my code remember a number for
-later", picked because it shares no words with the sentence that answers
-it. The
-faulty model is still keyword matching: students have heard that
-embeddings match meaning and not yet believed it. A second group picks
-the sourdough question, on the model that hardness means distance from
-the corpus; with a threshold that is the EASY case. The hard one is
-"which topics do these documents cover", because the answer needs every
-document and the search returns three chunks. Hardness is how much of the
-corpus the answer needs, and no ranking fixes a question that needs all
-of it. -->
-
 ## Predict: which question defeats top-3?
 
 Same five programming documents, k = 3.
@@ -790,18 +451,6 @@ Same five programming documents, k = 3.
 * "How do I bake sourdough?"
 
 ---
-
-<!-- Speaker notes: ~1:26. The reveal: the global question. Top-k
-retrieval answers LOCAL questions, where the answer lives in one place or
-a few; a question about the whole corpus needs the whole corpus, and three
-chunks cannot summarise five documents whatever their scores. The synonym
-question is exactly what embeddings are for; the sourdough question is
-what the threshold is for.
-
-This is the structural limit that produces the hybrid: bounded retrieval
-for local questions, and either a whole-corpus read or a two-stage summary
-for global ones. When the corpus is small enough to paste, the global
-question is the strongest argument for pasting it. -->
 
 ## Local questions, global questions
 
@@ -817,20 +466,6 @@ question is the strongest argument for pasting it. -->
 - On a corpus that fits the window, the global question is the strongest argument for pasting it
 
 ---
-
-<!-- Speaker notes: ~1:28. How the hybrid's two halves fit together.
-Retrieval is BOUNDED: a generous k with a threshold, so the set is bigger
-than three chunks and never the whole corpus. Each hit is then widened to
-its neighbourhood, typically the section or document it came from, so the
-model sees whole thoughts rather than fragments. The long-context model
-reads the union in one prompt, which is where cross-referencing happens:
-joining a fact from one document to a condition in another, noticing that
-two chunks disagree. Every piece keeps its label, so the answer can cite.
-
-The bound is what keeps the read inside the range where attention is
-reliable, keeps cost proportional to the question, and keeps the citation
-set small enough to check. The long read is what single-chunk answers
-never had. -->
 
 ## The hybrid, mechanically
 
@@ -849,18 +484,6 @@ never had. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. Freshness, mechanically. The index is a
-snapshot: the vectors were computed when you built it, and editing a
-document does not touch them. A stale chunk looks exactly like a fresh one
-to the model, which is how a system gives a correct answer to last month's
-question with full confidence. So: re-chunk and re-embed what changed,
-carry a version or date in the chunk's label so the answer can say how old
-its source is, and for anything that changes by the minute skip the index
-and search live at question time.
-
-The misconception is that retrieval is "always current" because it reads
-real documents. It reads the documents as they were when indexed. -->
-
 ## The index is a snapshot
 
 * The vectors were computed **when you built the index**. Editing the document does not touch them
@@ -873,18 +496,6 @@ real documents. It reads the documents as they were when indexed. -->
 - For data that changes by the minute: no index — **search live** at question time
 
 ---
-
-<!-- Speaker notes: ~1:32. Worked case 2, different in kind from the
-document corpus: a question about a codebase, answered by a coding
-assistant that can run a search and read files. There is no index and no
-embedding; retrieval is a LOOP the agent runs at question time: search for
-a literal, read the file that matched, answer with a file and line as the
-citation. This is the hybrid in miniature: a bounded search (the hits), a
-widened read (the whole file), and a long-context answer with a citation.
-
-The point for students is that agentic retrieval is retrieval, with
-keyword search doing the job embeddings do in the pipeline, and inheriting
-keyword search's strength: exact identifiers. -->
 
 ## Worked case: a question about a codebase
 
@@ -901,19 +512,6 @@ keyword search's strength: exact identifiers. -->
 * Bounded search, widened read, cited answer — the hybrid in miniature
 
 ---
-
-<!-- Speaker notes: ~1:34. The case continued, at the point where keyword
-search fails: the code never uses the word "retry". A search for the
-literal returns nothing, and a naive agent reports that there is no retry
-limit, which is confidently wrong in exactly the way part 1's
-bad-retrieval row describes. A good agent treats an empty search as a
-signal and iterates: try the synonyms ("attempt", "backoff"), or read the
-file where such a setting would plausibly live. Meaning search would
-have found it first time; keyword search needs the right word.
-
-The lesson is the mirror image of the embeddings table: every retrieval
-method has a gap, and a system that iterates on its own retrieval closes
-it. -->
 
 <!-- _class: dense -->
 
@@ -934,21 +532,6 @@ It is spelled "attempts", not "retry", which is why the first search missed it.<
 
 ---
 
-<!-- Speaker notes: ~1:35. TRY IT NOW, five to eight minutes, on their own
-laptops with whatever assistant they have; no code and no pipeline. They
-ground an answer by hand: paste a three-sentence context and two
-questions, one the context answers and one it only appears to. The
-handling-fee question is the trap: the context mentions a fee, so the
-nearest text is relevant, but the amount is not there. That is the gap
-between "found the right chunk" and "the chunk contains the answer", and
-it is where a grounded system must decline. Then they remove the
-permission sentence and ask again.
-
-The instruction to observe is deliberately neutral: watch whether the
-second answer comes from the context, is invented, or is a decline, and
-whether the permission line changes that. Do not tell them what will
-happen; models differ, and the point is to look. -->
-
 <!-- _class: dense -->
 
 ## Try it now: ground an answer by hand
@@ -968,21 +551,6 @@ Q2: What is the handling fee for a lost item?</p>
 
 ---
 
-<!-- Speaker notes: ~1:41. Debrief, framed as mechanism rather than as a
-prediction of what each model did. The handling-fee question is a near
-miss: retrieval would have found the right chunk, because the fee sentence
-is the closest text, and the chunk still does not contain the answer.
-"Found the right chunk" and "the chunk answers the question" are different
-conditions, and a grounded system has to decline on the second even when
-the first succeeded. The obviously off-topic question is the easy test;
-the near miss is the real one, and an evaluation set should contain
-several.
-
-If removing the permission line changed the behaviour, that is the "I
-don't know is a rare continuation" point seen live. If it did not, the
-instruction still belongs there, because behaviour you did not ask for is
-behaviour you cannot rely on. -->
-
 ## What the near miss shows
 
 * Retrieval would have **found the right chunk** — the fee sentence is the closest text
@@ -996,14 +564,6 @@ behaviour you cannot rely on. -->
 
 ---
 
-<!-- Speaker notes: ~1:42. Common mistakes when building, extended with
-part 2's mechanisms. The first is the one the whole lecture is arranged to
-prevent: building a pipeline for a corpus that would fit in the prompt.
-Then: chunking without measuring; mixing embedding models across chunks
-and queries, which fails silently; reading the score in the wrong
-direction when writing a threshold; and zero overlap. Each of these is a
-search bug that will be reported as a model bug. -->
-
 ## Common mistakes: building it
 
 * Building a pipeline for a corpus that would **fit in the prompt**
@@ -1015,17 +575,6 @@ search bug that will be reported as a model bug. -->
 - Overlap of zero, then wondering why facts at chunk seams are never found
 
 ---
-
-<!-- Speaker notes: ~1:43. Common mistakes when running it, and the honest
-limits. Blaming the model when retrieval returned the wrong chunks;
-forgetting the index goes stale; asking a global question of a top-k
-system and treating the fragments it returns as a summary; testing only
-the obviously off-topic question and never a near miss; and having no set
-of questions with known answers, which is the difference between
-engineering and guessing and the one almost nobody builds.
-
-The limit to be honest about: grounding reduces hallucination and does
-not remove it, and the near miss is where that shows. -->
 
 ## Common mistakes: running it
 
@@ -1040,15 +589,6 @@ not remove it, and the near miss is where that shows. -->
 <span class="kicker">// grounding reduces hallucination; it does not remove it</span>
 
 ---
-
-<!-- Speaker notes: ~1:45. Summary and close. Return to the opening
-problem, 40,000 documents: they can now answer it, including the part
-where they check whether 40,000 is really the number a question needs.
-Part 1's takeaways are the decision and the shape; part 2's are the
-mechanisms: one arrow per chunk in a space private to the model, always a
-nearest neighbour so the score and its threshold are the only signal,
-local versus global questions, and the hybrid as bounded retrieval feeding
-one long read. Leave the callout up for questions. -->
 
 <!-- _class: dense -->
 
