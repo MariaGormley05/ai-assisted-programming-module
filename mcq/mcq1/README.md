@@ -6,7 +6,7 @@ and no lab that week.
 ## What it covers
 
 Everything taught before the reading week: the module introduction and
-overview, prompting and context engineering, retrieval and grounding, MCP,
+overview, prompting and context engineering, RAG (retrieval-augmented generation), MCP,
 and coding agents — the lectures and the labs both. If it was in a deck or
 in a lab README, it is examinable.
 

@@ -5,7 +5,7 @@
     { "week": "1",  "topic": "Module Introduction",            "lecture": "introduction", "lab": "",            "assessment": "",            "notes": "No labs week 1. Labs start week 2." },
     { "week": "2",  "topic": "AIAP Overview",                  "lecture": "overview",     "lab": "setup",       "assessment": "PA1 (4%)",    "notes": "" },
     { "week": "3",  "topic": "Prompting & Context Engineering", "lecture": "prompting",   "lab": "prompting",   "assessment": "PA2 (4%)",    "notes": "" },
-    { "week": "4",  "topic": "Retrieval & Grounding",          "lecture": "rag",          "lab": "rag",         "assessment": "PA3 (4%)",    "notes": "" },
+    { "week": "4",  "topic": "RAG",                            "lecture": "rag",          "lab": "rag",         "assessment": "PA3 (4%)",    "notes": "" },
     { "week": "5",  "topic": "MCP",                            "lecture": "mcp",          "lab": "mcp",         "assessment": "PA4 (4%)",    "notes": "" },
     { "week": "6",  "topic": "Coding Agents",                  "lecture": "agents",       "lab": "agents",      "assessment": "PA5 (4%)",    "notes": "" },
     { "week": "X",  "topic": "",                               "lecture": "",             "lab": "",            "assessment": "",            "notes": "Reading week" },

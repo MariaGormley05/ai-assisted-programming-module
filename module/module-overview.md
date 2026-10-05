@@ -77,7 +77,7 @@ topic covers.
 | Module Introduction | How the module runs, assessment, tooling setup; licensing and confidentiality before the first tool is installed | — |
 | AIAP Overview | What AI-assisted programming is; the landscape and its limits | [setup](../lectures-and-labs/week02/setup_lab/) |
 | Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../lectures-and-labs/week03/prompting_lab/) |
-| Retrieval &amp; Grounding | Chunking, embeddings, vector search, grounded answers — when long context beats retrieval outright, and how an assistant finds its way round a codebase | [rag](../lectures-and-labs/week04/rag_lab/) |
+| RAG | Retrieval-augmented generation: chunking, embeddings, vector databases, grounded and cited answers — when long context beats retrieval outright, and how a coding assistant finds its way round a codebase | [rag](../lectures-and-labs/week04/rag_lab/) |
 | MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../lectures-and-labs/week05/mcp_lab/) |
 | Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../lectures-and-labs/week06/agents_lab/) |
 | Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../lectures-and-labs/week08/security_lab/) |

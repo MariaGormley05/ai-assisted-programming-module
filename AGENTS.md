@@ -153,13 +153,19 @@ materially wrong by 2026.
   something?" — because rewording cannot fix missing information. Note
   that more context is not better: a huge irrelevant paste makes answers
   worse.
-- **Retrieval and grounding (RAG)** — teach the **decision** before the pipeline. Long
-  context beats retrieval on small corpora; retrieval wins on scale, cost,
-  freshness and citation, with the crossover around a couple of thousand
-  pages. Cover the failure modes of long context (lost-in-the-middle,
-  dilution) so "just paste everything" is not the takeaway either. The
-  hybrid — bounded retrieval, then long-context reasoning over the result
-  — is the shape most real systems use.
+- **RAG** (a PowerPoint deck since October 2026) — part 1 is the pipeline,
+  step by step: web RAG and private RAG, then load, chunk, embed, store,
+  search, generate, grounding and citations, benefits and drawbacks. That
+  spine is what the RAG questions in MCQ 1 test, so keep it. Part 2 is the
+  **decision**: long context beats retrieval on small corpora; retrieval
+  wins on scale, cost, freshness and citation. Cover the failure modes of
+  long context (context rot, lost in the middle) so "just paste everything"
+  is not the takeaway either; the 2026 default is bounded retrieval, then
+  one long-context read. Then the upgrades (hybrid search, rerank, graph,
+  agentic) and how coding assistants retrieve code. Every measured number
+  on a slide comes from a run of the lab's own corpus and model, so the
+  deck and the lab cannot disagree: rerun it if the lab's data, model or
+  chunking changes.
 - **MCP** — the 2026-07-28 spec removed the
   `initialize`/`initialized` handshake and `Mcp-Session-Id`, added
   `server/discover` in their place, deprecated HTTP+SSE on a year-long
@@ -254,7 +260,7 @@ add a note.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
-### PowerPoint lectures (since September 2026: the overview and prompting lectures)
+### PowerPoint lectures (since September 2026: the overview, prompting and RAG lectures)
 
 A week may be taught from a PowerPoint deck instead of a Marp one,
 `<topic>-lecture.pptx` (the module owner builds them with the

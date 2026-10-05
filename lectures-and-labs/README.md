@@ -4,7 +4,7 @@ Everything for each week of the module is here, one folder per week, in
 order. A teaching week's folder holds:
 
 - **`<topic>-lecture.md`**: that week's lecture slides (for example
-  `rag-lecture.md`). In a Codespace it opens as slides; in VS Code on
+  `mcp-lecture.md`). In a Codespace it opens as slides; in VS Code on
   your own computer, install *Marp for VS Code* and open the preview.
   A week taught from PowerPoint has **`<topic>-lecture.pptx`** instead.
   To look at its slides, use the week's *slides* link on the module site:
@@ -21,8 +21,8 @@ happens that week.
 |---|---|---|---|
 | 1 | Module Introduction | [slides](week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
 | 2 | AIAP Overview | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/overview/) | [lab](week02/setup_lab/README.md) |
-| **➡️ 3** | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](week03/prompting_lab/README.md) |
-| 4 | Retrieval & Grounding | [slides](week04/rag-lecture.md) | [lab](week04/rag_lab/README.md) |
+| 3 | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](week03/prompting_lab/README.md) |
+| **➡️ 4** | RAG | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/rag/) | [lab](week04/rag_lab/README.md) |
 | 5 | MCP | [slides](week05/mcp-lecture.md) | [lab](week05/mcp_lab/README.md) |
 | 6 | Coding Agents | [slides](week06/agents-lecture.md) | [lab](week06/agents_lab/README.md) |
 | — | Reading week | [details](week06b-reading-week/README.md) | — |
