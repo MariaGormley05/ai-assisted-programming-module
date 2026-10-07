@@ -106,11 +106,11 @@ planned from a world that no longer exists.
 | Tool | Access | Reads instructions from | Runs headless |
 |---|---|---|---|
 | **Copilot CLI** | Any Copilot plan, incl. students' free plan | `AGENTS.md`, `.github/copilot-instructions.md` | `copilot -p` |
-| **Gemini CLI** | Google account, free tier | `GEMINI.md` — `AGENTS.md` if configured | `gemini -p` |
+| **Gemini CLI** | Gemini API key, free tier | `GEMINI.md` — `AGENTS.md` if configured | `gemini -p` |
 | **Claude Code** | Paid Claude plan or API key | `CLAUDE.md` | `claude -p` |
 | **Codex CLI** | ChatGPT account | `AGENTS.md` | `codex exec` |
 
-<span class="kicker">// names and prices as of September 2026; the columns do not change</span>
+<span class="kicker">// names and prices as of October 2026; the columns do not change</span>
 
 ---
 
@@ -244,7 +244,7 @@ Extra focus: {{args}}
 </div>
 
 ```bash
-copilot --allow-tool='shell(git)' --deny-tool='shell(git push)'
+copilot --allow-tool='shell(git:*)' --deny-tool='shell(git push)'
 ```
 
 - A rule names how a command **starts**: `shell(git push)` also covers

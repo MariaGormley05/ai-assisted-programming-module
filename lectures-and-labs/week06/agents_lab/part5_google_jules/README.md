@@ -159,7 +159,11 @@ graph TB
    - You can monitor its progress on the jules.google.com interface
    - You'll see it cloning, installing dependencies, making changes
 
-**Note:** Jules is experimental and availability varies by user and organisation. If you cannot access it, use the alternative exercise below.
+7. **Publish the work:**
+   - When Jules finishes, click **Create branch** (the button may be labelled **Publish branch**)
+   - Open a pull request from that branch on GitHub
+
+**Note:** Jules is experimental and availability varies by user and organisation. You must be 18 or over to use it. If you cannot access it, use the alternative exercise below.
 
 ---
 
@@ -170,7 +174,7 @@ graph TB
 **Steps:**
 
 1. **Review the PR:**
-   - Navigate to the Pull Request Jules created
+   - Navigate to the pull request you opened from Jules' branch
    - Check the code changes
    - Look at the commit messages
    - Review any tests added

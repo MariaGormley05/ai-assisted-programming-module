@@ -38,8 +38,20 @@ terminal is a step further again, and has [a lab of its own](../../week09/cli_ag
    pip install -r requirements.txt
    ```
 
-3. Confirm the editor assistant is active — you should see its icon in the
-   status bar, and `Ctrl+Alt+I` should open its chat panel.
+3. Open the chat panel with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac). Its
+   icon should also be in the status bar.
+4. Look at the row of controls under the chat input and choose
+   **Copilot** as the session (it may say **Local** currently), as in the
+   setup lab. Every step that talks to the assistant names a **mode**:
+   **Interactive** reads your files and asks before it runs a command or
+   changes a file; **Plan** reads and thinks but changes nothing. If your
+   picker uses other names, those are the two to look for: the one that
+   asks first, and the read-only one.
+
+The three levels in this lab's headings map onto those controls: *Ask* is
+**Plan**, *Edit* is inline chat (`Ctrl+I`, or `Cmd+I` on a Mac, with the
+code selected) and *Agent* is **Interactive**. *Fresh conversation* means
+press the `+` at the top of the chat panel first.
 
 Each section has a folder beside this README (`part1_ask_mode/`,
 `part2_edit_mode/`, …) holding the code you work on and the detailed
@@ -62,13 +74,14 @@ does not survive being skipped.
 Work in `part1_ask_mode/`.
 
 1. Open `mystery_code.py`. **Do not run it yet.**
-2. Ask the assistant to explain what it does, then write down what it will
-   print **before** running anything.
+2. Fresh conversation, **Plan**: ask the assistant to explain what it
+   does, then write down what it will print **before** running anything.
 3. Run it. Compare the real output with your prediction.
 4. Open `buggy_code.py`. It processes `grades.csv` and happens to get the
    right answer on that file; its bugs bite on data it has not seen yet.
-   Ask the assistant *what input could make this crash or produce the
-   wrong average* — do not ask it to fix anything.
+   Fresh conversation, **Plan**: ask the assistant *what input could make
+   this crash or produce the wrong average* — do not ask it to fix
+   anything.
 5. Fix the bug **yourself**, using what it told you.
 
 **What you should have**
@@ -103,13 +116,15 @@ edit mode and agent mode are the same tool.
 Work in `part2_edit_mode/`.
 
 1. Open `messy_code.py` and read it. Note two things you dislike.
-2. Select the whole file and ask for a refactor: better names, smaller
-   functions, no behaviour change.
+2. Select the whole file, press `Ctrl+I` (`Cmd+I` on a Mac) for inline
+   chat, and ask for a refactor: better names, smaller functions, no
+   behaviour change.
 3. **Read the diff before accepting.** Find one change you did not ask
    for. There is almost always one.
 4. Accept, reject, or amend — and record which and why.
-5. Repeat on `broken_calculator.py`, which has a real bug. Ask for the
-   bug to be fixed **without** other changes.
+5. Repeat on `broken_calculator.py`, which has several planted bugs (`5!`
+   prints 24, and `Is 1 prime?` prints True): pick one. Ask for that bug
+   to be fixed **without** other changes.
 
 **What you should have**
 
@@ -143,8 +158,10 @@ Work in `part3_agent_mode/` and follow its README for the full brief.
 
 1. Read the task in `part3_agent_mode/README.md`.
 2. Before starting, write down in one sentence what "done" means to you.
-3. Give the agent the goal — the outcome, not the steps.
-4. Let it work without interrupting. Note every file it touched.
+3. Fresh conversation, **Interactive**: give the agent the goal — the
+   outcome, not the steps.
+4. Let it work without interrupting. Allow what it asks to do. Note every
+   file it touched.
 5. Check the result against your definition from step 2. Then run the
    tests.
 
@@ -171,7 +188,8 @@ Write it down.
    to review.
 2. **Before running it**, write down what you would need to see to accept
    the result.
-3. Run it. Review against your own criteria from step 2.
+3. Run it: fresh conversation, **Interactive**. Review against your own
+   criteria from step 2.
 4. Record where your comfort ran out, and why.
 
 **What you should have**
@@ -187,6 +205,11 @@ files I had not read" has done this exercise properly.
 
 Commit before you start, so `git diff` is your review tool and `git
 checkout` is your undo.
+
+If the diff is longer than the terminal, git shows it in a scrolling
+viewer and your prompt disappears. Scroll with the arrow keys, then
+press `q` to get back to the prompt. If `q` does nothing, you are in the
+Vim editor: press `Esc`, type `:q` and press Enter.
 
 </details>
 

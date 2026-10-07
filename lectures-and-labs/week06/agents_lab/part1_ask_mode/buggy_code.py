@@ -84,7 +84,7 @@ def generate_report(students: List[Dict[str, any]]) -> str:
     grades = [s['grade'] for s in students]
     avg = calculate_average(grades)
     highest = find_highest_grade(students)
-    lowest = find_lowest_grade(students)
+    lowest = find_lowest_grade(students)  # Bug: What if lowest is None?
     retakes = identify_retakes(students)
     
     report = f"""
@@ -93,7 +93,7 @@ def generate_report(students: List[Dict[str, any]]) -> str:
     Total Students: {len(students)}
     Average Grade: {avg:.2f}
     Highest Grade: {highest['name']} - {highest['grade']}
-    Lowest Grade: {lowest['name']} - {lowest['grade']}  # Bug: What if lowest is None?
+    Lowest Grade: {lowest['name']} - {lowest['grade']}
     
     Students Needing Retakes ({len(retakes)}):
     """

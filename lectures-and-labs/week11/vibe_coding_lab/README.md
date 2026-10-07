@@ -23,12 +23,28 @@ so you have felt both sides of the argument rather than just heard it.
 
 ## Getting started
 
-Nothing to install — every tool in this lab runs in a browser. You will
-need accounts for three prompt-first builders. All have a free tier that
-is enough for this lab.
+Nothing to install — every tool in this lab runs in a browser. You need a
+free account on each of three prompt-first builders:
+
+- **Bolt.new** — [bolt.new](https://bolt.new)
+- **Lovable** — [lovable.dev](https://lovable.dev)
+- **v0** — [v0.app](https://v0.app), which signs you in with a Vercel
+  account
+
+Each free plan has a daily limit, so build all three in one sitting. If a
+limit stops you, use Build mode in
+[Google AI Studio](https://aistudio.google.com/apps) instead, which needs
+a Google account.
 
 Create a `REFLECTION.md` in this folder now; you will write into it
 throughout.
+
+DIY 2 and DIY 4 use the Copilot chat in your Codespace. Open the chat panel
+with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac). Every step that talks to the
+assistant names a **mode**: **Plan** reads and thinks but changes nothing;
+**Interactive** reads your files and asks before it runs a command or
+changes a file. This lab never needs **Autopilot**. *Fresh conversation*
+means press the `+` at the top of the chat panel first.
 
 > **Tool names change.** The three used here are examples of a *category*,
 > not a prescription. If one has changed name, pricing or shut down, pick
@@ -53,13 +69,16 @@ and the list survives a page refresh.
    follow-up prompts you needed.
 3. Repeat in tool two.
 4. Repeat in tool three.
-5. Note the first thing each tool got *wrong*.
+5. Check each app against the brief: add two tasks, tick one, delete the
+   other, refresh the page. Note the first thing each tool got *wrong* — or, if it
+   got nothing wrong, the first thing it decided that your prompt did not
+   say, such as what happens with an empty task or the same task twice.
 
 **What you should have**
 
 Three working to-do apps, one shared prompt, and a table in
-`REFLECTION.md` recording time, number of follow-ups, and the first
-mistake for each tool.
+`REFLECTION.md` recording time, number of follow-ups, and for each tool
+the first mistake, or the first decision it made that your prompt did not.
 
 <details><summary>Hint</summary>
 
@@ -68,8 +87,10 @@ than three anecdotes. Resist improving the prompt between tools — if you
 must, record that you did and why.
 
 "Survives a page refresh" is the requirement that separates a demo from an
-app. Check it explicitly in all three; at least one will usually fail it
-until asked again.
+app. Check it explicitly in all three. If one fails, that is your first
+mistake. If all three pass, look at what each one chose without being
+asked: what an empty task does, whether the same task can go in twice. The
+brief says nothing about either, so every tool answered for you.
 
 </details>
 
@@ -84,16 +105,22 @@ whole reason the lab exists.
 
 Pick **one** of the three and spend fifteen minutes in its source.
 
-1. Find the file that handles **user input** or **data storage**.
+1. Open its code view — the **Code** tab in Lovable, v0 and Google AI
+   Studio, the `<>` icon in Bolt.new — and find the file that handles
+   **user input** or **data storage**.
 2. Answer in `REFLECTION.md`:
    - How many dependencies did it add? Do you know what any of them do?
    - Is user input validated anywhere before being stored or displayed?
    - If this held real people's data, what would worry you?
 3. Find **one line you genuinely cannot explain.** Paste it.
-4. Ask the assistant to explain that line. Did the explanation match what
-   you had assumed?
-5. Ask it directly: *"Review this code for security vulnerabilities as a
-   security engineer would."* Record what it finds.
+4. Fresh conversation, **Plan**, in the Copilot chat: paste the line and
+   ask what it does. Did the explanation match what you had assumed?
+5. Fresh conversation, **Plan**: paste the whole file and ask directly:
+
+   > Review this code for security vulnerabilities as a security engineer
+   > would.
+
+   Record what it finds.
 
 **What you should have**
 
@@ -104,12 +131,18 @@ explain, and the security review's findings.
 
 Around 45% of AI-generated samples carry a common vulnerability class, so
 the base rate is on your side. Unvalidated input is the usual suspect —
-look for anything that goes from a form straight into storage or straight
-back onto the page.
+look for anything that goes from a form straight into storage: is there a
+limit on how long a task can be, or a check for an empty one? In plain
+JavaScript, also look for text that goes straight back onto the page
+through `innerHTML`. React escapes text by default, so in a React app that
+one is less likely.
 
 Step 4 is the real exercise. The gap between what you *assumed* a line did
 and what it *does* is comprehension debt, measured directly, on code you
 created an hour ago.
+
+Lovable shows its code read-only on the free plan. Reading is all this
+step needs.
 
 </details>
 
@@ -154,10 +187,16 @@ done both.
    - What it explicitly does **not** do
    - The data it stores, and its shape
    - Three acceptance criteria you could actually test
-2. Give the spec to an AI coding assistant and ask for a **plan** — not
-   code.
-3. Read the plan against your spec. Correct it where it drifted.
-4. Only now let it implement.
+2. Open `spec.md`. Fresh conversation, **Plan**, in the Copilot chat:
+
+   > Here is spec.md. Give me a plan: which files you will create and what
+   > each one does. Do not write code yet.
+
+3. Read the plan against your spec. Correct it where it drifted, in the
+   same conversation.
+4. Only now switch the mode to **Interactive**, stay in the same
+   conversation, and ask it to build the plan in a new folder called
+   `todo-spec` next to this README. Allow the changes it asks for.
 5. Check the result against your three acceptance criteria.
 
 **What you should have**

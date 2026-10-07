@@ -45,7 +45,9 @@ deliberately ordinary — the lab is about what you build *around* it.
 Section 3 sends a diff to a hosted model from GitHub Actions. It uses the
 same free API key you got for the RAG lab, stored in your copy of the repo
 as a **repository secret** named `LLM_API_KEY` — nothing in this lab costs
-money. Sections 1, 2 and 4 need no key at all.
+money, but on the free tier Google may use what you send to improve its
+products, so send it nothing personal. Sections 1, 2 and 4 need no key at
+all.
 
 ---
 
@@ -60,7 +62,7 @@ not you remembered.
 1. Create `.github/workflows/ci.yml` in **your own copy** of the repo.
 2. Trigger it on `push`.
 3. Have it check out the code, set up Python 3.12, install
-   `lectures-and-labs/week10/cicd_lab/requirements.txt`, and run `pytest` from `lectures-and-labs/week10/cicd_lab`.
+   `lectures-and-labs/week10/cicd_lab/requirements.txt`, and run `python -m pytest` from `lectures-and-labs/week10/cicd_lab`.
 4. Push, and watch it in the **Actions** tab.
 5. Now **break a test on purpose**, push, and confirm the run goes red.
 
@@ -82,8 +84,10 @@ Step 5 matters more than step 4. A pipeline you have never seen fail is a
 pipeline you have no evidence works — plenty of workflows pass because
 they silently run nothing.
 
-If the run cannot find your tests, check the working directory: Actions
-starts at the repo root, not in the lab folder.
+If the run fails with `No module named 'hello_app'`, check the working
+directory, and that you ran `python -m pytest` rather than `pytest`: Actions
+starts at the repo root, not in the lab folder, and only `python -m` puts
+the current folder on the import path.
 
 </details>
 
@@ -98,9 +102,19 @@ minute says otherwise.
 
 Add three checks to your pipeline, in this order:
 
-1. **Secret scanning** — enable it in Settings → Code security. Confirm
-   it is on.
-2. **Dependency scanning** — enable Dependabot alerts.
+1. **Secret scanning** — GitHub's own scanner is for public repos and paid
+   plans, and your copy is private, so add gitleaks to `ci.yml` instead.
+   Give the checkout step `fetch-depth: 0` and add the gitleaks step:
+
+   ```yaml
+         - uses: actions/checkout@v7
+           with:
+             fetch-depth: 0
+         - uses: gitleaks/gitleaks-action@v3
+   ```
+
+2. **Dependency scanning** — enable Dependabot alerts (Settings →
+   Advanced Security).
 3. **A linter** — add a `ruff` or `pylint` step to `ci.yml`.
 4. For each, record in `findings.md`: what it caught, or that it caught
    nothing.
@@ -108,7 +122,8 @@ Add three checks to your pipeline, in this order:
 
 **What you should have**
 
-Three checks enabled, and a written answer to step 5 with your reasoning.
+Three checks in place — gitleaks and a linter in `ci.yml`, Dependabot
+alerts on — and a written answer to step 5 with your reasoning.
 
 <details><summary>Hint</summary>
 
@@ -118,6 +133,27 @@ pushing a fix — the key is out, and it must be rotated.
 
 That asymmetry is why irreversibility, not sophistication, is the right
 ordering principle for what you automate.
+
+`fetch-depth: 0` matters: gitleaks scans every commit you push, so it needs
+the history. Without it, a push of more than one commit turns the step red
+and its log says `unknown revision`.
+
+DIY 1 triggers `ci.yml` on `push` only. If you add `pull_request` to its
+triggers, also give the job `permissions:` with `contents: read` and
+`pull-requests: read`: on a pull request gitleaks lists the request's
+commits, and the default token of a private repo is not allowed to.
+
+gitleaks-action needs no licence key in a copy under your own account. In a
+copy that belongs to an organisation it asks for a free one, passed to the
+step as `GITLEAKS_LICENSE`.
+
+Expect the linter to go red on its first run: it finds real things in the
+starter app. If you use ruff, point it at the lab folder
+(`ruff check lectures-and-labs/week10/cicd_lab`), because `ruff check .`
+from the repo root lints every other lab too, and do not clear the
+findings with `ruff check --fix`. Three of the unused imports, in
+`hello_app/webapp.py` and `startup.py`, are there on purpose, and removing
+them breaks the app and its test. Mark those with `# noqa: F401` instead.
 
 </details>
 
@@ -136,9 +172,10 @@ review that could not run must go red, not green.
 
 ### DIY 3: A review step that cannot lie
 
-1. Add the free API key from the RAG lab to your copy of the repo as a
-   repository secret named `LLM_API_KEY` (Settings → Secrets and
-   variables → Actions).
+1. Add the free API key from the RAG lab (or make one at
+   [aistudio.google.com/apikey](https://aistudio.google.com/apikey)) to
+   your copy of the repo as a repository secret named `LLM_API_KEY`
+   (Settings → Secrets and variables → Actions).
 2. Add a second workflow, `.github/workflows/review.yml`, that runs on
    pull requests, diffs the branch against its base, and runs the starter
    on that diff:
@@ -153,12 +190,13 @@ review that could not run must go red, not green.
          contents: read
          pull-requests: write
        steps:
-         - uses: actions/checkout@v4
+         - uses: actions/checkout@v7
            with:
              fetch-depth: 0
          - name: Review the diff, and fail if the review could not run
            env:
              LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+           shell: bash
            run: |
              git fetch --quiet origin ${{ github.base_ref }}
              git diff origin/${{ github.base_ref }}...HEAD > pr.diff
@@ -187,11 +225,19 @@ Step 5 is the one that separates a useful review job from a decorative
 one. The failure mode is a job that catches its own exception, writes the
 error text into the report, and exits zero — leaving a green tick over a
 check that never ran. The starter refuses to do that; if you write your
-own, keep that property. Actions runs each `run:` step with `pipefail`, so
-`python review_diff.py | tee` fails the step when the script fails.
+own, keep that property. Actions turns `pipefail` on only for a step that
+says `shell: bash`, which is why the review step does: without it
+`python review_diff.py | tee` exits with `tee`'s status, 0, and the step
+stays green when the script fails.
 
 Never ask it whether the code compiles. A compiler answers that exactly;
 a model guesses.
+
+If you used another provider in the RAG lab, add `LLM_BASE_URL` and
+`LLM_MODEL` as repository secrets too and pass them in the `env:` block
+next to the key, the same way. Add them only if you made the secrets: a
+missing secret reaches the script as an empty string, and an empty
+`LLM_BASE_URL` or `LLM_MODEL` beats the built-in default.
 
 </details>
 
@@ -208,7 +254,7 @@ cannot happen.
 1. In `tests/test_summary.py`, write `test_exact`: a test asserting the
    summary of `samples/article_1.txt` equals a fixed string you got from
    one run.
-2. Run it. It passes.
+2. Run it. It almost always fails at once; if it passes, that was luck.
 3. Run it again. And again.
 4. Record what happens and why.
 

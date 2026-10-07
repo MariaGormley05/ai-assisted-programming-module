@@ -12,10 +12,10 @@ Agent mode gives Copilot the ability to:
 - Fix errors iteratively
 
 **How to Access:**
-- **Keyboard shortcut:** `Ctrl+Shift+I` (Windows/Linux) or `Cmd+Shift+I` (Mac) - quick access
-- **Copilot Chat pane:** Open chat, then select **Agent** from the dropdown menu at the top
+- **Keyboard shortcut:** `Ctrl+Alt+I` (Windows/Linux) or `Ctrl+Cmd+I` (Mac) opens the chat panel
+- **Copilot Chat pane:** Press the `+` at the top of the chat panel for a fresh conversation, then choose **Interactive** in the row of controls under the chat input
 
-> 💡 **Tip:** You'll see a dropdown menu in the Copilot Chat pane with options: **Chat**, **Edit**, and **Agent**. The keyboard shortcuts are just quick ways to access these modes!
+> 💡 **Tip:** In the **Copilot** session, agent mode is the **Interactive** mode: it reads your files and asks before it runs a command or changes a file. If your picker uses other names, look for the one that asks first.
 
 ```mermaid
 graph TD
@@ -51,9 +51,7 @@ graph TD
 **Task:** Have the agent build a complete task management system with tests.
 
 **Steps:**
-1. Open Agent mode:
-   - **Option A:** Press `Ctrl+Shift+I` (quick shortcut)
-   - **Option B:** Open Copilot Chat (`Ctrl+Alt+I`), then select **Agent** from the dropdown
+1. Fresh conversation, **Interactive**.
 2. Enter this task:
 
 ```
@@ -74,6 +72,8 @@ Create a task management system with:
    - add, list, complete, delete commands
 
 Use type hints and docstrings throughout.
+
+Put every file in the part3_agent_mode folder.
 ```
 
 4. **Watch the Agent Work:**
@@ -93,7 +93,7 @@ Use type hints and docstrings throughout.
 **Task:** Have the agent add new functionality to the task manager it just created.
 
 **Steps:**
-1. Open Agent mode (use either `Ctrl+Shift+I` or select **Agent** from the Copilot Chat dropdown)
+1. Fresh conversation, **Interactive**
 2. Enter:
 
 ```

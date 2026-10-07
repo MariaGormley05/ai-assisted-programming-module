@@ -4,7 +4,7 @@
 Learn to use Copilot as a conversational coding assistant for understanding code, learning concepts, and getting debugging help.
 
 ## What is Ask Mode?
-Ask mode is the conversational interface of GitHub Copilot. It's ideal for:
+Ask mode is the conversational interface of GitHub Copilot. In the **Copilot** session it is the **Plan** mode, which reads your files and thinks but changes nothing, as long as you do not approve a plan it offers to carry out. It's ideal for:
 - Understanding unfamiliar code
 - Getting explanations of concepts
 - Asking for code examples (without editing files)
@@ -12,9 +12,9 @@ Ask mode is the conversational interface of GitHub Copilot. It's ideal for:
 - Debugging assistance
 
 **How to Access:**
-- **Keyboard shortcut:** `Ctrl+Alt+I` (Windows/Linux) or `Cmd+Alt+I` (Mac)
-- **Copilot Chat pane:** Click the chat icon in the sidebar - this is the default mode
-- **Context menu:** Right-click code → **Copilot** → **Explain This**
+- **Keyboard shortcut:** `Ctrl+Alt+I` (Windows/Linux) or `Ctrl+Cmd+I` (Mac)
+- **Copilot Chat pane:** Press the `+` at the top of the chat panel for a fresh conversation, then choose **Plan** in the row of controls under the chat input
+- **Context menu:** Right-click code → **Explain**
 
 ```mermaid
 graph LR
@@ -41,12 +41,12 @@ graph LR
 **Task:** Use Ask mode to understand what this code does WITHOUT looking at the implementation details first.
 
 **Steps:**
-1. Open the file `mystery_code.py`
+1. Fresh conversation, **Plan**. Open the file `mystery_code.py`
 2. Select all the code (`Ctrl+A`)
 3. Right-click → **Explain**
 4. Read Copilot's explanation
 
-**Questions to ask Copilot:**
+**Questions to ask Copilot** (same conversation, **Plan**):
 ```
 What does this code do?
 What is a ShoppingCart class used for?
@@ -59,7 +59,7 @@ Could you show me how to add a new item to this cart?
 
 ### Exercise 1.2: Learning Concepts (5 min)
 
-**Task:** Use Copilot to learn about a new concept.
+**Task:** Fresh conversation, **Plan**. Use Copilot to learn about a new concept.
 
 **Sample Questions:**
 ```
@@ -87,22 +87,22 @@ What are context managers and when should I use them?
 
 **File:** `buggy_code.py`
 
-**Task:** Use Copilot to help debug code with errors.
+**Task:** Fresh conversation, **Plan**. Use Copilot to help debug code with errors.
 
 **Steps:**
 1. Open `buggy_code.py`
 2. Read the code and try to spot bugs
-3. Right-click → **Copilot** → **Review and Comment**
+3. Select all the code (`Ctrl+A`), then right-click → **Review** (it may sit inside the **Generate Code** submenu)
 
-4. Compare Copilot's findings with yours
-5. Ask follow-up questions:
+4. Compare Copilot's findings with yours (they appear in the **Comments** panel and inline in the editor)
+5. Fresh conversation, **Plan**, with `buggy_code.py` open. The review's findings are in the
+   Comments panel, not in the chat, so name the finding in each question:
    ```
-   Why is [specific issue] a problem?
-   How should I fix [specific bug]?
-   What testing would catch these bugs?
+   In buggy_code.py, why is [the finding, in your own words] a problem?
+   How should I fix [that bug]? Explain it, do not change the file.
+   What test would have caught it?
    ```
-6. Right-click → **Copilot** → **Fix This**
-7. In the Terminal, run the code. 
+6. In the Terminal, run the code. 
     ```
     cd part1_ask_mode    # from the lab folder, lectures-and-labs/week06/agents_lab
     python buggy_code.py

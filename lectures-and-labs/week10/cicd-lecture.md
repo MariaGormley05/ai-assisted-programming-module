@@ -318,8 +318,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4        # 01: fetch the code
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7        # 01: fetch the code
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt   # 02: it has nothing

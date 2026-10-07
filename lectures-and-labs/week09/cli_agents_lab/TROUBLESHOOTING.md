@@ -33,9 +33,11 @@ on one line.
 
 - Check that a plan is active at https://github.com/settings/copilot —
   Copilot Free, or Copilot Student through GitHub Education.
-- In a Codespace, the Codespace's own `GITHUB_TOKEN` can be picked up in
-  place of your sign-in, and it has no Copilot access. Clear it for that
-  terminal only, start the agent, and type `/login`:
+- In a Codespace, Copilot starts signed in with the Codespace's own
+  `GITHUB_TOKEN`. If that is not the account with the plan, type
+  `/login` to sign in as the right one. If it still uses the wrong
+  account, clear the token for that terminal only, start the agent, and
+  type `/login`:
 
   ```bash
   unset GITHUB_TOKEN GH_TOKEN
@@ -47,18 +49,24 @@ on one line.
 That is the sign-in. Open the address, type the code, approve. There is
 nothing to paste into a file.
 
-### Gemini's sign-in never comes back to the terminal
+### Gemini's key box says "Paste your API key here"
 
-In a Codespace the browser cannot always reach the terminal. Start it as
-`NO_BROWSER=true gemini`: it prints a link to open, then asks you to paste
-back a code.
+Gemini did not find your key, so it is asking for it. Quit it, then check
+that the file is `sample-app/.env` and its name starts with a dot, that
+it has a line `GEMINI_API_KEY=` followed by your key, and that you
+started `gemini` from `sample-app`. Start it again. **Sign in with
+Google** is not the way in: Google's own sign-in stopped serving free
+personal accounts on 18 June 2026. In a script (`gemini -p`) the same
+problem shows as `Please set an Auth method` and exit code 41.
 
 ### Where does a token or key go?
 
-Never in a file in this repository — the module's safety audit rejects
-one, and your repository may be public. Signing in with `/login` or with
-Google stores what the agent needs in its own configuration, outside the
-repo.
+Never in a file git tracks — the module's safety audit rejects one, and
+your repository may be public. Copilot's `/login` stores what it needs in
+its own configuration, outside the repo. Gemini's key goes in
+`sample-app/.env`, which `.gitignore` covers, and Gemini also keeps the
+key you confirm in a file under `~/.gemini/`, outside the repo. Never type
+a key into a command or paste it into code.
 
 ## In a session
 
@@ -86,11 +94,26 @@ An approval you give during a session can last for the rest of that
 session. In Copilot, `/reset-allowed-tools` clears them; starting a new
 session clears them in both agents.
 
+### Gemini never answers
+
+Look at the bottom right of its screen. It should read
+`gemini-3.5-flash-lite`. If it reads `Auto`, Gemini did not read the
+`GEMINI_MODEL=gemini-3.5-flash-lite` line from `sample-app/.env`, and on a
+free key its default model gave no answer when this lab was checked in
+October 2026. Fix the file, quit, and start it again.
+
+### Gemini says it is not running in a trusted directory
+
+That is a script run (`gemini -p`) in a folder you have not trusted yet.
+Start `gemini` once in `sample-app` and trust the folder, or add
+`--skip-trust` to the command.
+
 ### It says I have run out of requests
 
 The free plans have limits: a monthly allowance on the Copilot student
-plan, and per-minute and daily limits on Gemini's free tier. Wait, or
-switch to the other agent — every exercise works in both.
+plan, shared with Copilot Chat (`/usage` shows what the current session
+has used), and per-minute and daily limits on Gemini's free API key. Wait,
+or switch to the other agent.
 
 ## The policy checker
 

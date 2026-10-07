@@ -4,7 +4,7 @@
 Learn to generate and modify code directly in files using Copilot's Edit Mode for quick, focused changes.
 
 ## What is Edit Mode?
-Edit mode lets you make quick edits to a specific code selection. It's ideal for:
+Edit mode lets you make quick edits to a specific code selection. Today that is **inline chat**, which shows the change as a diff for you to keep or undo. It's ideal for:
 - Generating single functions or classes
 - Refactoring a specific function
 - Fixing bugs in selected code
@@ -13,26 +13,24 @@ Edit mode lets you make quick edits to a specific code selection. It's ideal for
 
 **How to Access:**
 - **Keyboard shortcut:** `Ctrl+I` (Windows/Linux) or `Cmd+I` (Mac) - quick inline access
-- **Copilot Chat pane:** Open chat, then select **Edit** from the dropdown menu at the top
-- **Context menu:** Select code → Right-click → **Copilot** → **Start Editing**
 
-> 💡 **Tip:** The keyboard shortcut `Ctrl+I` is just a convenient way to quickly access Edit mode without opening the chat pane!
+> 💡 **Tip:** `Ctrl+I` opens inline chat: select code, describe the change, then read the diff and choose **Keep** or **Undo**.
 
 ```mermaid
 stateDiagram-v2
     [*] --> SelectCode
-    SelectCode --> OpenEditMode: Ctrl+I or Right-click
+    SelectCode --> OpenEditMode: Ctrl+I
     OpenEditMode --> DescribeChange: Type instruction
     DescribeChange --> CopilotGenerates: Enter
     
     CopilotGenerates --> PreviewChanges
-    PreviewChanges --> Accept: Looks good
-    PreviewChanges --> Reject: Not right
+    PreviewChanges --> Keep: Looks good
+    PreviewChanges --> Undo: Not right
     PreviewChanges --> Refine: Modify prompt
     
     Refine --> CopilotGenerates
-    Accept --> Applied
-    Reject --> [*]
+    Keep --> Applied
+    Undo --> [*]
     Applied --> [*]
 ```
 
@@ -46,14 +44,14 @@ stateDiagram-v2
 
 **Steps:**
 1. Open `validators.py`
-2. Press `Ctrl+I` (Windows/Linux) or `Cmd+I` (Mac) to open inline edit
+2. Press `Ctrl+I` (Windows/Linux) or `Cmd+I` (Mac) to open inline chat
 3. Type this instruction:
    ```
    Create an EmailValidator class with a validate_email method that checks 
    email format using regex. Include docstrings and type hints.
    ```
 4. Review the generated code
-5. Click **Accept** if it looks good, or **Reject** to try again
+5. Click **Keep** if it looks good, or **Undo** to try again
 
 **Refinement:** Select the class again and ask to:
 ```
@@ -70,17 +68,16 @@ Add a method to extract the domain from an email address
 
 **Steps:**
 1. Open `messy_code.py`
-2. Select the entire function
+2. Select the whole file
 3. Press `Ctrl+I` / `Cmd+I`
 4. Give instructions:
    ```
    Refactor this code to:
    - Follow PEP 8 style guidelines
    - Use meaningful variable names
-   - Add type hints
    - Add docstrings
-   - Improve error handling
    - Break into smaller functions if needed
+   - Change no behaviour
    ```
 
 **Compare:** 
@@ -101,7 +98,7 @@ Add a method to extract the domain from an email address
 2. Select the buggy function
 3. Use `Ctrl+I` / `Cmd+I`:
    ```
-   Fix all bugs in this function and add input validation
+   Fix the bug in this function. Change nothing else.
    ```
 
 4. Review changes carefully
@@ -117,7 +114,7 @@ Add a method to extract the domain from an email address
 - ✅ Quick refactoring of one section
 - ✅ Adding/fixing a specific feature
 
-**Use Agent Mode (`Ctrl+Shift+I`) when:**
+**Use Agent Mode (Interactive) when:**
 - ✅ Creating multiple related files
 - ✅ Making changes across several files
 - ✅ Building complete features

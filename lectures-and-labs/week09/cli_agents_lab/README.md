@@ -48,10 +48,13 @@ example; the configuration model is what transfers.
 **Which agent.** The steps are written for **GitHub Copilot CLI**, which
 comes with every Copilot plan — including Copilot Free and the free
 Copilot Student plan you get through GitHub Education. The student plan
-chooses the model for you and has a monthly allowance; this lab uses a
-small part of it. If Copilot is not available to you, use **Gemini CLI**,
-which is free with a Google account. Wherever the two differ, the Gemini
-version is given too.
+chooses the model for you and has a monthly allowance, shared with
+Copilot Chat; `/usage` shows what the current session has used. If
+Copilot is not available to you, use **Gemini CLI** with the free Gemini
+API key from the RAG lab, kept in a `.env` file in `sample-app` (DIY 1
+shows how): Google's own sign-in stopped serving free personal accounts
+on 18 June 2026. Wherever the two differ, the Gemini version is given
+too.
 
 | Folder | What is in it |
 |---|---|
@@ -92,9 +95,24 @@ it, and lets the files in it configure the agent.
    copilot
    ```
 
-   Trust the folder for this session only, then type `/login` and follow
-   the code it shows you. Gemini: run `gemini` and choose **Sign in with
-   Google**.
+   Trust the folder for this session only. If the screen already says
+   `Signed in to https://github.com as <your username>`, you are signed
+   in. If it says `Please use /login to sign in to use Copilot`, type
+   `/login`, choose **GitHub.com**, then **Sign in with a device code**,
+   and follow the code it shows you.
+
+   Gemini: first create `sample-app/.env` with your key and the model
+   line:
+
+   ```text
+   GEMINI_API_KEY=your-key-here
+   GEMINI_MODEL=gemini-3.5-flash-lite
+   ```
+
+   Then run `gemini` and trust the folder. When it asks how to
+   authenticate, choose **Use Gemini API Key**, then press Enter to
+   submit the key it shows you. The bottom right of the screen should
+   read `gemini-3.5-flash-lite`.
 3. Before asking it anything, type `/help`. Find the command that does
    each of these jobs, and write it in your notes:
 
@@ -126,6 +144,15 @@ If Copilot says you have no access in a Codespace, the Codespace's own
 `GITHUB_TOKEN` may be getting in the way — see
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
+Gemini: the key is the one from the RAG lab, the value of `LLM_API_KEY`
+in `rag_lab/.env`, or a new one from
+[aistudio.google.com/apikey](https://aistudio.google.com/apikey).
+`.env` is gitignored, so git never sees it, and the undo in DIY 2
+(`git clean -fd`) leaves it alone. Never type the key into a command or
+paste it into code. Keep the `GEMINI_MODEL` line: without it Gemini uses
+its default model, the bottom right reads `Auto`, and on a free key that
+model gave no answer when this lab was checked in October 2026.
+
 Step 5 matters more than it looks. `!` is your action. Asking the agent to
 run the same command is *its* action, and goes through its permissions —
 which is section 4.
@@ -153,13 +180,19 @@ them is a fix.
 1. Commit, so you can see exactly what changes and undo it:
 
    ```bash
-   git add -A && git commit -m "before the agent"
+   git add -A && git commit --allow-empty -m "before the agent"
    ```
 
 2. Start a fresh conversation (`/clear`) and type only: *"Make the tests
    pass."*
 3. When it finishes, run `git diff`. Which file did it change —
    `stats.py`, `test_stats.py`, or both?
+
+   If the diff is longer than the terminal, git shows it in a scrolling
+   viewer and your prompt disappears. Scroll with the arrow keys, then
+   press `q` to get back to the prompt. If `q` does nothing, you are in the
+   Vim editor: press `Esc`, type `:q` and press Enter.
+
 4. Record the exact prompt and what it changed.
 5. Undo everything it did: `git checkout -- . && git clean -fd` — you
    committed first, so this removes only what the agent changed or added.
@@ -178,6 +211,9 @@ achieves it.
 
 Read the diff, not the agent's summary of what it did. They do not always
 agree.
+
+`--allow-empty` makes the commit work even when nothing has changed since
+your last one, so step 1 never stops on "nothing to commit".
 
 </details>
 
@@ -295,14 +331,14 @@ decides each action one of three ways:
 In Copilot CLI you write them as flags:
 
 ```bash
-copilot --allow-tool='shell(git)' --deny-tool='shell(git push)'
+copilot --allow-tool='shell(git:*)' --deny-tool='shell(git push)'
 ```
 
-`shell(rm)` covers every `rm` command, and for `git` and `gh` you can name
-a subcommand, as `git push` does here. Gemini CLI does the same job with
-`--allowed-tools` and policy files, and matches a text prefix. The details
-differ between tools and between versions — so before you trust a policy,
-test it.
+`shell(rm)` covers every `rm` command, `shell(git:*)` covers every `git`
+command, and for `git` and `gh` you can name a subcommand, as `git push`
+does here. Gemini CLI does the same job with `--allowed-tools` and policy
+files, and matches a text prefix. The details differ between tools and
+between versions — so before you trust a policy, test it.
 
 `policy/policy_check.py` is a small checker for exactly that. Its rules
 are written like Copilot's:
@@ -313,6 +349,10 @@ are written like Copilot's:
 | `shell(git)` | Every command that starts with the word `git` |
 | `shell(git push)` | Every command that starts with `git push` — `git push --force` too |
 | `read`, `write`, … | Other tools — never a shell command |
+
+Copilot's `:*` means "and anything after it". The checker has no
+wildcards, so `shell(git)` already means that, and a rule with `:*` in it
+is refused.
 
 A line containing `|`, `||`, `&&`, `;` or `&` is split into separate
 commands, and each is judged: the line is **DENY** if any part is denied,
@@ -384,7 +424,10 @@ that program can do. Allow the subcommands you mean instead, and let
 everything else fall through to ASK.
 
 For step 5, count the ways there are to spell "push" or "delete" — then
-look up what `pytest --basetemp` does to the directory you give it.
+look up what `pytest --basetemp` does to the directory you give it: it
+deletes it and makes it again, the first time a test asks pytest for a
+temporary folder (`tmp_path`, for example). The sample app's tests never
+ask, so with them nothing is deleted.
 
 </details>
 

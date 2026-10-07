@@ -57,7 +57,7 @@ async def main():
 
             for location in locations:
                 print(f"\n{'='*50}")
-                print(f"�️  Fetching weather for: {location}")
+                print(f"🌡️  Fetching weather for: {location}")
                 print(f"{'='*50}")
 
                 try:

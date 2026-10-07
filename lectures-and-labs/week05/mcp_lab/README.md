@@ -9,7 +9,7 @@ notice which version of it you are looking at.
 - Run an MCP server and read the JSON-RPC going past
 - Explain who actually executes a tool, and why that matters for security
 - Write a tool description a model will reliably choose to call
-- Build your own server and client from a specification
+- Build your own server from a specification, checked by a validator
 - Recognise the 2026 stateless protocol change and say why it happened
 
 ## Table of Contents
@@ -57,8 +57,8 @@ watching the conversation rather than reading the code.
 2. Watch the coloured JSON-RPC messages scroll past.
 3. Identify each of these in the output: the handshake, the tool listing,
    a tool call, and its result.
-4. Write down, for the tool call: **what did the client send, and what
-   came back?**
+4. For the tool call, match the request to its reply by `id`: **what did
+   the client send, and what came back?**
 
 **Expected output**
 
@@ -131,18 +131,30 @@ the trace shows an error result, and your code never ran.
 1. In your `power` handler, add a line that prints
    `"[server] power called"` to stderr.
 2. Run the client and trigger the tool.
-3. Note **where** that line appears — which process printed it.
-4. Now make the handler raise an exception deliberately, and call it
+3. Find **where** that line appears in the trace, and which process
+   printed it.
+4. Now make the handler raise an exception deliberately. In
+   `part1/mcp_client.py`, add one more call after the `power` call,
+   `await session.call_tool("add", {"a": 1, "b": 2})`, and run the client
    again.
-5. Read the trace. The reply is a result with `"isError": true` carrying
-   the exception's text; the server is still running (the next call
-   works); and the process that ran your code was the server, not the
-   model.
+5. Read the trace. The reply to `power` is a result with
+   `"isError": true` carrying the exception's text; the `add` call after
+   it still gets its answer, so the server is still running; and the
+   process that ran your code was the server, not the model.
+6. Take the exception out again. DIY 4 needs `power` working.
 
-**What you should have**
+**Expected output**
 
-A note recording which process executed your code, and what the client got
-back when the handler failed.
+The end of the trace at step 5. The text in the error result is whatever
+your exception said:
+
+```text
+-> {"method":"tools/call","params":{"name":"power","arguments":{"x":2,"y":10}},"jsonrpc":"2.0","id":6}
+[server] power called
+<- {"jsonrpc":"2.0","id":6,"result":{"content":[{"type":"text","text":"power is broken on purpose"}],"isError":true}}
+-> {"method":"tools/call","params":{"name":"add","arguments":{"a":1,"b":2}},"jsonrpc":"2.0","id":7}
+<- {"jsonrpc":"2.0","id":7,"result":{"content":[{"type":"text","text":"Result: 1 + 2 = 3"}],"isError":false}}
+```
 
 <details><summary>Hint</summary>
 
@@ -161,22 +173,72 @@ installing an unknown browser extension.
 
 ## 3. Descriptions are the interface
 
-A tool's description is not documentation for humans. It is how the model
-decides whether to call the thing at all.
+A tool's name and description are not documentation for humans. They are
+how the model decides whether to call the thing at all.
 
-### DIY 4: Make a tool that never gets called
+### DIY 4: Take the tool's name away
 
-1. Change your `power` description to something useless: `"does maths"`.
-2. Connect the server to an assistant that supports MCP and ask it a
-   question `power` should answer.
-3. Record whether it called the tool.
-4. Now rewrite the description to say precisely what it does and when to
-   use it.
-5. Ask the same question and record the difference.
+A model is shown three things about a tool: its **name**, its
+**description** and its **schema**. This exercise takes them away one at
+a time and watches which tool the assistant reaches for.
+
+1. Work on a copy, so that `part1/mcp_server.py` stays as DIY 3 left it:
+
+   ```bash
+   cp part1/mcp_server.py part1/t4_server.py
+   ```
+
+2. Tell the editor about the copy. Open a new file in the **top folder of
+   your repository**, three folders up from this lab:
+
+   ```bash
+   code ../../../.mcp.json
+   ```
+
+   Put this in it:
+
+   ```json
+   {
+     "mcpServers": {
+       "calculator": {
+         "command": "python",
+         "args": ["lectures-and-labs/week05/mcp_lab/part1/t4_server.py"]
+       }
+     }
+   }
+   ```
+
+3. Open the Command Palette (`F1`) and run **MCP: List Servers**. If the
+   list offers **Show locally configured servers...**, choose that first.
+   Choose **calculator**, then **Start Server**. Open the same menu again
+   and choose **Show Output**: the log ends with `Discovered 4 tools`.
+4. In `part1/t4_server.py`, change the description of `power` to
+   something useless: `"does maths"`. Restart the server (**MCP: List
+   Servers**, **calculator**, **Restart Server**). Fresh conversation,
+   **Interactive**:
+
+   ```text
+   Use the calculator tools to work out 2 to the power of 10.
+   ```
+
+   Watch **which tool** it asks to run, then allow it.
+5. Now take the rest away. In `part1/t4_server.py`, rename the tool from
+   `power` to `t4`, in the listing and in the dispatcher, and leave its
+   description as `"does maths"`. If you gave its arguments descriptions,
+   delete those too, so that the schema says only that `x` and `y` are
+   numbers. Restart the server. Fresh conversation, **Interactive**, the
+   same prompt. Which tool does it ask for this time?
+6. Keep the name `t4`. Rewrite its description to say precisely what the
+   tool does and when to use it. Restart the server. Fresh conversation,
+   **Interactive**, the same prompt.
 
 **What you should have**
 
-Both descriptions, and what the assistant did with each.
+The same prompt answered against three listings, and the tool the
+assistant asked for each time: `power` with a useless description, `t4`
+with nothing to say what it is for, and `t4` with a precise description.
+In the first and the last it had something to go on. In the middle one,
+whatever it did was a guess.
 
 <details><summary>Hint</summary>
 
@@ -184,8 +246,28 @@ A good description says **what it does** and **when to use it**:
 *"Raise a number to a power. Use for exponentiation, e.g. 2 to the power
 of 10."* — not *"does maths"*.
 
-If it never calls the tool with either description, check the server is
-actually connected: an assistant cannot call a tool it cannot see.
+Tested in October 2026: three current models were given this prompt and
+these four tools beside an editor's own, nine runs for each listing. As
+`power` with *"does maths"*, all nine asked for `power`: the name was
+enough. As `t4` with *"does maths"* and bare arguments, eight asked for
+`multiply` instead (one of them four times over) and one tried `t4`
+blind. With the arguments described as *"Base"* and *"Exponent"*, all
+nine asked for `t4`: the schema gave it away. As `t4` with a precise
+description, all nine asked for `t4`. If yours starts chaining
+`multiply` calls, you have your answer: stop it rather than approve every
+one.
+
+So a description matters most when nothing else carries the meaning, and
+real tool names often do not: `search`, `query`, `run`, `get_data`. The
+name, the description and the schema are everything the model has. It
+never sees your server's code.
+
+Restart the server after every edit: the running process still has the
+old listing. If the assistant goes on seeing the old name, run **MCP:
+Reset Cached Tools** from the Command Palette. If it never asks for any
+calculator tool, check the server is connected (**MCP: List Servers**
+shows its state, and **Show Output** shows any error): an assistant
+cannot call a tool it cannot see.
 
 </details>
 
@@ -193,8 +275,8 @@ actually connected: an assistant cannot call a tool it cannot see.
 
 ## 4. Build your own
 
-`part3_student_exercise/` has a skeleton server and client for a news
-tool. This is the section that matters.
+`part3_student_exercise/` has a skeleton server for a news tool and a
+validator that checks it. This is the section that matters.
 
 ### DIY 5: A news server, from the specification
 
@@ -215,6 +297,8 @@ your server and checks it, test by test.
    absent `count` means 5), validate them, call your helpers, and return
    the result as text content. A bad argument or an unknown story comes
    back as a **result** that says what went wrong, not as an exception.
+   Start that text with `Error:`, which is the word the validator looks
+   for.
 4. Run the validator from the exercise folder until every test passes:
 
    ```bash
@@ -258,6 +342,10 @@ next.
 Study `part2/mcp_server_weather.py` if you are stuck; it solves the same
 shape of problem against a real API.
 
+The skeleton already imports `urllib.request`, and that is all the API
+needs. An assistant will often reach for `requests` instead, which may
+not be installed in your Codespace.
+
 </details>
 
 ---
@@ -282,15 +370,21 @@ client identity in its own `_meta`.
    remember** after the handshake.
 2. Now imagine three copies of that server behind a load balancer that
    sends each request to whichever is free.
-3. Write down what breaks, and why.
+3. Work out what breaks, and why.
 4. The new specification says a tool needing state should *mint an
    explicit handle and return it*, for the model to pass back as an
-   argument. Explain in one sentence why that fixes the problem.
+   argument. Put into one sentence why that fixes the problem.
+5. Fresh conversation, **Plan**. Give it your two answers and ask:
+
+   ```text
+   Here is my explanation of why MCP removed sessions in 2026. Find what is wrong or missing in it.
+   ```
 
 **What you should have**
 
-A written answer naming the remembered state, the failure it causes behind
-a load balancer, and why an explicit handle avoids it.
+Your explanation, naming the remembered state, the failure it causes
+behind a load balancer and why an explicit handle avoids it, and the
+assistant's reply to it: either it found a gap, or it could not.
 
 <details><summary>Hint</summary>
 
@@ -313,8 +407,13 @@ made HTTP stateless.
 
 ## Common mistakes
 
-- **Writing a terse tool description** and wondering why the model never
-  calls it.
+- **Running `pip install mcp` on its own.** That installs version 2 of the
+  SDK, and every server in this lab then stops with
+  `AttributeError: 'Server' object has no attribute 'list_tools'`. Use
+  `pip install -r requirements.txt`, which pins the version the lab was
+  written for.
+- **Giving a tool a vague name and a terse description** and wondering
+  why the model reaches for something else.
 - Assuming the model executes tools itself — it only ever asks.
 - Adding a tool to the listing but not to the dispatcher.
 - **Leaving errors to the SDK.** It turns an exception into an error
@@ -332,6 +431,7 @@ made HTTP stateless.
   assistant.
 - The model **only ever asks**. A client runs the tool, as you, with your
   permissions.
-- A tool's **description** is how a model decides to call it.
+- A tool's **name, description and schema** are all a model has to
+  decide whether to call it.
 - **2026:** sessions removed for a stateless core; state became an explicit
   handle, and the old HTTP+SSE transport is on a year-long offramp.

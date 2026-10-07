@@ -73,8 +73,10 @@ it from the environment — never a literal in code, never a committed
 config file. Nothing in the module may cost a student
 money. If you see a key in a file that is about to
 be committed, say so loudly. `mcp` needs no key (its weather server uses
-`wttr.in`), and the `cli-agents` lab signs in to a coding agent instead;
-that sign-in lives in the agent's own configuration, never in the repo.
+`wttr.in`), and the `cli-agents` lab signs in to Copilot instead; that
+sign-in lives in the agent's own configuration, never in the repo. Its
+fallback, Gemini CLI, takes the same free Gemini key from a gitignored
+`sample-app/.env`.
 
 ## Map
 
@@ -166,15 +168,27 @@ materially wrong by 2026.
   on a slide comes from a run of the lab's own corpus and model, so the
   deck and the lab cannot disagree: rerun it if the lab's data, model or
   chunking changes.
-- **MCP** — the 2026-07-28 spec removed the
+- **MCP** (a PowerPoint deck since October 2026) — part 1 is the protocol,
+  step by step: the M × N problem, host, client and server, tools,
+  resources and prompts, JSON-RPC, the two transports (stdio and Streamable
+  HTTP, with HTTP+SSE named as the one it replaced), MCP against a plain
+  API, benefits and challenges, a use case. That spine is what the MCP
+  questions in MCQ 1 test, so keep it. Part 2 is the **mechanism**: the
+  listing is all the model knows, so a description decides whether a tool
+  is called; the model only asks, and the client's decision and the
+  server's grant are the two enforceable "no"s; tool output is untrusted
+  input. Then the 2026 change: the 2026-07-28 spec removed the
   `initialize`/`initialized` handshake and `Mcp-Session-Id`, added
   `server/discover` in their place, deprecated HTTP+SSE on a year-long
   offramp, and added header-based routing plus Multi Round-Trip Requests.
-  Checked against the published changelog on 12 Sep 2026; the lab pins
+  Checked against the published changelog on 6 Oct 2026; the lab pins
   the 1.26 SDK on purpose so students see the old handshake first. Teach *why*: a handshake forces the server to
   remember who you are, which is fine on one machine and miserable behind
   a load balancer. State became an explicit handle a tool mints and the
-  model passes back.
+  model passes back. Every JSON message on a slide is real traffic captured
+  from the SDK, and the counts beside the try-it-now come from sending its
+  prompt to hosted models: capture them again if the SDK pin or the prompt
+  changes. Its diagrams are drawn shapes, not pictures.
 - **CLI Coding Agents** — teach the **configuration model**, not
   a tour of tools: standing instructions (`AGENTS.md`), built-in and
   custom slash commands, and allow/ask/deny permissions, where deny wins
@@ -260,7 +274,7 @@ add a note.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
-### PowerPoint lectures (since September 2026: the overview, prompting and RAG lectures)
+### PowerPoint lectures (since September 2026: the overview, prompting, RAG and MCP lectures)
 
 A week may be taught from a PowerPoint deck instead of a Marp one,
 `<topic>-lecture.pptx` (the module owner builds them with the
@@ -298,8 +312,10 @@ so a student moving between them never has to relearn where things are:
       -> agenda, naming both halves
       -> PART 1 (~0:05 to ~0:55): the core concepts, each with a worked
          example, and 2-3 PREDICT beats
-      -> break: one `lead` slide at about ~0:55 — "ten minutes", and the
-         question part 2 answers
+      -> break: one divider slide at about ~0:55, with the question part 2
+         answers. A PowerPoint deck titles it "Part 2: <name>" and does
+         not announce the break; a Marp deck's `lead` slide says "ten
+         minutes"
       -> PART 2 (~1:05 to ~1:45): the deeper mechanism, a second worked
          case, and ONE "try it now" activity (5-10 minutes, students on
          their own laptops, with a .prompt box to type), plus 2-3 more
