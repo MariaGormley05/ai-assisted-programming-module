@@ -22,8 +22,8 @@ happens that week.
 | 1 | Module Introduction | [slides](week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
 | 2 | AIAP Overview | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/overview/) | [lab](week02/setup_lab/README.md) |
 | 3 | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](week03/prompting_lab/README.md) |
-| **➡️ 4** | RAG | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/rag/) | [lab](week04/rag_lab/README.md) |
-| 5 | MCP | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/mcp/) | [lab](week05/mcp_lab/README.md) |
+| 4 | RAG | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/rag/) | [lab](week04/rag_lab/README.md) |
+| **➡️ 5** | MCP | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/mcp/) | [lab](week05/mcp_lab/README.md) |
 | 6 | Coding Agents | [slides](week06/agents-lecture.md) | [lab](week06/agents_lab/README.md) |
 | — | Reading week | [details](week06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (32%) · held during the lab slot | [details](week07/README.md) · [what it covers](../mcq/mcq1/README.md) | — |
