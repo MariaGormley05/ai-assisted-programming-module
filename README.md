@@ -51,7 +51,7 @@ in a `.env`, which is gitignored and rejected by the repo's safety audit.
 |---|---|---|
 | MCQ 1 | 32% | In person, during the lab slot, straight after reading week |
 | MCQ 2 | 32% | In person, during the lab slot, in the last week |
-| Practical Assessments 1–9 | 4% each | One per lab, on Moodle, open for that lab's week |
+| Practical Assessments (Weeks 2–6, 8–11) | 4% each | One per lab, on Moodle, named for the lab's week and open that week |
 
 The **Practical Assessments** are short Moodle questions, one for each
 lab, open from the Monday to the Sunday of the lab's week — do each
