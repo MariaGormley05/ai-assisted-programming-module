@@ -69,7 +69,7 @@ only.
 ## Module schedule
 
 <!-- current-week:start -->
-> 🗓️ **Current teaching week: 5 — MCP** (week beginning 12 Oct 2026).
+> 🗓️ **Current teaching week: 6 — Coding Agents** (week beginning 19 Oct 2026).
 <!-- current-week:end -->
 
 <!-- schedule-table:start -->
@@ -79,8 +79,8 @@ only.
 | 2 | AIAP Overview | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/overview/) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
 | 3 | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](lectures-and-labs/week03/prompting_lab/README.md) |
 | 4 | RAG | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/rag/) | [lab](lectures-and-labs/week04/rag_lab/README.md) |
-| **➡️ 5** | MCP | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/mcp/) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
-| 6 | Coding Agents | [slides](lectures-and-labs/week06/agents-lecture.md) | [lab](lectures-and-labs/week06/agents_lab/README.md) |
+| 5 | MCP | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/mcp/) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
+| **➡️ 6** | Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/agents/) | [lab](lectures-and-labs/week06/agents_lab/README.md) |
 | — | Reading week | [details](lectures-and-labs/week06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (32%) · held during the lab slot | [details](lectures-and-labs/week07/README.md) · [what it covers](mcq/mcq1/README.md) | — |
 | 8 | Security of AI-Generated Code | [slides](lectures-and-labs/week08/security-lecture.md) | [lab](lectures-and-labs/week08/security_lab/README.md) |

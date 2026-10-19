@@ -1,11 +1,11 @@
-# Part 4: Cloud Coding Agent (30 minutes)
+# Part 4: Copilot Cloud Agent (30 minutes)
 
 ## Overview
 Use GitHub Copilot's cloud agent for fully autonomous development that works asynchronously.
 
-## What is the Cloud Coding Agent?
+## What is the Copilot Cloud Agent?
 
-The cloud coding agent runs completely autonomously in GitHub's infrastructure:
+The Copilot cloud agent (GitHub called it the Copilot coding agent until April 2026) runs completely autonomously in GitHub's infrastructure:
 - Works asynchronously (you don't wait)
 - Creates a new branch automatically
 - Implements the feature independently
@@ -52,7 +52,7 @@ sequenceDiagram
 
 **Steps:**
 
-1. **In Copilot Chat**, press the `+` at the top of the chat panel for a fresh conversation. Open the control that says **Copilot** or **Local** (the session target) and choose **Cloud**. If **Cloud** is not in the list, choose **Copilot** and put `/delegate` and a space in front of the prompt instead. If neither starts a cloud session, the cloud agent is not available to you: skip to Part 5. Then send:
+1. **In Copilot Chat**, press the `+` at the top of the chat panel for a fresh conversation. Open the control that says **Copilot** or **Local** (the session target) and choose **Cloud**; if it then asks for a provider, pick the Copilot one. If **Cloud** is not in the list, choose **Copilot** and put `/delegate` and a space in front of the prompt instead. If neither starts a cloud session, the cloud agent is not available to you: skip to Part 5. Then send:
 
 ```
 Create a user authentication system with:

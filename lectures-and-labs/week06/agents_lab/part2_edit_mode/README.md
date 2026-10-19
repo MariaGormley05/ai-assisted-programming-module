@@ -114,7 +114,7 @@ Add a method to extract the domain from an email address
 - ✅ Quick refactoring of one section
 - ✅ Adding/fixing a specific feature
 
-**Use Agent Mode (Interactive) when:**
+**Use Agent Mode (Agent, in the chat panel) when:**
 - ✅ Creating multiple related files
 - ✅ Making changes across several files
 - ✅ Building complete features

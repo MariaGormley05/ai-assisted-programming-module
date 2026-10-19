@@ -42,16 +42,21 @@ terminal is a step further again, and has [a lab of its own](../../week09/cli_ag
    icon should also be in the status bar.
 4. Look at the row of controls under the chat input and choose
    **Copilot** as the session (it may say **Local** currently), as in the
-   setup lab. Every step that talks to the assistant names a **mode**:
-   **Interactive** reads your files and asks before it runs a command or
-   changes a file; **Plan** reads and thinks but changes nothing. If your
-   picker uses other names, those are the two to look for: the one that
-   asks first, and the read-only one.
+   setup lab. Every step that talks to the assistant then says what to
+   pick in the agent picker, the control that first says **Agent**:
+   **Ask** reads your files and answers, but cannot edit a file or run a
+   command that changes anything; **Agent** edits files straight away
+   and runs commands. Leave the mode and permissions controls on their
+   defaults, **Interactive** and **Manual permissions**, and **Agent**
+   asks before it runs a command (read-only ones such as `ls` excepted).
+   **Autopilot** and **Allow all** stop it asking; this lab never needs
+   them. If your picker uses other names, look for the read-only one and
+   the one that asks first.
 
 The three levels in this lab's headings map onto those controls: *Ask* is
-**Plan**, *Edit* is inline chat (`Ctrl+I`, or `Cmd+I` on a Mac, with the
-code selected) and *Agent* is **Interactive**. *Fresh conversation* means
-press the `+` at the top of the chat panel first.
+**Ask**, *Edit* is inline chat (`Ctrl+I`, or `Cmd+I` on a Mac, with the
+code selected) and *Agent* is **Agent**. *Fresh conversation* means press
+the `+` at the top of the chat panel first.
 
 Each section has a folder beside this README (`part1_ask_mode/`,
 `part2_edit_mode/`, …) holding the code you work on and the detailed
@@ -74,12 +79,12 @@ does not survive being skipped.
 Work in `part1_ask_mode/`.
 
 1. Open `mystery_code.py`. **Do not run it yet.**
-2. Fresh conversation, **Plan**: ask the assistant to explain what it
+2. Fresh conversation, **Ask**: ask the assistant to explain what it
    does, then write down what it will print **before** running anything.
 3. Run it. Compare the real output with your prediction.
 4. Open `buggy_code.py`. It processes `grades.csv` and happens to get the
    right answer on that file; its bugs bite on data it has not seen yet.
-   Fresh conversation, **Plan**: ask the assistant *what input could make
+   Fresh conversation, **Ask**: ask the assistant *what input could make
    this crash or produce the wrong average* — do not ask it to fix
    anything.
 5. Fix the bug **yourself**, using what it told you.
@@ -158,7 +163,7 @@ Work in `part3_agent_mode/` and follow its README for the full brief.
 
 1. Read the task in `part3_agent_mode/README.md`.
 2. Before starting, write down in one sentence what "done" means to you.
-3. Fresh conversation, **Interactive**: give the agent the goal — the
+3. Fresh conversation, **Agent**: give the agent the goal — the
    outcome, not the steps.
 4. Let it work without interrupting. Allow what it asks to do. Note every
    file it touched.
@@ -188,7 +193,7 @@ Write it down.
    to review.
 2. **Before running it**, write down what you would need to see to accept
    the result.
-3. Run it: fresh conversation, **Interactive**. Review against your own
+3. Run it: fresh conversation, **Agent**. Review against your own
    criteria from step 2.
 4. Record where your comfort ran out, and why.
 

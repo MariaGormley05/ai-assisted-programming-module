@@ -13,9 +13,9 @@ Agent mode gives Copilot the ability to:
 
 **How to Access:**
 - **Keyboard shortcut:** `Ctrl+Alt+I` (Windows/Linux) or `Ctrl+Cmd+I` (Mac) opens the chat panel
-- **Copilot Chat pane:** Press the `+` at the top of the chat panel for a fresh conversation, then choose **Interactive** in the row of controls under the chat input
+- **Copilot Chat pane:** Press the `+` at the top of the chat panel for a fresh conversation, then check that the agent picker under the chat input says **Agent** (not **Ask**)
 
-> 💡 **Tip:** In the **Copilot** session, agent mode is the **Interactive** mode: it reads your files and asks before it runs a command or changes a file. If your picker uses other names, look for the one that asks first.
+> 💡 **Tip:** In the **Copilot** session, agent mode is **Agent**: it edits files straight away and runs commands. Leave the mode and permissions controls on **Interactive** and **Manual permissions** and it asks before it runs a command (read-only ones such as `ls` excepted); **Autopilot** and **Allow all** stop it asking. If your picker uses other names, look for the one that asks first.
 
 ```mermaid
 graph TD
@@ -51,7 +51,7 @@ graph TD
 **Task:** Have the agent build a complete task management system with tests.
 
 **Steps:**
-1. Fresh conversation, **Interactive**.
+1. Fresh conversation, **Agent**.
 2. Enter this task:
 
 ```
@@ -93,7 +93,7 @@ Put every file in the part3_agent_mode folder.
 **Task:** Have the agent add new functionality to the task manager it just created.
 
 **Steps:**
-1. Fresh conversation, **Interactive**
+1. Fresh conversation, **Agent**
 2. Enter:
 
 ```
@@ -153,4 +153,4 @@ Make sure all existing tests still pass.
 ---
 
 ## Next Steps
-When you're done with Part 3, move on to `part4_cloud_agent` for the Cloud Coding Agent!
+When you're done with Part 3, move on to `part4_cloud_agent` for the Copilot cloud agent!
