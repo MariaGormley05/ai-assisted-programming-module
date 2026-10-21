@@ -163,7 +163,7 @@ graph TB
    - When Jules finishes, click **Create branch** (the button may be labelled **Publish branch**)
    - Open a pull request from that branch on GitHub
 
-**Note:** Jules is experimental and availability varies by user and organisation. You must be 18 or over to use it. If you cannot access it, use the alternative exercise below.
+**Note:** Jules has been out of beta since August 2025, but availability still varies by account and organisation. You must be 18 or over to use it. If you cannot access it, use the alternative exercise below.
 
 ---
 

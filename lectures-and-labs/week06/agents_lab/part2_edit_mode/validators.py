@@ -1,5 +1,5 @@
 """
-Empty file for Exercise 2.1: Code Generation
+Empty file for "Generate from nothing", in this folder's README.md
 
 Instructions:
 1. Place your cursor in this file

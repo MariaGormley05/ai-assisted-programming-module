@@ -1,137 +1,115 @@
-# Part 1: GitHub Copilot Ask Mode (20 minutes)
+# Part 1: Ask (DIY 1, step by step)
 
-## Overview
-Learn to use Copilot as a conversational coding assistant for understanding code, learning concepts, and getting debugging help.
+The walkthrough for **DIY 1** on the [lab page](../README.md), with the
+same steps in the same order.
 
-## What is Ask Mode?
-Ask mode is the conversational interface of GitHub Copilot. In the **Copilot** session it is **Ask**, picked in the agent picker (the control that first says **Agent**): it reads your files and answers, but cannot edit a file or run a command that changes anything. It's ideal for:
-- Understanding unfamiliar code
-- Getting explanations of concepts
-- Asking for code examples (without editing files)
-- Learning best practices
-- Debugging assistance
+**Ask** reads your files and answers in the chat. It cannot edit a file or
+run a command that changes anything, so every change in this part is one
+you make yourself. Open the chat with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a
+Mac), press the `+` at the top of the panel for a fresh conversation, and
+pick **Ask** in the agent picker under the chat input (the control that
+first says **Agent**).
 
-**How to Access:**
-- **Keyboard shortcut:** `Ctrl+Alt+I` (Windows/Linux) or `Ctrl+Cmd+I` (Mac)
-- **Copilot Chat pane:** Press the `+` at the top of the chat panel for a fresh conversation, then choose **Ask** in the agent picker under the chat input
-- **Context menu:** Right-click code → **Explain**
+From the lab folder:
 
-```mermaid
-graph LR
-    A[Developer Question] --> B[Copilot Chat]
-    B --> C[Analyze Context]
-    C --> D[Search Knowledge]
-    D --> E[Generate Response]
-    E --> F[Provide Answer]
-    F --> G[Code Examples]
-    F --> H[Explanations]
-    F --> I[Suggestions]
-    
-    style A fill:#0288d1,stroke:#01579b,stroke-width:3px,color:#fff
-    style B fill:#f57f17,stroke:#f57f17,stroke-width:3px,color:#000
-    style F fill:#2e7d32,stroke:#1b5e20,stroke-width:3px,color:#fff
+```bash
+cd part1_ask_mode
 ```
 
-## Exercises
+## The steps
 
-### Exercise 1.1: Code Explanation (5 min)
+1. Open `mystery_code.py`. **Do not run it yet.** Its docstring suggests
+   some questions; leave them for now.
+2. Fresh conversation, **Ask**, with the file open:
 
-**File:** `mystery_code.py`
+   > Walk me through mystery_code.py line by line and tell me exactly what
+   > it prints.
 
-**Task:** Use Ask mode to understand what this code does WITHOUT looking at the implementation details first.
+   Then make your own guess at the last line it prints and ask:
 
-**Steps:**
-1. Fresh conversation, **Ask**. Open the file `mystery_code.py`
-2. Select all the code (`Ctrl+A`)
-3. Right-click → **Explain**
-4. Read Copilot's explanation
+   > I think the total comes out at $____. Am I right?
 
-**Questions to ask Copilot** (same conversation, **Ask**):
-```
-What does this code do?
-What is a ShoppingCart class used for?
-How does the calculate_total() method work?
-What would happen if I add_discount(20)?
-Could you show me how to add a new item to this cart?
-```
+3. Run it and see who was right:
 
----
-
-### Exercise 1.2: Learning Concepts (5 min)
-
-**Task:** Fresh conversation, **Ask**. Use Copilot to learn about a new concept.
-
-**Sample Questions:**
-```
-Explain what async/await does in Python
-
-Show me an example of the decorator pattern in Python
-
-What's the difference between deepcopy and shallow copy?
-
-How do I handle exceptions properly in Python?
-
-What are context managers and when should I use them?
-```
-
-**Your Turn:** Pick a Python/JavaScript concept you're unfamiliar with and ask Copilot to explain it.
-
-**Note:**
-- Clarity of explanation
-- Quality of examples
-- Accuracy of information
-
----
-
-### Exercise 1.3: Debugging Assistant (10 min)
-
-**File:** `buggy_code.py`
-
-**Task:** Fresh conversation, **Ask**. Use Copilot to help debug code with errors.
-
-**Steps:**
-1. Open `buggy_code.py`
-2. Read the code and try to spot bugs
-3. Select all the code (`Ctrl+A`), then right-click → **Review** (it may sit inside the **Generate Code** submenu)
-
-4. Compare Copilot's findings with yours (they appear in the **Comments** panel and inline in the editor)
-5. Fresh conversation, **Ask**, with `buggy_code.py` open. The review's findings are in the
-   Comments panel, not in the chat, so name the finding in each question:
-   ```
-   In buggy_code.py, why is [the finding, in your own words] a problem?
-   How should I fix [that bug]? Explain it, do not change the file.
-   What test would have caught it?
-   ```
-6. In the Terminal, run the code. 
-    ```
-    cd part1_ask_mode    # from the lab folder, lectures-and-labs/week06/agents_lab
-    python buggy_code.py
+   ```bash
+   python mystery_code.py
    ```
 
-**Questions for Reflection:**
-- Did Copilot catch all the bugs?
-- Were the explanations clear?
-- Did it suggest good fixes?
-- What did Copilot miss (if anything)?
+   Then ask about a call the file never makes:
 
----
+   > What would add_discount(150) do to the total?
 
-## Best Practices for Ask Mode
+   and check its answer by running it:
 
-✅ **DO:**
-- Be specific in your questions
-- Provide context about your project
-- Ask follow-up questions
-- Verify information from multiple sources
-- Use it for learning and understanding
+   ```bash
+   python -c "from mystery_code import ShoppingCart as C; c = C(); c.add_item('Laptop', 100); c.add_discount(150); print(c.calculate_total())"
+   ```
 
-❌ **DON'T:**
-- Blindly trust all answers
-- Skip understanding the explanations
-- Use it as a replacement for documentation
-- Forget to test suggested solutions
+4. Open `buggy_code.py`. It reads `grades.csv` and gets the right answer
+   on that file. Fresh conversation, **Ask**:
 
----
+   > What input could make buggy_code.py crash, or print the wrong
+   > average? List the inputs. Don't fix anything.
 
-## Next Steps
-When you're done with Part 1, move on to `part2_edit_mode` for Edit Mode!
+5. Prove two of them: a grade with a decimal point, and a negative grade.
+
+   ```bash
+   printf 'name,grade,subject\nAoife,72.5,Maths\n' > decimal.csv
+   python -c "from buggy_code import load_grades; print(load_grades('decimal.csv'))"
+   printf 'name,grade,subject\nAoife,72,Maths\nBen,-100,Maths\n' > negative.csv
+   python -c "from buggy_code import load_grades, generate_report; print(generate_report(load_grades('negative.csv')))"
+   ```
+
+   Now fix one of the two in `buggy_code.py` **yourself**, using what the
+   assistant told you (Ask cannot edit, and that is the point), and run
+   the same command again.
+6. **The hunt.** Ask the step 4 question in two more fresh conversations.
+   Does it name the same inputs each time? Does every answer catch the
+   decimal grade?
+
+## Expected output
+
+Step 3:
+
+```text
+=== Shopping Cart ===
+Laptop: $999.99 x 1
+Mouse: $29.99 x 2
+Keyboard: $79.99 x 1
+
+Subtotal: $1139.96
+Discount: -$114.00
+Total: $1025.96
+```
+
+and the 150% discount prints `-50.0`: nothing stops a discount over 100%,
+so the shop pays you.
+
+Step 5, before your fix, the decimal grade stops the program:
+
+```text
+ValueError: invalid literal for int() with base 10: '72.5'
+```
+
+and the negative grade goes into the average without a word:
+
+```text
+    Average Grade: -14.00
+    Highest Grade: Aoife - 72
+    Lowest Grade: Ben - -100
+```
+
+After your fix, the same command does what you decided it should: skip
+the row, round it, or refuse it with a clear message. Which one is right
+is your call, not the assistant's.
+
+## If you finish early
+
+- **Review, not chat.** Select all of `buggy_code.py`, right-click and
+  choose **Review** (it may sit inside a **Generate Code** submenu). Its
+  findings appear in the **Comments** panel and inline in the editor, not
+  in the chat. Did it find the decimal grade?
+- **Learn something new.** Fresh conversation, **Ask**: pick a Python idea
+  you have not met, such as `async`/`await`, decorators, or `deepcopy`
+  against a shallow copy, and ask for an explanation with a five-line
+  example. Run the example.

@@ -1,138 +1,122 @@
-# Part 2: GitHub Copilot Edit Mode (25 minutes)
+# Part 2: Edit with inline chat (DIY 2, step by step)
 
-## Overview
-Learn to generate and modify code directly in files using Copilot's Edit Mode for quick, focused changes.
+The walkthrough for **DIY 2** on the [lab page](../README.md), with the
+same steps in the same order.
 
-## What is Edit Mode?
-Edit mode lets you make quick edits to a specific code selection. Today that is **inline chat**, which shows the change as a diff for you to keep or undo. It's ideal for:
-- Generating single functions or classes
-- Refactoring a specific function
-- Fixing bugs in selected code
-- Adding docstrings or comments
-- Quick code improvements
+Edit is **inline chat**: select some code, press `Ctrl+I` (`Cmd+I` on a
+Mac), describe the change, and it rewrites the selection in place. You see
+the change as a diff, red lines out and green lines in, and choose
+**Keep** or **Undo**. The diff is the whole safety mechanism.
 
-**How to Access:**
-- **Keyboard shortcut:** `Ctrl+I` (Windows/Linux) or `Cmd+I` (Mac) - quick inline access
+From the lab folder:
 
-> 💡 **Tip:** `Ctrl+I` opens inline chat: select code, describe the change, then read the diff and choose **Keep** or **Undo**.
-
-```mermaid
-stateDiagram-v2
-    [*] --> SelectCode
-    SelectCode --> OpenEditMode: Ctrl+I
-    OpenEditMode --> DescribeChange: Type instruction
-    DescribeChange --> CopilotGenerates: Enter
-    
-    CopilotGenerates --> PreviewChanges
-    PreviewChanges --> Keep: Looks good
-    PreviewChanges --> Undo: Not right
-    PreviewChanges --> Refine: Modify prompt
-    
-    Refine --> CopilotGenerates
-    Keep --> Applied
-    Undo --> [*]
-    Applied --> [*]
+```bash
+cd part2_edit_mode
 ```
 
-## Exercises
+## The steps
 
-### Exercise 2.1: Code Generation (10 min)
+1. Run the checker. It calls `calc()` from `messy_code.py` on four lists
+   and compares each answer with what the original file returned:
 
-**File:** `validators.py` (currently empty)
-
-**Task:** Generate a new data validation class.
-
-**Steps:**
-1. Open `validators.py`
-2. Press `Ctrl+I` (Windows/Linux) or `Cmd+I` (Mac) to open inline chat
-3. Type this instruction:
+   ```bash
+   python check_refactor.py
    ```
-   Create an EmailValidator class with a validate_email method that checks 
-   email format using regex. Include docstrings and type hints.
-   ```
-4. Review the generated code
-5. Click **Keep** if it looks good, or **Undo** to try again
 
-**Refinement:** Select the class again and ask to:
+2. Open `messy_code.py`, select the whole file (`Ctrl+A`), press `Ctrl+I`
+   and ask:
+
+   > Refactor this for readability: better variable names, smaller
+   > functions, no behaviour change. Keep the function names calc,
+   > proc_data and get_stuff, because other code calls them.
+
+3. **Read the diff before you choose Keep.** Find at least one change you
+   did not ask for: a docstring, a type hint, a guard for an empty list,
+   `max()` in place of a loop. Then choose **Keep** and run the checker
+   again:
+
+   ```bash
+   python check_refactor.py
+   ```
+
+4. If any line says `CHANGED`, put the file back and ask again, this time
+   naming what must not change:
+
+   ```bash
+   git restore messy_code.py
+   ```
+
+   > Refactor this for readability. Every result must stay exactly the
+   > same for every input, including negative numbers, a list containing
+   > 0 and an empty list. Keep the function names calc, proc_data and
+   > get_stuff.
+
+   Choose **Keep** and run the checker a third time.
+5. Run the calculator and pick one wrong line, `5! = 24` or
+   `Is 1 prime? True`:
+
+   ```bash
+   python broken_calculator.py
+   ```
+
+   Select only that function (`factorial` or `is_prime`), press `Ctrl+I`
+   and ask:
+
+   > Fix the bug in this function. Change nothing else.
+
+   Read the diff, choose **Keep**, then run it again and count what
+   changed:
+
+   ```bash
+   python broken_calculator.py
+   git diff --stat broken_calculator.py
+   ```
+
+6. **The hunt.** Put the calculator back (`git restore
+   broken_calculator.py`) and give the step 5 prompt twice more. Does it
+   change the same lines each time?
+
+## Expected output
+
+Step 1:
+
+```text
+calc() on four lists, before the refactor and now:
+
+  [10, 20, 30, 40, 50]   same
+  [-5, -3]               same
+  [5, 0, 3]              same
+  []                     same
+
+No behaviour change.
 ```
-Add a method to extract the domain from an email address
+
+After step 3, if the refactor swapped in `max()` and `min()`:
+
+```text
+  [-5, -3]               CHANGED  before: {'avg': -4.0, 'max': 0, 'min': -5, 'sum': -8}
+                                  now:    {'avg': -4.0, 'max': -3, 'min': -5, 'sum': -8}
+  [5, 0, 3]              CHANGED  before: {'avg': 2.6666666666666665, 'max': 5, 'min': 3, 'sum': 8}
+                                  now:    {'avg': 2.6666666666666665, 'max': 5, 'min': 0, 'sum': 8}
 ```
 
----
+The original `calc` starts its maximum at 0 and treats 0 as "no minimum
+yet", so it was wrong on negative numbers and on a list containing 0. A
+tidy refactor fixes that: a bug fix, and also a behaviour change you asked
+it not to make. Whether to keep the fix is your decision, not one to find
+hidden in a refactor. If the checker says it cannot find `calc`, the
+refactor renamed it although you asked it not to.
 
-### Exercise 2.2: Refactoring (10 min)
+Step 5: your line now reads `5! = 120` or `Is 1 prime? False`, and
+`git diff --stat` reports one file and a few lines, not dozens.
 
-**File:** `messy_code.py`
+## If you finish early
 
-**Task:** Refactor poorly written code to follow best practices.
-
-**Steps:**
-1. Open `messy_code.py`
-2. Select the whole file
-3. Press `Ctrl+I` / `Cmd+I`
-4. Give instructions:
-   ```
-   Refactor this code to:
-   - Follow PEP 8 style guidelines
-   - Use meaningful variable names
-   - Add docstrings
-   - Break into smaller functions if needed
-   - Change no behaviour
-   ```
-
-**Compare:** 
-- Before and after versions
-- Readability improvements
-- What changed and why
-
----
-
-### Exercise 2.3: Bug Fixing (5 min)
-
-**File:** `broken_calculator.py`
-
-**Task:** Fix bugs in existing code using Edit mode.
-
-**Steps:**
-1. Open `broken_calculator.py`
-2. Select the buggy function
-3. Use `Ctrl+I` / `Cmd+I`:
-   ```
-   Fix the bug in this function. Change nothing else.
-   ```
-
-4. Review changes carefully
-5. Test the fixed code
-
----
-
-## Edit Mode vs Agent Mode
-
-**Use Edit Mode (`Ctrl+I`) when:**
-- ✅ Editing a single function or class
-- ✅ Making focused changes to selected code
-- ✅ Quick refactoring of one section
-- ✅ Adding/fixing a specific feature
-
-**Use Agent Mode (Agent, in the chat panel) when:**
-- ✅ Creating multiple related files
-- ✅ Making changes across several files
-- ✅ Building complete features
-- ✅ Need autonomous planning and execution
-
-## Best Practices for Edit Mode
-
-✅ **DO:**
-- Select the specific code section you want to change
-- Review ALL generated code carefully
-- Test generated code before moving on
-- Be specific in your instructions
-- Use it for quick, focused changes
-
-❌ **DON'T:**
-- Accept code without understanding it
-- Use it for multi-file changes (use Agent Mode instead)
-- Use vague instructions
-- Skip testing
-## Next Steps
-When you're done with Part 2, move on to `part3_agent_mode` for Agent Mode!
+- **Generate from nothing.** Open `validators.py`, put the cursor in it,
+  press `Ctrl+I` and ask for an `EmailValidator` class with a
+  `validate_email` method that checks the format with a regular
+  expression. Then select the class and ask for a method that returns the
+  domain of an address. Which addresses would you test it on?
+- **More planted bugs.** The calculator has others that its own test
+  never prints: `multiply(3, -2)` gives 0 and `power(2, -1)` gives 1. Fix
+  them one at a time, one function selected each time.
