@@ -191,8 +191,12 @@ materially wrong by 2026.
   changes. Its diagrams are drawn shapes, not pictures.
 - **Coding Agents** (a PowerPoint deck since October 2026, titled "AI
   Agents" on its first slide) — four sections, each in its own colour,
-  with five question slides for the room and animations that build each
-  diagram. **What is an agent?** a chatbot against an agent, with
+  with animations that build each diagram, and four question slides for
+  the room: four lettered options, then a click that marks the right one
+  on the question slide itself. There is no try-it-now: in a lecture the
+  room answers questions, and the hands-on work is in the lab. Slide text
+  is full sentences that name the actor ("The agent…", never a bare
+  "it"), and every title states its point. **What is an agent?** a chatbot against an agent, with
   autonomy as the central trait; "agent" in the textbook sense (anything
   that perceives and acts) against the 2026 sense; the five textbook agent
   types (simple reflex, model-based, goal-based, utility-based, learning);
@@ -201,16 +205,16 @@ materially wrong by 2026.
   finishes alone, from METR's measurements. **How an agent thinks:** the
   ReAct loop (thought, action, observation), a real run line by line, the
   model asks while the loop acts, and the model decides when it is done.
-  **Agents at work:** editor, terminal and cloud; cloud agents that open
+  **Agents you can use:** editor, terminal and cloud; cloud agents that open
   pull requests, with the review and the `@copilot` comment as the human
   oversight; what agents are good for. Those topics are what the AI Agents
-  questions in MCQ 1 test, so keep them. **Keeping agents honest:** the
+  questions in MCQ 1 test, so keep them. **Staying in control:** the
   ladder of autonomy (ask, edit, agent, cloud) and what you review at each
-  rung; outcomes, not steps; say what must not change; "make the test
-  suite pass" against an out-of-date test, and a request that gives the
-  agent a way out that isn't green; it reads beyond the folder it was
-  given; review the diff, not the summary, and commit first because Stop
-  does not undo. Every trace, file list, quoted report and count on a
+  rung; describe the outcome, not the steps; say what must not change;
+  "make the test suite pass" against an out-of-date test, and a request
+  that tells the agent when to stop and report; an agent can read beyond
+  the folder it was given; review the diff, not the summary, and commit
+  first because Stop does not undo. The last slide is the summary. Every trace, file list, quoted report and count on a
   slide comes from a real run (a short agent loop on hosted models, and a
   coding-agent product) or from METR's published data: rerun or re-read
   them if a claim or the models change. Tool and mode names are dated on
