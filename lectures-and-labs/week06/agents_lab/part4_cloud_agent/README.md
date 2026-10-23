@@ -41,7 +41,8 @@ sequenceDiagram
     GH->>Dev: Notify PR ready
     
     Dev->>GH: Review PR
-    Dev->>GH: Approve & Merge
+    Note over Dev,GH: You asked Copilot for this change, so you cannot approve its pull request. Your own copy needs no approval, so you merge it.
+    Dev->>GH: Merge
 ```
 
 ## Exercises
