@@ -10,54 +10,67 @@ Instructions:
 4. Compare before and after
 """
 
-def calc(l):
-    # Calculate stuff
-    x = 0
-    y = 0
-    z = 0
-    for i in l:
-        x = x + i
-        if i > y:
-            y = i
-        if z == 0:
-            z = i
-        else:
-            if i < z:
-                z = i
-    a = x / len(l)
-    return {'avg': a, 'max': y, 'min': z, 'sum': x}
+def _calculate_statistics(numbers):
+    total = sum(numbers)
+    maximum = 0
+    minimum = 0
+
+    for number in numbers:
+        if number > maximum:
+            maximum = number
+        if minimum == 0 or number < minimum:
+            minimum = number
+
+    return {
+        'avg': total / len(numbers),
+        'max': maximum,
+        'min': minimum,
+        'sum': total,
+    }
+
+
+def calc(numbers):
+    return _calculate_statistics(numbers)
+
+
+def _process_active_item(item):
+    value = item['value']
+    return {
+        'id': item['id'],
+        'value': value * 1.1,
+        'priority': 'high' if value > 100 else 'low',
+    }
 
 
 def proc_data(data):
-    # Process the data
-    result = []
-    for d in data:
-        if d['status'] == 'active':
-            temp = {}
-            temp['id'] = d['id']
-            temp['value'] = d['value'] * 1.1
-            temp['priority'] = 'high' if d['value'] > 100 else 'low'
-            result.append(temp)
-    return result
+    return [
+        _process_active_item(item)
+        for item in data
+        if item['status'] == 'active'
+    ]
+
+
+def _split_by_status(data):
+    active_items = []
+    inactive_items = []
+
+    for item in data:
+        if item['status'] == 'active':
+            active_items.append(item)
+        else:
+            inactive_items.append(item)
+
+    return active_items, inactive_items
 
 
 def get_stuff(filename):
-    # Read file and do stuff
+    # Read file and split items by status.
     import json
-    f = open(filename, 'r')
-    data = json.load(f)
-    f.close()
-    
-    active = []
-    inactive = []
-    
-    for item in data:
-        if item['status'] == 'active':
-            active.append(item)
-        else:
-            inactive.append(item)
-    
-    return active, inactive
+
+    with open(filename, 'r') as file:
+        data = json.load(file)
+
+    return _split_by_status(data)
 
 
 # Test code

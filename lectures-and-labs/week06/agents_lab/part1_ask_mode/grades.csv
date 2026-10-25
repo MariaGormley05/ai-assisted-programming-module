@@ -1,6 +1,6 @@
 name,grade,subject
-Alice Smith,85,Mathematics
-Bob Johnson,92,Physics
+Alice Smith,-42,Mathematics
+Bob Johnson,92.5,Physics
 Charlie Brown,45,Chemistry
 Diana Prince,78,Biology
 Eve Davis,88,Mathematics

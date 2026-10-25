@@ -46,9 +46,11 @@ class Calculator:
     
     def factorial(self, n):
         """Calculate factorial of n."""
-        # Bug: Doesn't handle negative numbers or 0
+        if n < 0:
+            raise ValueError("Factorial is not defined for negative numbers")
+
         result = 1
-        for i in range(1, n):  # Bug: Should be range(1, n+1)
+        for i in range(1, n + 1):
             result *= i
         return result
     

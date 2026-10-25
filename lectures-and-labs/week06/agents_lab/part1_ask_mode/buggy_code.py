@@ -28,7 +28,7 @@ def load_grades(filename: str) -> List[Dict[str, any]]:
         for row in reader:
             student = {
                 'name': row['name'],
-                'grade': int(row['grade']),  # Bug: What if the value isn't a valid integer?
+                'grade': float(row['grade']),  # Bug: What if the value isn't a valid integer?
                 'subject': row['subject']
             }
             students.append(student)
