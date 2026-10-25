@@ -64,6 +64,7 @@ def _split_by_status(data):
 
 
 def get_stuff(filename):
+    """Return the active and inactive items loaded from a JSON file."""
     # Read file and split items by status.
     import json
 
