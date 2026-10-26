@@ -24,8 +24,8 @@ happens that week.
 | 3 | Prompting & Context Engineering | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/prompting/) | [lab](week03/prompting_lab/README.md) |
 | 4 | RAG | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/rag/) | [lab](week04/rag_lab/README.md) |
 | 5 | MCP | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/mcp/) | [lab](week05/mcp_lab/README.md) |
-| **➡️ 6** | Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/agents/) | [lab](week06/agents_lab/README.md) |
-| — | Reading week | [details](week06b-reading-week/README.md) | — |
+| 6 | Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/agents/) | [lab](week06/agents_lab/README.md) |
+| **➡️ —** | Reading week | [details](week06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (32%) · held during the lab slot | [details](week07/README.md) · [what it covers](../mcq/mcq1/README.md) | — |
 | 8 | Security of AI-Generated Code | [slides](week08/security-lecture.md) | [lab](week08/security_lab/README.md) |
 | 9 | CLI Coding Agents | [slides](week09/cli-agents-lecture.md) | [lab](week09/cli_agents_lab/README.md) |
