@@ -1,0 +1,2 @@
+# The lab's own tests (DIY 8) run under pytest; nothing else is needed.
+pytest>=7.4.0

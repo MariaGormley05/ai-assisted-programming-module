@@ -1,0 +1,46 @@
+# Office/OneDrive temp files
+~$*
+*.tmp
+desktop.ini
+Thumbs.db
+
+# Local build output
+build/
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Python virtual environments. This repo is a template students copy and then
+# `pip install` into: several labs ship a requirements.txt, and the first thing
+# a student is told to do is make a venv. Without these lines every one of them
+# sees thousands of vendored files in `git status`.
+.venv/
+venv/
+env/
+
+# API keys. One lab (rag) needs a live-service key, which students supply
+# themselves. .env.example ships and is the ONLY env file that may ever be
+# tracked -- safety_audit.py rejects any other.
+.env
+.env.*
+!.env.example
+
+# Bookkeeping for scripts/update-course-content.sh in a student's copy:
+# which upstream commit their content last came from. Local state, not repo
+# content — committing it would put a merge-ish marker in everyone's history.
+.course-sync
+
+# Local preview tooling only. marp-cli is pinned exactly in package.json and
+# CI installs it globally at that same version, so the lockfile would pin only
+# marp's own transitive deps -- ~1900 lines of noise in a repo students copy.
+package-lock.json
+
+# SDD scratch workspace (plan execution artifacts, never repo content)
+.superpowers/
+
+# personal working notes: course ids, private material locations, open
+# decisions. Loads alongside AGENTS.md for local AI sessions; must never
+# reach a copy of this repo.
+CLAUDE.local.md

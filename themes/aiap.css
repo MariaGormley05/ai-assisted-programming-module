@@ -1,0 +1,255 @@
+/* @theme aiap */
+/* AIAP module theme — "the lecture as source code".
+   Shares its structure with the sibling OOC module theme so the two module
+   sites read as one family; the accent differs so they are never mistaken
+   for each other (OOC uses Java orange #E76F00, AIAP violet #6741D9).
+   Classes: lead, cols, grid2, logos, dense, centered-table, side,
+   code-sm, code-xs. See AGENTS.md for usage. */
+
+@import 'default';
+
+/* ── AIAP theme: "the lecture as source code" ─────────────────────────
+   Palette: blue #33698C, accent violet #6741D9,
+   ink #1E2833, paper #FBFAF7. Signature: an editor gutter down the left,
+   slide numbers set like line numbers, and every heading ends in ;
+   (element rules are section-prefixed to outrank the default theme) */
+section {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 25px;
+  line-height: 1.5;
+  color: #1E2833;
+  /* the editor-gutter rail is painted into the background — template-proof */
+  background: linear-gradient(to right,
+    #FBFAF7 0, #FBFAF7 86px,
+    #DED8C9 86px, #DED8C9 88px,
+    #FBFAF7 88px, #FBFAF7 100%);
+  padding: 56px 72px 56px 122px;
+  justify-content: flex-start !important;
+  align-content: flex-start !important;
+  align-items: stretch !important;
+}
+section::after {
+  position: absolute !important; left: 0 !important; right: auto !important;
+  top: auto !important; bottom: 26px !important; width: 86px !important;
+  text-align: center !important; padding: 0 !important; background: transparent !important;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  font-size: 16px !important; font-weight: 400 !important; color: #AFA893 !important;
+  content: attr(data-marpit-pagination) !important;
+}
+section h1, section h2 {
+  font-family: 'Cascadia Code', Consolas, 'Courier New', monospace;
+  font-weight: 600; letter-spacing: -0.01em;
+}
+section h2 { font-size: 40px; margin: 0 0 26px 0 !important; padding: 0; color: #1E2833; border: none; }
+section h2::after { content: ';'; color: #6741D9; }
+section ul { margin: 0; padding-left: 1.15em; }
+section li { margin: 7px 0; }
+section ul li::marker { content: '▸ '; color: #6741D9; }
+section ul ul li::marker { content: '· '; color: #8B94A3; }
+section ul ul { font-size: 0.9em; color: #46536B; }
+section a { color: #33698C; text-decoration-color: #6741D9; }
+section strong { color: #0F1720; }
+section em { color: #46536B; }
+section code {
+  font-family: 'Cascadia Code', Consolas, monospace;
+  background: #EFECE3; color: #4C2FB0;
+  padding: 0.1em 0.35em; border-radius: 5px; font-size: 0.9em;
+}
+section pre {
+  background: #16222E; border: none; border-radius: 10px;
+  padding: 20px 24px; margin: 14px 0;
+  line-height: 1.45;
+}
+section pre code { background: transparent; color: #E8ECF1; font-size: 21px; padding: 0; }
+section pre code .hljs-string { color: #F0B26B; }
+section pre code .hljs-keyword { color: #7FB4D8; }
+section pre code .hljs-title, section pre code .hljs-built_in { color: #A8D3EE; }
+section pre code .hljs-comment { color: #7C8B99; }
+section table { margin: 10px 0 18px 0; border-collapse: collapse; font-size: 24px; }
+section table th {
+  font-family: 'Cascadia Code', Consolas, monospace; font-weight: 600;
+  text-align: left; color: #46536B; font-size: 20px;
+  border: none; border-bottom: 2px solid #1E2833;
+  padding: 8px 34px 8px 6px; background: transparent;
+}
+section table td {
+  border: none; border-bottom: 1px solid #DED8C9;
+  padding: 10px 34px 10px 6px; background: transparent;
+}
+section.centered-table table { margin: 10px auto 18px auto; }
+section table thead tr, section table tbody tr,
+section table tbody tr:nth-child(odd), section table tbody tr:nth-child(even) { background: transparent !important; }
+section table td strong { color: #6741D9; }
+section blockquote {
+  border: none; border-left: 4px solid #6741D9; background: #F4F0E6;
+  margin: 14px 0; padding: 12px 20px; color: #46536B; font-size: 0.92em;
+}
+section img {
+  max-width: 100%;
+  background: #FFFFFF; border: 1px solid #E5E1D6;
+  border-radius: 8px; padding: 6px;
+}
+/* a paragraph holding a single image (e.g. a pre-rendered mermaid diagram,
+   sized via Marp's ![h:NNN] hint) is centered; src-based selectors would
+   break in PDF export where images become data URIs */
+section p:has(> img:only-child) { text-align: center; }
+/* lead: title + section dividers — inverted ink, no gutter */
+section.lead {
+  background: linear-gradient(150deg, #14202C 0%, #23405A 100%);
+  color: #F4F1E8; padding: 96px 110px; justify-content: center;
+}
+section.lead::after { color: #4E6478; }
+section.lead h1 { font-size: 62px; color: #FFFFFF; margin: 6px 0 18px 0; }
+section.lead h1::after { content: ';'; color: #6741D9; }
+/* a ## heading on a lead slide (the break slide in a two-hour deck) */
+section.lead h2 { font-size: 48px; color: #FFFFFF; margin: 6px 0 18px 0; border: 0; padding: 0; }
+section.lead h2::after { content: ';'; color: #6741D9; }
+section.lead p { color: #A9B6C4; font-size: 26px; }
+section.lead .kicker {
+  font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 21px; color: #6741D9; letter-spacing: 0.06em;
+}
+/* title-slide artwork must never spill off the slide */
+section.lead img { max-height: 340px; object-fit: contain; }
+/* cols: two-column bullet flow for dense slides */
+section.cols ul { columns: 2; column-gap: 52px; font-size: 21px; }
+section.cols li { break-inside: avoid; margin: 0 0 12px 0; }
+/* grid2: side-by-side image walls (JVM diagrams, error screenshots) */
+section.grid2 p:has(img) {
+  display: flex; flex-wrap: wrap; gap: 14px;
+  justify-content: center; align-items: center; margin: 10px 0;
+}
+section.grid2 img { max-width: 46%; max-height: 215px; object-fit: contain; }
+/* logos: borderless inline logo row */
+section.logos p:has(img) {
+  display: flex; gap: 28px; justify-content: center; align-items: center;
+}
+section.logos img { border: none; background: transparent; padding: 0; max-height: 100px; max-width: 30%; object-fit: contain; }
+/* dense: slightly smaller body for prose-heavy slides */
+section.dense { font-size: 22px; }
+/* code-sm / code-xs: shrink a slide's code block when a full class listing
+   needs more lines than the 21px default fits. Prefer these over a per-slide
+   <style scoped> block so every deck shrinks by the same two steps.
+   Set the size on BOTH pre and code: a unitless line-height on pre alone is
+   resolved against pre's own font-size, so the code would keep 21px leading. */
+section.code-sm pre { font-size: 17px; line-height: 1.3; padding: 14px 20px; margin: 8px 0; }
+section.code-sm pre code { font-size: 17px; }
+section.code-xs pre { font-size: 14px; line-height: 1.25; padding: 10px 18px; margin: 6px 0; }
+section.code-xs pre code { font-size: 14px; }
+/* side: bullets left, ONE image right (slides pairing a list with a figure).
+   Expects exactly one list and one image paragraph per slide. */
+section.side {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  grid-template-areas: "head head" "body figure";
+  column-gap: 44px;
+  align-content: start !important;
+}
+section.side h2 { grid-area: head; }
+section.side ul, section.side ol { grid-area: body; align-self: center; }
+section.side p:has(img) {
+  grid-area: figure; align-self: center; justify-self: center; margin: 0;
+}
+section.side img { max-width: 100%; max-height: 460px; object-fit: contain; }
+
+/* ── shared deck components ──────────────────────────────────────
+   Defined once here instead of in all ten decks' <style> blocks: the
+   kicker, the callout, the figure legend, and the memory-cell strip.
+   A deck that needs a different look still overrides these locally --
+   its own <style> block comes after the theme in the cascade. */
+section .kicker { font-family: 'Cascadia Code', Consolas, monospace; font-size: 17px; color: #6741D9; letter-spacing: 0.05em; }
+section .callout { border-left: 4px solid #6741D9; background: #F4F0E6; padding: 12px 20px; margin: 16px 0; color: #46536B; font-size: 0.92em; }
+section .callout strong { color: #4C2FB0; }
+section .legend { font-size: 17px; color: #8B8471; margin-top: 2px; }
+section .mem .cell { min-width: 92px; padding: 15px 10px 13px; text-align: center; background: #FFFFFF; border: 2px solid #33698C; border-left-width: 1px; border-right-width: 1px; font-size: 25px; color: #1E2833; position: relative; }
+section .mem .cell:first-child { border-left-width: 2px; border-radius: 9px 0 0 9px; }
+section .mem .cell:last-child { border-right-width: 2px; border-radius: 0 9px 9px 0; }
+section .mem .cell .idx { position: absolute; top: -30px; left: 0; right: 0; font-size: 16px; color: #AFA893; }
+section .mem .cell.hot { background: #FDEFD9; border-color: #6741D9; color: #4C2FB0; font-weight: 600; }
+section .mem .cell.boom { background: #F9E3E3; border: 2px dashed #C0392B; color: #C0392B; }
+section .mem .name { align-self: center; margin-right: 22px; font-size: 23px; color: #33698C; font-weight: 600; }
+
+/* ── prompt boxes ────────────────────────────────────────────────
+   This module quotes PROMPTS constantly, and a prompt is neither prose
+   nor code: it is the thing you type at a model. It needs to read as
+   distinct from both, or slides turn into undifferentiated grey text.
+
+   Design: monospace like code (it is typed verbatim), but a COOL blue
+   ground rather than the dark code block, and labelled by a ::before
+   marker so it is unmistakable even in a photograph of a slide. The
+   callout stays warm violet; a prompt is never confused with an aside.
+
+   <p class="prompt">Write a Python function that…</p>
+   <p class="prompt bad">fix this</p>          <- the counter-example
+   <p class="prompt good">…</p>                <- the improved version   */
+section .prompt {
+  font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 0.82em; line-height: 1.45;
+  background: #EEF3F8; border-left: 4px solid #33698C; border-radius: 0 6px 6px 0;
+  padding: 13px 20px 13px 18px; margin: 14px 0; color: #22303F;
+  white-space: pre-wrap; position: relative;
+}
+section .prompt::before {
+  content: 'prompt'; display: block;
+  font-size: 0.72em; letter-spacing: 0.09em; text-transform: uppercase;
+  color: #33698C; margin-bottom: 6px;
+}
+/* A bad/good pair is the module's commonest teaching move, so it gets
+   first-class styling rather than a per-deck hack. */
+section .prompt.bad { background: #FBEEEE; border-left-color: #C0392B; color: #6B2B24; }
+section .prompt.bad::before { content: 'vague prompt'; color: #C0392B; }
+section .prompt.good { background: #ECF5EE; border-left-color: #2E7D4F; color: #21402F; }
+section .prompt.good::before { content: 'better prompt'; color: #2E7D4F; }
+/* The model's reply, when the contrast matters. */
+section .reply {
+  font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.78em;
+  background: #F5F3EE; border-left: 4px solid #AFA893; border-radius: 0 6px 6px 0;
+  padding: 12px 18px; margin: 12px 0; color: #46536B; white-space: pre-wrap;
+}
+section .reply::before {
+  content: 'reply'; display: block; font-size: 0.72em; letter-spacing: 0.09em;
+  text-transform: uppercase; color: #8B8471; margin-bottom: 5px;
+}
+
+/* ── diagram primitives ──────────────────────────────────────────
+   Deliberately NO image files anywhere in the teaching path. Diagrams
+   are drawn in CSS so that they diff in git, restyle from one place, and
+   can be READ by an assistant helping a student -- a PNG of an attack
+   chain is opaque to every one of those.
+
+   .flow  — a left-to-right chain of steps, arrows drawn with ::after
+   .stack — ranked layers, highest authority at the top                 */
+section .flow { display: flex; align-items: stretch; gap: 0; margin: 22px 0; }
+section .flow .step {
+  flex: 1; position: relative; background: #FFFFFF; border: 2px solid #33698C;
+  border-radius: 8px; padding: 13px 15px; margin-right: 26px;
+  font-size: 0.74em; line-height: 1.35; color: #1E2833;
+}
+section .flow .step:last-child { margin-right: 0; }
+section .flow .step:not(:last-child)::after {
+  content: '→'; position: absolute; right: -22px; top: 50%;
+  transform: translateY(-50%); color: #6741D9; font-size: 22px; font-weight: 700;
+}
+section .flow .step .n {
+  display: block; font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 0.8em; color: #8B8471; margin-bottom: 4px;
+}
+section .flow .step.danger { border-color: #C0392B; background: #FBEEEE; color: #6B2B24; }
+section .flow .step.danger .n { color: #C0392B; }
+
+section .stack { margin: 20px 0; }
+section .stack .layer {
+  border: 2px solid #33698C; border-radius: 8px; padding: 11px 18px;
+  margin: 7px 0; font-size: 0.8em; background: #FFFFFF; color: #1E2833;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 18px;
+}
+section .stack .layer .rank {
+  font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.8em;
+  color: #8B8471; white-space: nowrap;
+}
+section .stack .layer.top { border-color: #6741D9; background: #F4F0E6; }
+section .stack .layer.top .rank { color: #4C2FB0; }
+section .stack .layer.untrusted { border-style: dashed; border-color: #C0392B; background: #FBEEEE; color: #6B2B24; }
+section .stack .layer.untrusted .rank { color: #C0392B; }
+section .mem .name::after { content: ' →'; color: #6741D9; }
+section.lead .mem .cell .idx { color: #6E8497; }

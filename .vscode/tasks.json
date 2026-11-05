@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Update course content",
+      "detail": "Pull the latest lectures, lab instructions and untouched starter files from the module repo. A file you edited or created is never touched.",
+      "type": "shell",
+      "command": "bash scripts/update-course-content.sh",
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+    }
+  ]
+}

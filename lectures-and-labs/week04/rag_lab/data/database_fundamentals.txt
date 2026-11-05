@@ -1,0 +1,24 @@
+Database Fundamentals
+
+A database is an organized collection of data stored and accessed electronically. Databases allow us to store, retrieve, update, and manage large amounts of information efficiently. They're essential to almost every modern application, from social media to banking systems.
+
+Why Use Databases?
+Before databases, applications stored data in files. This approach had many problems: data redundancy (same data stored multiple times), difficulty enforcing data integrity, poor concurrent access, and no efficient querying. Databases solve these problems through structured organization and management systems.
+
+Relational Databases:
+Relational databases organize data into tables (relations) with rows and columns. Each row represents a record, and each column represents an attribute. Tables can be related to each other through foreign keys. For example, a Students table might have a foreign key linking to a Courses table. SQL (Structured Query Language) is used to interact with relational databases. Popular systems include MySQL, PostgreSQL, and SQLite.
+
+SQL Basics:
+SQL lets you create, read, update, and delete data. SELECT retrieves data: "SELECT name, age FROM students WHERE age > 18". INSERT adds new records: "INSERT INTO students VALUES ('John', 20)". UPDATE modifies existing data: "UPDATE students SET age = 21 WHERE name = 'John'". DELETE removes records: "DELETE FROM students WHERE age < 18". These four operations are often called CRUD operations.
+
+Database Design:
+Good database design follows normalization principles to reduce redundancy and improve data integrity. First Normal Form (1NF) ensures atomic values in each column. Second Normal Form (2NF) removes partial dependencies. Third Normal Form (3NF) removes transitive dependencies. However, sometimes denormalization is used intentionally for performance in read-heavy applications.
+
+NoSQL Databases:
+NoSQL databases provide alternative data models beyond tables. Document databases like MongoDB store JSON-like documents, perfect for flexible schemas. Key-value stores like Redis are fast caches. Column-family databases like Cassandra handle huge datasets across many servers. Graph databases like Neo4j excel at representing connected data. Choose based on your data's nature and access patterns.
+
+ACID Properties:
+Database transactions should be ACID: Atomic (all or nothing), Consistent (valid state to valid state), Isolated (concurrent transactions don't interfere), and Durable (committed data persists). These properties ensure data reliability even during failures or concurrent access.
+
+Indexing for Performance:
+Indexes speed up data retrieval by creating additional data structures that point to records. Think of an index like a book's index - instead of reading every page to find a topic, you check the index for page numbers. However, indexes take up space and slow down writes, so you should index columns used frequently in WHERE clauses and JOIN conditions.

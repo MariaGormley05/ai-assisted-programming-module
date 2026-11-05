@@ -1,0 +1,153 @@
+<!--
+  The Moodle course-page schedule. Paste this ONCE into the course page's
+  top-section summary (Edit section -> Tools -> Source code) and never edit it
+  again: on every page load it fetches the schedule the module site publishes
+  (build/schedule.json, generated from module/schedule.json by
+  scripts/build_index.py) and draws the table, so a change to the schedule
+  file reaches Moodle within minutes of a push, with no re-pasting.
+
+  The dates are worked out here from the same rule as everywhere else: week 1
+  is `readingWeekIndex` weeks before the Irish October bank holiday (the last
+  Monday of October) unless the published file fixes a startDate. The row for
+  the current week is highlighted and scrolled into view.
+
+  Rows are built with DOM calls only. Moodle strips closing tags out of inline
+  script text, so no markup may sit inside a string here.
+-->
+<div class="schedule-window shadow-sm mb-5 rounded">
+  <table id="courseSchedule"
+    class="table table-hover table-bordered schedule-table"
+    style="width: 100%; background-color: #f1f5f9;">
+    <thead>
+      <tr>
+        <th style="width: 5.36%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff;" scope="col">Week</th>
+        <th style="width: 12.85%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff;" scope="col">Dates (Mon - Sun)</th>
+        <th style="width: 13.22%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff;" scope="col">Topic</th>
+        <th style="width: 12.85%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff;" scope="col">Assessments</th>
+        <th style="width: 7.49%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff; text-align: center;" scope="col">Lecture</th>
+        <th style="width: 5.36%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff; text-align: center;" scope="col">Lab</th>
+        <th style="width: 42.87%; white-space: nowrap; border-color: #cbd5e1; background-color: #1c1917; color: #ffffff;" scope="col">Notes</th>
+      </tr>
+    </thead>
+    <tbody id="scheduleBody"></tbody>
+  </table>
+</div>
+<p>
+  <script>
+    (function () {
+      var SCHEDULE_URL = "https://danielcregg.is-a.dev/ai-assisted-programming/schedule.json";
+      var SITE_URL = "https://danielcregg.is-a.dev/ai-assisted-programming/";
+      var SVG = "http://www.w3.org/2000/svg";
+      var tbody = document.getElementById("scheduleBody");
+
+      function icon(stroke, shapes) {
+        var s = document.createElementNS(SVG, "svg");
+        var attrs = { width: "22", height: "22", viewBox: "0 0 24 24", fill: "none", stroke: stroke,
+                      "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" };
+        for (var k in attrs) s.setAttribute(k, attrs[k]);
+        s.style.verticalAlign = "middle";
+        shapes.forEach(function (shape) {
+          var e = document.createElementNS(SVG, shape[0]);
+          for (var a in shape[1]) e.setAttribute(a, shape[1][a]);
+          s.appendChild(e);
+        });
+        return s;
+      }
+      function lectureIcon() {
+        return icon("#d97706", [["rect", { x: 4, y: 2, width: 16, height: 20, rx: 2 }],
+                                ["line", { x1: 8, y1: 7, x2: 16, y2: 7 }],
+                                ["line", { x1: 8, y1: 11, x2: 16, y2: 11 }],
+                                ["line", { x1: 8, y1: 15, x2: 13, y2: 15 }]]);
+      }
+      function labIcon() {
+        return icon("#0f766e", [["rect", { x: 2, y: 3, width: 20, height: 14, rx: 2 }],
+                                ["line", { x1: 8, y1: 21, x2: 16, y2: 21 }],
+                                ["line", { x1: 12, y1: 17, x2: 12, y2: 21 }]]);
+      }
+      function cell(tag, style, content) {
+        var c = document.createElement(tag);
+        c.setAttribute("style", style);
+        if (typeof content === "string") c.textContent = content;
+        else if (content) c.appendChild(content);
+        return c;
+      }
+      function link(url, title, makeIcon) {
+        var a = document.createElement("a");
+        a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.title = title;
+        a.appendChild(makeIcon());
+        return a;
+      }
+      function mondayOf(d) {
+        var m = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        m.setDate(m.getDate() - (m.getDay() + 6) % 7);
+        return m;
+      }
+      function startDate(data, today) {
+        if (!data.startDateDerived && data.startDate) {
+          var p = data.startDate.split("-");
+          return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+        }
+        // Before July the calendar in force is still last autumn's.
+        var year = today.getMonth() < 6 ? today.getFullYear() - 1 : today.getFullYear();
+        var reading = mondayOf(new Date(year, 9, 31));   // last Monday of October
+        reading.setDate(reading.getDate() - 7 * (data.readingWeekIndex || 0));
+        return reading;
+      }
+      function fallback(message) {
+        var row = document.createElement("tr");
+        var td = cell("td", "border-color: #cbd5e1; color: #666666;", "");
+        td.setAttribute("colspan", "7");
+        td.appendChild(document.createTextNode(message + " "));
+        var a = document.createElement("a");
+        a.href = SITE_URL; a.target = "_blank"; a.rel = "noopener noreferrer";
+        a.textContent = "Open the schedule on the module site";
+        td.appendChild(a);
+        row.appendChild(td);
+        tbody.appendChild(row);
+      }
+      function render(data) {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var start = startDate(data, today);
+        var M3 = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var fmtD = function (d) { return String(d.getDate()).padStart(2, "0") + " " + M3[d.getMonth()]; };
+
+        data.weeks.forEach(function (item, index) {
+          var weekStart = new Date(start);
+          weekStart.setDate(start.getDate() + index * 7);
+          var weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 6);
+
+          var row = document.createElement("tr");
+          if (index % 2 === 1) row.style.backgroundColor = "#e2e8f0";
+          if (today >= weekStart && today <= weekEnd) {
+            row.style.backgroundColor = "#fff3cd";
+            row.style.fontWeight = "bold";
+            setTimeout(function () { row.scrollIntoView({ behavior: "smooth", block: "center" }); }, 100);
+          } else if (item.week === "X") {
+            row.style.backgroundColor = "#f0f0f0";
+            row.style.fontStyle = "italic";
+          }
+
+          var th = cell("th", "border-color: #cbd5e1;", item.week);
+          th.setAttribute("scope", "row");
+          row.appendChild(th);
+          row.appendChild(cell("td", "border-color: #cbd5e1;", fmtD(weekStart) + " - " + fmtD(weekEnd)));
+          row.appendChild(cell("td", "border-color: #cbd5e1;", item.topic || ""));
+          row.appendChild(cell("td", "color: #b91c1c; font-weight: 500; border-color: #cbd5e1;", item.assessment || ""));
+          row.appendChild(cell("td", "border-color: #cbd5e1; text-align: center;",
+            item.lectureUrl ? link(item.lectureUrl, "Open Lecture", lectureIcon) : ""));
+          row.appendChild(cell("td", "border-color: #cbd5e1; text-align: center;",
+            item.labUrl ? link(item.labUrl, "Open Lab", labIcon) : ""));
+          row.appendChild(cell("td", "color: #666666; border-color: #cbd5e1;", item.notes || ""));
+          tbody.appendChild(row);
+        });
+      }
+
+      fetch(SCHEDULE_URL, { cache: "no-cache" })
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(render)
+        .catch(function () { fallback("The schedule could not be loaded just now."); });
+    })();
+  </script>
+</p>

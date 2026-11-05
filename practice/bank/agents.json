@@ -1,0 +1,456 @@
+{
+  "topic": "agents",
+  "title": "Coding Agents",
+  "questions": [
+    {
+      "id": "agents-001",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "The same model answered all three of these requests on the same day. What actually changed from the first to the third?",
+      "code": "What does this function do?\n\nRewrite this function to handle empty input.\n\nMake the test suite pass.",
+      "options": [
+        "Each request needed a more capable model than the one before",
+        "Each request gave the model more permission to act on its own",
+        "Each request needed more context about the codebase to be answered",
+        "Each request required a longer and more detailed prompt to work"
+      ],
+      "answer": 1,
+      "explanation": "The three sit on a ladder of autonomy: answer only, edit a selection, then choose files, make changes and run things until it decides it is done. What grows across the ladder is authority, not intelligence — the same model is doing all three, so when a run goes wrong the question is how much rope you gave it, not whether it was clever enough."
+    },
+    {
+      "id": "agents-002",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What is the unit of review at each rung of the ladder, from ask mode to edit mode to agent mode?",
+      "code": null,
+      "options": [
+        "A suggestion, then a diff, then a result",
+        "A diff, then a result, then a summary",
+        "A summary, then a diff, then a test run",
+        "A result, then a diff, then a suggestion"
+      ],
+      "answer": 0,
+      "explanation": "In ask mode nothing is changed, so you judge a suggestion; in edit mode you accept or reject a diff. In agent mode several files may have changed and commands may have run, so you are judging a result. Most people never notice that what they are reviewing changed."
+    },
+    {
+      "id": "agents-003",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What is an editor assistant in ask mode allowed to do?",
+      "code": null,
+      "options": [
+        "Rewrite the code you selected in place, after showing you a diff to approve",
+        "Edit any file you have open, but only after asking you to confirm each change",
+        "Answer in the chat panel; every change to a file is one you make yourself",
+        "Read and change any file on its own, but never run commands or the test suite"
+      ],
+      "answer": 2,
+      "explanation": "Ask mode is the most restricted rung: it reads what you show it and replies, and it cannot touch a single file. That restriction is the feature — the output lands in your head rather than in your files, and any change is still yours to make."
+    },
+    {
+      "id": "agents-004",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Which description matches edit mode?",
+      "code": null,
+      "options": [
+        "You describe a goal; it chooses the files, makes the changes and runs things",
+        "You select code and describe a change; it rewrites that code and you accept or reject a diff",
+        "You paste code into the chat; it explains the change to make and you type that change in yourself",
+        "You point it at the repository; it makes the change and reports back with a summary"
+      ],
+      "answer": 1,
+      "explanation": "Edit mode is one step up from ask: it changes a selection you chose, in place, and shows you a diff before anything is accepted. Choosing files and running commands belong to agent mode; typing the change yourself is ask mode."
+    },
+    {
+      "id": "agents-005",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "In agent mode, who decides which files are changed and which commands are run?",
+      "code": null,
+      "options": [
+        "You do, by listing every file and command in the request before it starts",
+        "You do, by approving each file it proposes to open before it continues",
+        "The editor does, restricting it to whichever files you currently have open",
+        "The assistant does, working out the steps from the outcome you described"
+      ],
+      "answer": 3,
+      "explanation": "Agent mode is the rung where you describe an outcome and it works out the steps: which files to open, what to change, what to run. It may edit several files and execute commands before handing back, which is why you end up reviewing a result rather than a change."
+    },
+    {
+      "id": "agents-006",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Two agents receive the same instruction. What actually decides how much damage a bad run can do?",
+      "code": null,
+      "options": [
+        "Which tools it may call, which files it may touch, and whether commands need your approval",
+        "Whether it runs inside the editor or in a terminal window, since the terminal is the more powerful surface",
+        "The size of the model behind it, since a larger model makes bolder changes",
+        "How long the instruction was, since a short prompt leaves it more freedom"
+      ],
+      "answer": 0,
+      "explanation": "Blast radius is a matter of grants, not of user interface. An editor agent given the workspace and a terminal has the same reach as a terminal agent; a terminal agent with a deny on writes has less. Read the permission policy (allow, ask, deny) and the folder it is allowed to touch, and you know what a bad run can cost before it starts."
+    },
+    {
+      "id": "agents-007",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Why commit before letting an agent loose on your code?",
+      "code": null,
+      "options": [
+        "So that the agent can read the commit history and understand the code better",
+        "So that the tests are guaranteed to pass before the agent starts changing things",
+        "So that `git diff` shows exactly what it changed and `git checkout` can undo it",
+        "So that the agent's work is saved automatically if the editor crashes mid-run"
+      ],
+      "answer": 2,
+      "explanation": "A clean starting point is what makes `git diff` a review tool and `git checkout` an undo. Without a commit you have neither: you cannot see what changed against a known state, and you cannot get back to it."
+    },
+    {
+      "id": "agents-008",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What is wrong with always using the most autonomous mode available?",
+      "code": null,
+      "options": [
+        "Nothing, as long as the tests pass afterwards — autonomy is the point",
+        "It is an unexamined default, the same mistake as never leaving ask mode",
+        "It costs more, because agent mode uses far more tokens per request",
+        "It is slower, because the agent has to read every file before it starts"
+      ],
+      "answer": 1,
+      "explanation": "The skill is picking a rung deliberately for the task in hand. Reaching for the top rung by default is as unexamined as never leaving the bottom one — and ask mode is the right tool more often than it gets used, because understanding is the step people skip."
+    },
+    {
+      "id": "agents-009",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "How does a cloud agent differ from the assistant modes that run inside your editor?",
+      "code": null,
+      "options": [
+        "It works asynchronously on a repository and hands back a pull request",
+        "It runs a larger model than the editor can, so its changes need less review",
+        "It only answers questions about a repository and cannot change any files",
+        "It edits the same open files as the editor, but from a remote machine"
+      ],
+      "answer": 0,
+      "explanation": "A cloud agent works on the repository while you are not watching, then opens a pull request rather than editing beside you. That raises the question of what review even means when you did not see the work happen — the pull request is all you have."
+    },
+    {
+      "id": "agents-010",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "You have inherited code you have never seen and need to understand what it does before changing anything. Which mode fits?",
+      "code": null,
+      "options": [
+        "Agent mode, so it can explore the whole codebase on its own and report back to you",
+        "Edit mode, so that its explanation is written into the file itself as comments",
+        "Ask mode, so the explanation lands in your head and nothing is touched",
+        "A terminal agent, so it can run the code in your shell and describe the behaviour"
+      ],
+      "answer": 2,
+      "explanation": "Ask mode is the best tool in the room for code you did not write: it explains, touches nothing, and leaves every change to you. Agent mode would explore and report, but it may also change things, and the point here is to understand before deciding what to do."
+    },
+    {
+      "id": "agents-011",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What does each step up the ladder — ask, then edit, then agent — trade away, and for what?",
+      "code": null,
+      "options": [
+        "It trades review effort for reach: more can be done, and it is harder to check",
+        "It trades accuracy for speed: more gets done per request, and more of it is wrong",
+        "It trades context for autonomy: the assistant sees less but decides more",
+        "It trades cost for capability: each rung needs a larger and dearer model"
+      ],
+      "answer": 0,
+      "explanation": "Each rung can touch more — a selection, then files and commands, then a whole repository — and in return the thing you review gets bigger and less direct: a suggestion, a diff, a result. Nothing about the model's accuracy or size changes from rung to rung."
+    },
+    {
+      "id": "agents-012",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "You have given an agent a goal and it has started working. What should you be doing while it runs?",
+      "code": null,
+      "options": [
+        "Stopping it as soon as it opens any file you were not expecting it to touch",
+        "Letting it finish uninterrupted, and keeping a note of every file it touches",
+        "Feeding it the next step each time it pauses, so it stays on your plan",
+        "Running the test suite alongside it, so that mistakes are caught as early as possible"
+      ],
+      "answer": 1,
+      "explanation": "The discipline is to let it work, then review. Steering it step by step wastes what the mode is for, and the list of files it touched is the raw material for the review afterwards — an unexpected file is a finding to write down, not a reason to stop it mid-run."
+    },
+    {
+      "id": "agents-013",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A colleague says ask mode is a waste of time because it never changes anything. What does that view miss?",
+      "code": null,
+      "options": [
+        "Ask mode is quicker than edit mode in practice, because there is no diff to read",
+        "Ask mode is the only rung that can safely be used on code without a test suite",
+        "Ask mode is what the assistant falls back to when an edit turns out to be impossible",
+        "Every higher rung assumes you already understand the code, which is what ask mode builds"
+      ],
+      "answer": 3,
+      "explanation": "Judging a diff or a result presupposes that you understand the code well enough to tell a good change from a bad one, and ask mode is where that understanding comes from. Skip it and you are approving changes to code you cannot evaluate — understanding is the step that does not survive being skipped."
+    },
+    {
+      "id": "agents-014",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "You give this to an editor assistant in edit mode. What most often comes back?",
+      "code": "rename calculate to compute_total in this file",
+      "options": [
+        "Exactly that rename and nothing else, because the instruction was narrow and specific",
+        "A clarifying question about which of the callers should also be renamed",
+        "The rename, plus reordered imports, a few type hints and a reformatted docstring",
+        "A complete rewrite of the file, since the assistant regenerates whole files by default"
+      ],
+      "answer": 2,
+      "explanation": "A narrow instruction does not produce a narrow change. Assistants tidy while they are in there — imports, type hints, a docstring, a stray reformat — and none of it was asked for, but all of it is inside the diff you are about to approve. That is why the diff has to be read, not glanced at."
+    },
+    {
+      "id": "agents-015",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Why add the second sentence to this edit-mode request?",
+      "code": "Rename calculate to compute_total in this file.\nChange nothing else: no import reordering, no type hints, no reformatting.",
+      "options": [
+        "It keeps the diff small enough to be read properly rather than skimmed",
+        "It stops the assistant asking a clarifying question before it makes the edit",
+        "It makes the assistant work faster, because it has fewer decisions to make",
+        "It is needed because the assistant cannot rename without touching imports"
+      ],
+      "answer": 0,
+      "explanation": "Saying what must not change is how you control the size of the diff. A 3-line diff gets read; a 40-line diff gets skimmed — and you choose which one you will be reviewing at the moment you write the prompt."
+    },
+    {
+      "id": "agents-016",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Before starting an agent on a task, you write down in one sentence what \"done\" means. What does that protect you from?",
+      "code": null,
+      "options": [
+        "The agent running out of context before it has finished the whole task",
+        "Accepting whatever comes back, because anything finished-looking is hard to fault",
+        "The agent asking you clarifying questions instead of getting on with the work",
+        "Having to read the diff afterwards, because the definition can be checked instead"
+      ],
+      "answer": 1,
+      "explanation": "If you cannot say what done means before it starts, you cannot tell whether it got there — and you will accept whatever looks finished. The sentence gives you something to check the result against; it does not replace reading the diff."
+    },
+    {
+      "id": "agents-017",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "Which of these is the better agent-mode request, and why?",
+      "code": "A: Open utils.py, find the parse function, add a try/except around line 40, then open test_utils.py and add a test, then run pytest.\n\nB: Make parse() handle malformed input without crashing. Add a test covering it. All existing tests must still pass.",
+      "options": [
+        "A, because it is more specific, and specificity is what makes a prompt work first time",
+        "A, because naming the files and the line number stops the agent touching anything else",
+        "B, because it states the outcome and the constraints and leaves the route open",
+        "B, because shorter prompts leave more of the context window free for the code itself"
+      ],
+      "answer": 2,
+      "explanation": "At this rung precision moves from the route to the destination: be vague about how, and ruthless about what done means. B says exactly that — no crash on malformed input, a test for it, and every existing test still passing — while A spends its detail on steps, which is the part agent mode exists to work out."
+    },
+    {
+      "id": "agents-018",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "An agent finishes and reports: \"Refactored the parser, added validation and updated the tests; everything passes.\" Why is this report not evidence of what happened?",
+      "code": null,
+      "options": [
+        "Reports are written before the changes are applied, so they describe a plan, not the result",
+        "Agents are told to summarise briefly, so anything awkward is left out of the report",
+        "A report cannot be diffed against the previous commit, so it cannot be verified",
+        "It says what the agent intended, and it came from the same process that wrote the code"
+      ],
+      "answer": 3,
+      "explanation": "The summary is fluent and confident, but it is a description of intent, not an independent check. If the process that wrote the code was wrong, the summary it wrote will be wrong in the same way. The diff is evidence; the story is not."
+    },
+    {
+      "id": "agents-019",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "You point an agent at a failing test whose cause nobody understands. Twenty minutes later the test passes, four files have changed, and there is still no explanation of what was wrong. What happened?",
+      "code": null,
+      "options": [
+        "It ran out of context partway through and lost track of its own earlier changes",
+        "The task was too big for an editor agent and should have gone to a terminal agent",
+        "It optimised for making the test go green, when what you needed was a diagnosis",
+        "The definition of done was too strict, so it kept changing files to satisfy it"
+      ],
+      "answer": 2,
+      "explanation": "An agent will try things until the symptom disappears; it has no particular interest in why. The result is a pile of speculative changes, a passing test and nobody who knows what was wrong. Debugging an unknown cause is the strongest case for deliberately choosing a lower rung: ask mode, and a diagnosis first."
+    },
+    {
+      "id": "agents-020",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "For which task does a terminal agent's extra reach actually earn its extra blast radius?",
+      "code": null,
+      "options": [
+        "A change spread across many files in the repository",
+        "A one-line bug fix in a function you have open",
+        "A subtle bug whose cause has not yet been identified",
+        "A refactor of a single file that you can already picture"
+      ],
+      "answer": 0,
+      "explanation": "An editor agent is good for a change you can picture in the files you have open; a terminal agent is good for a change spread across many files, because it sees the whole repository and can run your shell. The cost is that the same instruction now has a blast radius of everything, so it should be reserved for tasks that need the reach."
+    },
+    {
+      "id": "agents-021",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "You want to understand an unfamiliar script before running it. Which of these two ask-mode prompts is the better one, and why?",
+      "code": "A: What does this do?\n\nB: Walk me through this line by line with the input [3, 1, 4, 1, 5].",
+      "options": [
+        "A, because a short summary is easier to check against the real output",
+        "A, because giving a specific input biases the explanation towards one path",
+        "B, because the assistant cannot explain code without a concrete input",
+        "B, because a trace forces specifics, where a summary invites hand-waving"
+      ],
+      "answer": 3,
+      "explanation": "A line-by-line trace on a concrete input has to commit to what each step produces, which gives you a prediction you can test by running the code. \"What does this do\" can be answered plausibly without being right, and you would have nothing concrete to compare against."
+    },
+    {
+      "id": "agents-022",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "You asked for the one bug in `calc.py` (`subtract` returned `b - a`) to be fixed with no other changes, and got this diff. What is the right response?",
+      "code": "--- a/calc.py\n+++ b/calc.py\n@@ -1,5 +1,14 @@\n-def divide(a, b):\n-    return a / b\n+import logging\n+\n+logger = logging.getLogger(__name__)\n+\n+\n+def divide(a: float, b: float) -> float:\n+    \"\"\"Divide a by b, guarding against zero.\"\"\"\n+    if b == 0:\n+        logger.warning(\"division by zero\")\n+        raise ZeroDivisionError(\"b must not be zero\")\n+    return a / b\n \n-def subtract(a, b):\n-    return b - a\n+def subtract(a: float, b: float) -> float:\n+    return a - b",
+      "options": [
+        "Accept it: the bug is fixed and the extra guards and hints are improvements",
+        "Accept it, but add a note that the logging should be removed in a later pass",
+        "Reject it and ask again, this time adding \"change as little as possible\"",
+        "Reject it and switch to agent mode, which is better at keeping changes small"
+      ],
+      "answer": 2,
+      "explanation": "The requested fix is one line; the diff is over a dozen, and the extra lines are exactly where unrequested behaviour hides — a zero guard and logging that nobody asked for. A diff that touches more than a couple of lines for a one-line fix should be rejected and the request repeated with an explicit instruction to change as little as possible."
+    },
+    {
+      "id": "agents-023",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Two agents both complete the same task successfully. What is the more useful basis for comparing them?",
+      "code": null,
+      "options": [
+        "Which one finished faster, since their capability was equal and time is the cost",
+        "Which one wrote the shorter summary, since that is the part you will actually read",
+        "Which one ran the larger model, since that is what predicts success on harder tasks",
+        "What each one did without asking, since capability was equal and behaviour may not be"
+      ],
+      "answer": 3,
+      "explanation": "Judging a tool on capability misses the difference that matters. Two agents that can both do the task may differ entirely in what they do without asking — which files they touch, what they run, what they change beyond the request — and that is what determines how much review the result needs."
+    },
+    {
+      "id": "agents-024",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "Where does giving an assistant more autonomy cost you the most?",
+      "code": null,
+      "options": [
+        "A large mechanical refactor across thirty files, because the change is too big to review",
+        "A subtle bug whose cause you do not yet understand, because it will chase the symptom",
+        "Writing tests for existing code, because it cannot know what the intended behaviour was",
+        "Generating boilerplate, because there is nothing for it to reason about"
+      ],
+      "answer": 1,
+      "explanation": "The big refactor sounds hardest, but agents do sweeping mechanical changes well, and tests and boilerplate are routine for them. The trap is the bug with an unclear cause: an agent tries fixes until the symptom goes away, and what you wanted was to know the cause — a job for ask mode."
+    },
+    {
+      "id": "agents-025",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "\"The moment you stop reading the diff, edit mode and agent mode are the same tool.\" What is this claim saying?",
+      "code": null,
+      "options": [
+        "The safety difference between the rungs is the review, so skipping it removes the difference",
+        "Edit mode and agent mode use the same underlying model, so their output is identical",
+        "Agent mode should be preferred, since a diff is going to be skimmed rather than read anyway",
+        "Edit mode diffs are usually too large to read, so they add little real safety"
+      ],
+      "answer": 0,
+      "explanation": "The diff is the entire safety mechanism at the edit rung, not a formality. Accepting it unread means changes you did not choose go into your files unexamined, which is exactly what agent mode does, only with extra steps. The ladder is a ladder of review as much as of authority."
+    },
+    {
+      "id": "agents-026",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "An agent was asked to make `parse()` reject malformed input and add a test. It reports success and `git status` shows this. Which diff do you read first?",
+      "code": "$ git status --short\n M src/parse.py\n M tests/test_parse.py\n M tests/conftest.py\n M src/config.py\n M requirements.txt",
+      "options": [
+        "The agent's report, to check that the two files you expected to change are the ones it says it changed",
+        "`src/parse.py`, since that is where the change you asked for lives",
+        "`tests/test_parse.py` and `tests/conftest.py`: a changed test or fixture redefines what \"passing\" means",
+        "`src/config.py` and `requirements.txt`, the files you did not expect to see touched"
+      ],
+      "answer": 2,
+      "explanation": "Order the review by what each step can invalidate. A changed test or fixture moves the goalposts, so until you have read those diffs the passing suite is evidence of nothing; conftest.py is a shared fixture, exactly the place a test gets made to pass. The unexpected files come next (config.py and requirements.txt were not part of the request), then run it yourself, and read the intended change in parse.py last, because it is the only part the report already described. The report itself is a story, not evidence."
+    },
+    {
+      "id": "agents-027",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "You deliberately give an agent a task at the edge of what you would trust it with, and afterwards write: \"I stopped trusting it once it touched three files I had not read.\" What has that exercise established?",
+      "code": null,
+      "options": [
+        "That you need more practice with agent mode before using it on real work",
+        "That the task was too large and should have been split into smaller requests",
+        "Where your ability to verify ran out, and what would have to change to go further",
+        "That an agent should be configured to touch no more than two files in a single run"
+      ],
+      "answer": 2,
+      "explanation": "There is no correct answer and no minimum autonomy you are supposed to reach. The honest output is knowing where your comfort ends — the point at which you could no longer verify what it did — and what would have to be true, such as having read those files or having tests that cover them, to move that point."
+    },
+    {
+      "id": "agents-028",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "You give an agent a precise step-by-step plan. It carries out every step exactly, and the result is wrong. What is the most accurate reading of what happened?",
+      "code": null,
+      "options": [
+        "The plan was yours and it followed it faithfully, so the fault lies in the route, not the agent",
+        "The agent should have recognised that the plan was flawed and asked you before carrying it out",
+        "The model was not capable enough; a terminal agent would have carried out the same plan correctly",
+        "The steps were too detailed for the context window, so the later ones were carried out badly"
+      ],
+      "answer": 0,
+      "explanation": "Prescribing steps in agent mode and then blaming it for following them is a classic mistake. The mode exists to work out the route from a stated outcome; hand it the route and it will execute your bad plan faithfully. Precision belongs on the destination — what done means — not on the steps."
+    },
+    {
+      "id": "agents-029",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A task currently sits in edit mode. Which change to the situation would best justify moving it up to agent mode?",
+      "code": null,
+      "options": [
+        "A newer release of the assistant arrives with a noticeably more capable model",
+        "A colleague reports that agent mode handled a similar task for them without trouble",
+        "The task turns out to be tedious, so reading each diff no longer feels worth the time",
+        "A test suite now exists that would catch a wrong result, and the tree is committed"
+      ],
+      "answer": 3,
+      "explanation": "The axes for choosing a rung are how reversible the change is, how well you can test it, and what being wrong costs. Tests and a clean commit move two of those directly. A better model changes capability, not your ability to verify — and a tedious review is where your comfort gets tested, not a reason to skip it."
+    },
+    {
+      "id": "agents-030",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Working on a script that computes the wrong average from a CSV file, why ask an assistant what could cause the wrong result rather than asking it to fix the bug?",
+      "code": null,
+      "options": [
+        "So that the fix is one you understand and can justify, rather than one you pasted in",
+        "Because ask mode cannot see the CSV file itself, so any fix it proposed would be a guess",
+        "Because it would otherwise rewrite the whole script rather than change the one faulty line",
+        "So that it lists every possible cause and you can test each of them in turn"
+      ],
+      "answer": 0,
+      "explanation": "The value of ask mode is that understanding lands in your head. Asking for causes leaves the diagnosis and the change with you, and the deliverable is a one-line fix you can explain. Asking for the fix outright turns the exercise back into accepting a change you may not understand."
+    }
+  ]
+}

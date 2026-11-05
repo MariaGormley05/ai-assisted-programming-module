@@ -1,0 +1,9 @@
+# This lab deliberately needs almost nothing installed.
+#
+# That is a teaching point, not an oversight: DIY 3 is about verifying
+# dependencies BEFORE installing them, and a lab that opened by asking you
+# to `pip install` a long list from a file you had not checked would be
+# demonstrating the exact habit it argues against.
+#
+# Everything in the exercises runs on the standard library. The scanning
+# in section 6 runs in GitHub Actions, not on your machine.

@@ -1,0 +1,21 @@
+Data Structures Basics
+
+Data structures are ways of organizing and storing data in a computer so that it can be accessed and modified efficiently. Choosing the right data structure for your program can make a huge difference in performance and code simplicity.
+
+Arrays and Lists:
+An array is a collection of elements stored in contiguous memory locations. In Python, we typically use lists which are dynamic arrays. Lists can store elements of different types and can grow or shrink as needed. You can access any element directly using its index, like my_list[0] for the first element. Lists are great when you need ordered data and fast access by position.
+
+Linked Lists:
+A linked list is a linear data structure where elements aren't stored contiguously. Instead, each element (called a node) contains data and a reference (or link) to the next node. There are two main types: singly linked lists where each node points to the next, and doubly linked lists where nodes point both forward and backward. Linked lists excel at insertions and deletions because you only need to update pointers, not shift all elements like in an array.
+
+Stacks:
+A stack follows the Last-In-First-Out (LIFO) principle. Think of a stack of plates - you add new plates on top and remove from the top. Stacks have two primary operations: push (add an element) and pop (remove the top element). They're used in function call management, undo functionality in applications, and expression evaluation.
+
+Queues:
+A queue follows the First-In-First-Out (FIFO) principle, like a line of people waiting. The first person to join the queue is the first to be served. Queues have enqueue (add to back) and dequeue (remove from front) operations. They're commonly used in task scheduling, breadth-first search algorithms, and managing resources like printers.
+
+Hash Tables:
+Hash tables (dictionaries in Python) store key-value pairs. They use a hash function to compute an index where the value should be stored. This allows for very fast lookups, insertions, and deletions - typically O(1) time complexity. Hash tables are perfect when you need to associate values with unique keys and want fast access.
+
+Choosing the Right Structure:
+The best data structure depends on your specific needs. Consider what operations you'll perform most frequently, how much memory you have, and whether you need sorted data. Understanding these trade-offs is key to writing efficient programs.
