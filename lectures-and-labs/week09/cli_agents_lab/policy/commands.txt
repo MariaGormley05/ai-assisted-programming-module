@@ -1,11 +1,16 @@
 # Commands an agent might want to run in this project.
 #
-# BEFORE running the checker, write ALLOW, ASK or DENY beside each one in
-# your notes -- what you think team-policy.json decides. Then run:
+# BEFORE running the checker, predict what team-policy.json decides for
+# each one: copy the commands without these comments (DIY 5 shows how),
+# put ALLOW, ASK or DENY at the start of each line, then score your copy:
+#
+#     python policy/check_predictions.py policy/team-policy.json policy/my-predictions.txt
+#
+# The checker itself, on the whole list:
 #
 #     python policy/policy_check.py policy/team-policy.json --file policy/commands.txt
 #
-# (from the lab folder, as the README does)
+# (both from the lab folder, as the README does)
 #
 # Lines starting with # are ignored.
 

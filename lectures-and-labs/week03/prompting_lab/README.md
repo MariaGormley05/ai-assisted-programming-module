@@ -41,11 +41,19 @@ nothing is handed in.
    python check.py
    ```
 
-4. Open the chat panel with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac). Every
-   step that talks to the assistant names a **mode**: **Interactive** reads
-   your files and asks before it runs a command or changes a file;
-   **Plan** reads and thinks but changes nothing. This lab never needs
-   **Autopilot**.
+4. Open the chat panel with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac). Look
+   at the row of controls under the chat input and choose **Copilot** as
+   the session (it may say **Local** currently), as in the setup lab.
+   Every step that talks to the assistant then says what to pick in the
+   agent picker, the control that first says **Agent**: **Ask** reads
+   your files and answers, but cannot edit a file or run a command that
+   changes anything; **Agent** edits files straight away and runs
+   commands. Leave the mode and permissions controls on their defaults,
+   **Interactive** and **Manual permissions**, and **Agent** asks before
+   it runs a command (read-only ones such as `ls` excepted).
+   **Autopilot** and **Allow all** stop it asking; this lab never needs
+   them. If your picker uses other names, look for the read-only one and
+   the one that asks first.
 
 *Fresh conversation* means press the `+` at the top of the chat panel
 first. The files the tasks change are in `lab/code/`, and any of them can
@@ -65,14 +73,14 @@ from one conversation to the next.
 A slug is the part of a web address made from a title: `Ireland's Best`
 becomes something like `irelands-best`. Simple, until you look closely.
 
-1. Fresh conversation, **Interactive**:
+1. Fresh conversation, **Agent**:
 
    > Write a Python function slugify(title) that turns a blog post title
    > into a URL-safe slug. Put it in a new file called slug_a.py in the
    > prompting_lab folder.
 
-   Allow it to create the file.
-2. Now make the decisions yourself. Fresh conversation, **Interactive**.
+   If it asks to create the file, allow it.
+2. Now make the decisions yourself. Fresh conversation, **Agent**.
    Fill in the three blanks before you send it:
 
    > Write a Python function slugify(title: str) -> str in a new file
@@ -93,7 +101,7 @@ becomes something like `irelands-best`. Simple, until you look closely.
 4. Read the rows where the two disagree: each is a decision the first
    prompt left open that something made anyway. Then read the rows where
    they agree. Is every one of those what you would have chosen?
-5. **The hunt.** In a fresh conversation in **Interactive**, send the
+5. **The hunt.** In a fresh conversation in **Agent**, send the
    step 1 prompt again with the file name changed to `slug_c.py`; then
    once more, in another fresh conversation, into `slug_d.py`. Run the
    checker on all four; it takes any number of names. Did the same prompt
@@ -141,11 +149,11 @@ early. Fixing it needs one changed line.
    ```
 
 2. Open `lab/code/receipt.py` in the editor. Fresh conversation,
-   **Interactive**, exactly this:
+   **Agent**, exactly this:
 
    > here's my file, fix the bug in calculate_total
 
-   Allow the edit.
+   If it asks to make the edit, allow it.
 3. Run the checker again. It now also counts the lines changed since your
    last commit. Then read every one of them:
 
@@ -165,7 +173,7 @@ early. Fixing it needs one changed line.
    git restore lab/code/receipt.py
    ```
 
-   Fresh conversation, **Interactive**:
+   Fresh conversation, **Agent**:
 
    > Fix only the off-by-one in calculate_total in receipt.py. Change
    > nothing else: no formatting, no type hints, no error handling, no
@@ -173,7 +181,7 @@ early. Fixing it needs one changed line.
 
    Run the two commands from step 3 again.
 5. **The hunt.** `git restore` the file and give the step 2 prompt twice
-   more, each in a fresh conversation in **Interactive**, restoring
+   more, each in a fresh conversation in **Agent**, restoring
    between them. Did it change the same lines each time, and what did it
    change that you never asked for?
 
@@ -225,15 +233,15 @@ decisions, and some of them depend on facts that are not in the code.
    python check.py rates
    ```
 
-2. Open `lab/code/rates.py`. Fresh conversation, **Plan**:
+2. Open `lab/code/rates.py`. Fresh conversation, **Ask**:
 
    > I want to add caching to get_rate in rates.py. Do not write any code
    > yet. List the questions you would need answered first, most important
    > first.
 
 3. Read its questions. Which of them would you not have thought to answer?
-4. Here are the facts it cannot find in the code. Switch the mode to
-   **Interactive**, stay in the same conversation, and answer:
+4. Here are the facts it cannot find in the code. Switch the agent
+   picker to **Agent**, stay in the same conversation, and answer:
 
    > Past days never change, so cache them for good. Today's rate is
    > revised during the day, so never keep it for more than an hour. Keep
@@ -252,7 +260,7 @@ decisions, and some of them depend on facts that are not in the code.
    git restore lab/code/rates.py
    ```
 
-   Fresh conversation, **Interactive**:
+   Fresh conversation, **Agent**:
 
    > Add caching to get_rate in rates.py.
 
@@ -260,7 +268,7 @@ decisions, and some of them depend on facts that are not in the code.
    it got today's rate right without asking, look at the list above its
    answer: what did it open to find out what you wanted?
 7. **The hunt.** Step 6 twice more, each in a fresh conversation in
-   **Interactive**, restoring between them. Does it ask a question before
+   **Agent**, restoring between them. Does it ask a question before
    it caches on any of the runs?
 
 **Expected output**
@@ -314,11 +322,11 @@ test instead of taking it on trust.
 `lab/code/uploads.py` saves files that users upload. It has one serious
 flaw, and some ordinary untidiness.
 
-1. Open `lab/code/uploads.py`. Fresh conversation, **Plan**:
+1. Open `lab/code/uploads.py`. Fresh conversation, **Ask**:
 
    > Review this code.
 
-2. Fresh conversation, **Plan**:
+2. Fresh conversation, **Ask**:
 
    > You are a senior security engineer reviewing this code before it
    > goes to production. Review uploads.py.
@@ -332,14 +340,14 @@ flaw, and some ordinary untidiness.
 4. Did the plain review name what the checker found? Did the persona?
    Did the persona find anything real that the plain one missed, or say
    the same things more sternly?
-5. Switch to **Interactive**, in either conversation:
+5. Switch to **Agent**, in either conversation:
 
    > Fix the flaw that lets a file be saved outside the upload folder.
    > Change nothing else.
 
    Then run `python check.py uploads` again.
 6. **The hunt.** The step 1 prompt twice more, each in a fresh
-   conversation in **Plan**. Does the plain review find the flaw every
+   conversation in **Ask**. Does the plain review find the flaw every
    time, without a persona?
 
 **What you should have**
@@ -378,17 +386,17 @@ checker, not the review, is what showed you the flaw was real.
 `lab/code/batches.py` splits a list into batches, and loses items for some
 lists. It passes the example in its own docstring.
 
-1. Fresh conversation, **Plan**:
+1. Fresh conversation, **Ask**:
 
    > Is there a bug in batches.py? If there is, what is the minimal fix?
 
-2. Fresh conversation, **Plan**:
+2. Fresh conversation, **Ask**:
 
    > Think step by step: what batches in batches.py does, what it should
    > do, and where the two differ. Then give the minimal fix.
 
 3. Did the second answer find anything the first missed?
-4. Switch to **Interactive**:
+4. Switch to **Agent**:
 
    > Apply the minimal fix to batches in batches.py. Change nothing else.
 
@@ -399,7 +407,7 @@ lists. It passes the example in its own docstring.
    ```
 
 5. **The hunt.** The step 1 prompt twice more, each in a fresh
-   conversation in **Plan**. Does it find the bug every time without being
+   conversation in **Ask**. Does it find the bug every time without being
    told to reason?
 
 **Expected output**
@@ -433,13 +441,13 @@ spot than a wrong conclusion.
 `lab/data/people.txt` holds four people, one per line, fields separated by
 `|`. Two of them live somewhere with a comma in its name.
 
-1. Fresh conversation, **Interactive**, describing the format:
+1. Fresh conversation, **Agent**, describing the format:
 
    > Convert people.txt to CSV with the header name,email,city and the
    > columns in that order. Save it as people_prose.csv next to it.
    > Nothing but the CSV in the file.
 
-2. Fresh conversation, **Interactive**, showing it instead:
+2. Fresh conversation, **Agent**, showing it instead:
 
    > Convert people.txt to CSV and save it as people_shown.csv next to
    > it. Start with the header line name,email,city, then follow these
@@ -456,7 +464,7 @@ spot than a wrong conclusion.
    ```
 
 4. **The hunt.** The step 1 prompt twice more, each in a fresh
-   conversation in **Interactive**, with the file name changed to
+   conversation in **Agent**, with the file name changed to
    `people_prose2.csv` and then `people_prose3.csv`. Check them all. Does
    any run break a row?
 
@@ -505,7 +513,7 @@ model can see, which matters more.
    four tests of your own, before anything implements the function: the
    file's docstring lists the four cases, and the hint shows the first.
    Run them. They fail, which is right: nothing exists yet.
-3. Fresh conversation, **Interactive**:
+3. Fresh conversation, **Agent**:
 
    > Implement extract_domain in domains.py so that the tests in
    > test_extract_domain.py pass. Run the tests. Do not change the tests.
@@ -518,7 +526,7 @@ model can see, which matters more.
    git restore lab/code/domains.py
    ```
 
-   Fresh conversation, **Interactive**:
+   Fresh conversation, **Agent**:
 
    > Implement extract_domain in domains.py from its docstring.
 
@@ -563,7 +571,7 @@ the code already does, bugs included.
    ```
 
 2. Close every editor tab (right-click any tab, then *Close All*). Fresh
-   conversation, **Plan**:
+   conversation, **Ask**:
 
    > Without opening, searching for or reading any files: my test fails
    > with KeyError: 'unit_price', fix it.
@@ -571,14 +579,14 @@ the code already does, bugs included.
    Did it ask to see the code, hand you a fix anyway, or both? And did it
    keep to "without opening"? Anything it read is listed above its answer.
 3. If it suggested a default value, such as `.get("unit_price", 0)`, try
-   it: switch to **Interactive**, same conversation, and say *"Apply that
+   it: switch to **Agent**, same conversation, and say *"Apply that
    fix."* Run the test again. Then put the file back:
 
    ```bash
    git restore lab/code/orders.py
    ```
 
-4. Start again, carrying only what matters. Fresh conversation, **Plan**:
+4. Start again, carrying only what matters. Fresh conversation, **Ask**:
 
    > Read order_total in orders.py and the test in test_orders.py. A
    > default value was already tried and is wrong: the test then fails as
@@ -586,10 +594,10 @@ the code already does, bugs included.
    > as the right one.
 
 5. Choosing the key name is your decision, not the model's. Make it,
-   switch to **Interactive**, tell it which name to use, and let it apply
+   switch to **Agent**, tell it which name to use, and let it apply
    the fix. Run the test.
 6. **The hunt.** The step 2 prompt twice more, each in a fresh
-   conversation in **Plan**. Does it ask for the code every time, or
+   conversation in **Ask**. Does it ask for the code every time, or
    sometimes guess instead?
 
 **Expected output**
@@ -621,7 +629,7 @@ problem, or a knowledge problem?
 
 ### DIY 9: Context you write once
 
-1. Fresh conversation, **Plan**:
+1. Fresh conversation, **Ask**:
 
    > Before this conversation started, were you given any instructions
    > about this repository? If so, where did they come from, and what is
@@ -638,7 +646,7 @@ problem, or a knowledge problem?
    End every answer with one line that starts "TL;DR:" and sums it up in under ten words.
    ```
 
-3. Fresh conversation, **Plan**:
+3. Fresh conversation, **Ask**:
 
    > Write a Python function that parses dates like 12/08/2026.
 
@@ -648,7 +656,7 @@ problem, or a knowledge problem?
    conversation, ask a follow-up question. Then ask it again in a
    **fresh** conversation. Where does the TL;DR survive?
 5. **The hunt.** Put the TL;DR line back, then ask the step 3 prompt twice
-   more, each in a fresh conversation in **Plan**. Does every conversation
+   more, each in a fresh conversation in **Ask**. Does every conversation
    obey the file?
    Delete the TL;DR line again when you are done: it applies to every
    conversation you have in this repo.

@@ -116,14 +116,16 @@ Add three checks to your pipeline, in this order:
 2. **Dependency scanning** — enable Dependabot alerts (Settings →
    Advanced Security).
 3. **A linter** — add a `ruff` or `pylint` step to `ci.yml`.
-4. For each, record in `findings.md`: what it caught, or that it caught
-   nothing.
-5. Answer: **which of these three could you not undo by pushing a fix?**
+4. Push, then open what each one found: the gitleaks and linter steps in
+   the run on the **Actions** tab, and Dependabot's alerts on the
+   **Security** tab. Finding nothing is a result too.
+5. **Which of these three catches something you could not undo by
+   pushing a fix?** Decide, then open the hint.
 
 **What you should have**
 
 Three checks in place — gitleaks and a linter in `ci.yml`, Dependabot
-alerts on — and a written answer to step 5 with your reasoning.
+alerts on — and what each one found on screen, even if that is nothing.
 
 <details><summary>Hint</summary>
 
@@ -256,7 +258,8 @@ cannot happen.
    one run.
 2. Run it. It almost always fails at once; if it passes, that was luck.
 3. Run it again. And again.
-4. Record what happens and why.
+4. Read the two strings in each failure. Is either of them a wrong
+   summary?
 
 **Expected output**
 
@@ -288,7 +291,7 @@ summary.
 3. Use the strongest rung each property allows:
    - non-empty · under a length limit · mentions the key figure · says
      which way the figure moved · does not echo the prompt back
-4. Run it and record the rate.
+4. Run it three times. Does the rate stay the same?
 
 **Expected output**
 
@@ -318,20 +321,41 @@ and if you do, ask it for the **reason** as well as the score.
 
 ### DIY 6: Prove a change helped
 
-1. Note your current pass rate.
+1. Run the whole set five times and keep the output:
+
+   ```bash
+   for run in 1 2 3 4 5; do python evals/run_evals.py; done > before.txt
+   ```
+
 2. Change `PROMPT` at the top of `summarise.py` — try to improve it. The
    stand-in model understands a short list of instructions, documented at
    the top of that file: mention the figure, mention the direction, set a
    word limit, ask for two sentences. A real model understands far more,
    far less predictably — which is why you measure.
-3. Re-run the whole set, more than once.
-4. Record the before and after rates.
-5. Answer honestly: **did it improve, get worse, or move cases around?**
+3. Run the set five times again, into a second file:
+
+   ```bash
+   for run in 1 2 3 4 5; do python evals/run_evals.py; done > after.txt
+   ```
+
+4. Put the two side by side: the ten pass rates, then which cases failed,
+   and how often, before and after. This reads the `Pass rate` and `FAIL`
+   lines your runner prints, as in DIY 5's expected output:
+
+   ```bash
+   grep "Pass rate" before.txt after.txt
+   grep -h FAIL before.txt | sort | uniq -c
+   grep -h FAIL after.txt | sort | uniq -c
+   ```
+
+5. Be honest with yourself: **did it improve, get worse, or move cases
+   around?**
 
 **What you should have**
 
-Two pass rates and an honest verdict, including any case that got *worse*
-while others improved.
+Five pass rates from before the change and five from after, and each
+case's failures counted on both sides, including any case that got
+*worse* while others improved.
 
 <details><summary>Hint</summary>
 

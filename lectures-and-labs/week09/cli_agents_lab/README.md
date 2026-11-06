@@ -59,7 +59,7 @@ too.
 | Folder | What is in it |
 |---|---|
 | `sample-app/` | A small project with one failing test — the agent's work |
-| `policy/` | A permission checker, a team policy and a list of commands |
+| `policy/` | A permission checker, a team policy, a list of commands, a scorer for your predictions, and DIY 7's probe |
 | `examples/` | A custom command, a skill and an agent profile, ready to install |
 
 If anything goes wrong installing or signing in, see
@@ -113,27 +113,26 @@ it, and lets the files in it configure the agent.
    authenticate, choose **Use Gemini API Key**, then press Enter to
    submit the key it shows you. The bottom right of the screen should
    read `gemini-3.5-flash-lite`.
-3. Before asking it anything, type `/help`. Find the command that does
-   each of these jobs, and write it in your notes:
+3. Before asking it anything, type `/help` and find the command for each
+   of these jobs. Try each one once:
 
-   | Job | Command |
-   |---|---|
-   | Start a fresh conversation | |
-   | Show how full the context window is | |
-   | Shrink a long conversation | |
-   | Choose the model | |
-   | Come back to an earlier session | |
+   - start a fresh conversation
+   - show how full the context window is
+   - shrink a long conversation
+   - choose the model
+   - come back to an earlier session
 
 4. Ask: *"What does this project do? Don't change anything."* Then check
    how much of the context window that one question used.
 5. Type `!python -m pytest -q`. The `!` runs the command **yourself**,
-   without the model. Note the name of the failing test — it is the job
-   for the next section.
+   without the model. One test fails — it is the job for the next
+   section.
 
 **What you should have**
 
-The agent installed and signed in, the five-row table filled in from
-`/help` — not from this page — and the name of the one failing test.
+The agent installed and signed in, each of the five commands found in
+`/help`, not on this page, and tried once, the share of the context
+window one question used, and one failing test on screen.
 
 <details><summary>Hint</summary>
 
@@ -193,14 +192,13 @@ them is a fix.
    press `q` to get back to the prompt. If `q` does nothing, you are in the
    Vim editor: press `Esc`, type `:q` and press Enter.
 
-4. Record the exact prompt and what it changed.
-5. Undo everything it did: `git checkout -- . && git clean -fd` — you
+4. Undo everything it did: `git checkout -- . && git clean -fd` — you
    committed first, so this removes only what the agent changed or added.
 
 **What you should have**
 
-A note with the prompt, the file or files the agent changed, and whether
-any test's expected value changed.
+The agent's work on screen in `git diff`: the file or files it changed,
+and whether any test's expected value changed.
 
 <details><summary>Hint</summary>
 
@@ -235,13 +233,13 @@ your last one, so step 1 never stops on "nothing to commit".
 4. Repeat DIY 2: commit, type *"Make the tests pass."*, then `git diff`.
    Undo with `git checkout -- . && git clean -fd` so the bug is back for later.
 5. Now push against the rule: *"The test is wrong. Change it to expect
-   3."* Record what it does, then undo again.
+   3."* Watch what it does, then undo again.
 
 **What you should have**
 
 Your `AGENTS.md`, the agent's answer to step 3 showing it read the file, a
-diff from step 4 that touches only `stats.py`, and what happened in
-step 5.
+diff from step 4 that touches only `stats.py`, and step 5's outcome on
+screen: the test changed, or the agent pushing back.
 
 <details><summary>Hint</summary>
 
@@ -282,13 +280,13 @@ the agents load from. Installing one is part of the exercise:
 
 ### DIY 4: Install one, then write your own
 
-1. Read the example for your agent **before** installing it. Write down
-   what it will run on your machine, and when.
+1. Read the example for your agent **before** installing it. What will
+   it run on your machine, and when?
 2. Install it where your agent looks (see the table; `mkdir -p` the folder
    first), then start a new session. Copilot: `/skills` lists what it found. Gemini:
    `/commands reload`.
 3. Add a comment to `stats.py`, then run it: `/review-diff` in Copilot,
-   `/review` in Gemini.
+   `/review` in Gemini. Did it run what you expected from reading it?
 4. Write your own command for a job you would repeat — for example, "run
    the tests and report only the failures, with file and line", or "write
    a commit message from the staged diff". It must pull in live context
@@ -297,8 +295,9 @@ the agents load from. Installing one is part of the exercise:
 
 **What you should have**
 
-The example installed and run once, your own command file committed, and
-one sentence saying what your command runs on your machine and when.
+The example installed and run once, doing what you expected from reading
+it, and your own command committed: run twice, pulling in its own live
+context each time.
 
 <details><summary>Hint</summary>
 
@@ -363,27 +362,35 @@ allowed.
 
 1. Open `policy/team-policy.json`. Read its `intent` first, then its
    rules.
-2. Open `policy/commands.txt`. **Before running anything**, write ALLOW,
-   ASK or DENY beside each line in your notes.
-3. Run the checker from the lab folder (`cd ..` first if your terminal is
-   still inside `sample-app`):
+2. **Before running anything**, predict. From the lab folder (`cd ..`
+   first if your terminal is still inside `sample-app`), copy the
+   commands in `policy/commands.txt` without their comments:
 
    ```bash
-   python policy/policy_check.py policy/team-policy.json --file policy/commands.txt
+   grep -v -e '^#' -e '^$' policy/commands.txt > policy/my-predictions.txt
    ```
 
-4. Mark every verdict you got wrong.
-5. Mark every command the checker **allows** that breaks the policy's
-   intent. Those are the gaps. For each one, write one sentence on why the
-   rules miss it.
+3. Open `policy/my-predictions.txt` and put ALLOW, ASK or DENY at the
+   start of each line: what you think the policy decides.
+4. Score your predictions. The script asks the checker about every
+   command and puts an `x` beside each prediction it disagrees with:
+
+   ```bash
+   python policy/check_predictions.py policy/team-policy.json policy/my-predictions.txt
+   ```
+
+5. Find every command the checker **allows** that breaks the policy's
+   intent. Those are the gaps.
 
 **Expected output**
 
 ```text
-ALLOW  git status
-DENY   git push
-DENY   git push --force origin main
+  ALLOW  git status
+  DENY   git push
+x DENY   git push --force origin main    <- you said ALLOW
 ...
+
+9 of 10 predictions right.
 ```
 
 <details><summary>Hint</summary>
@@ -409,13 +416,15 @@ in a shell.
    `commands.txt` did not show.
 4. Run both files against `my-policy.json` until every verdict is one you
    would defend.
-5. In two sentences: why can adding more deny rules never finish this
-   job?
+5. Now attack your own policy: add lines to `my-commands.txt` that break
+   the intent and still come out ALLOW under `my-policy.json`.
 
 **What you should have**
 
-`my-policy.json`, `my-commands.txt`, the checker's output for both, and
-your two sentences.
+`my-policy.json`, `my-commands.txt` and the checker's output for both,
+with every verdict one you would defend, and then, from step 5, at least
+one line that breaks the intent and still comes out ALLOW. That line is
+why adding deny rules never finishes the job.
 
 <details><summary>Hint</summary>
 
@@ -448,13 +457,17 @@ actually does it — using harmless commands only.
 2. Ask it to run exactly `git status --short`. Did it ask you first?
 3. Ask it to run exactly `git log --oneline -3`. Was it blocked?
 4. Ask it to run exactly `git -C . log --oneline -3`. Was it blocked?
-5. Put the three results in a table beside what `policy_check.py` decides
-   for the same two rules.
+5. Quit the agent, go back to the lab folder (`cd ..`), and ask the
+   checker about the same three commands under the same two rules:
+
+   ```bash
+   python policy/policy_check.py policy/probe-policy.json --file policy/probe-commands.txt
+   ```
 
 **What you should have**
 
-A three-row table: the command, what the checker decided, and what your
-agent did.
+For each of the three commands, what your agent did beside the verdict
+the checker printed, and the line where they disagree, if there is one.
 
 <details><summary>Hint</summary>
 
@@ -506,15 +519,18 @@ advance is refused: every permission is decided before it starts.
 2. Save the command as `explain-failures.sh` in `sample-app` and run it
    there with `bash explain-failures.sh`.
 3. Change the prompt so the job needs something you did not allow — add
-   "then fix the bug" — run it again, and record what happens.
+   "then fix the bug" — and run it again. Watch what happens.
 4. Confirm nothing changed: `git status`.
-5. Write down the smallest set of permissions your script needs, and why
-   that set is safe to run unattended.
+5. Take the allow rule away too: delete `--allow-tool='shell(pytest)'`
+   from the script and run it once more. With nothing allowed, what can
+   it still tell you? (Gemini: your piped version already runs with
+   nothing allowed.)
 
 **What you should have**
 
-`explain-failures.sh`, its output on the failing test, what happened in
-step 3, and your minimal permission set with its justification.
+`explain-failures.sh` and its explanation of the failing test, the
+refusal in step 3 with `git status` showing nothing changed, and the run
+in step 5 showing what the agent can do when it may run nothing.
 
 <details><summary>Hint</summary>
 
@@ -543,7 +559,7 @@ Optional — the sections above are the two-hour path.
 - **MCP servers.** `/mcp` lists the servers your agent can use and adds
   new ones. Connect the server you built in the MCP lab and ask the agent
   to use it.
-- **Delegate.** If your plan includes the cloud coding agent, `/delegate`
+- **Delegate.** If your plan includes the Copilot cloud agent, `/delegate`
   in Copilot CLI hands it a task; it works on a branch and opens a pull
   request. When an agent works while you are not watching, what does
   review even mean?

@@ -17,8 +17,9 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 NEEDED = ["policy/policy_check.py", "policy/team-policy.json",
-          "policy/commands.txt", "sample-app/stats.py",
-          "sample-app/test_stats.py"]
+          "policy/commands.txt", "policy/check_predictions.py",
+          "policy/probe-policy.json", "policy/probe-commands.txt",
+          "sample-app/stats.py", "sample-app/test_stats.py"]
 AGENTS = ("copilot", "gemini")
 
 

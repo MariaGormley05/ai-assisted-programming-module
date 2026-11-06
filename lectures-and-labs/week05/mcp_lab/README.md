@@ -215,7 +215,7 @@ a time and watches which tool the assistant reaches for.
 4. In `part1/t4_server.py`, change the description of `power` to
    something useless: `"does maths"`. Restart the server (**MCP: List
    Servers**, **calculator**, **Restart Server**). Fresh conversation,
-   **Interactive**:
+   **Agent**:
 
    ```text
    Use the calculator tools to work out 2 to the power of 10.
@@ -226,11 +226,11 @@ a time and watches which tool the assistant reaches for.
    `power` to `t4`, in the listing and in the dispatcher, and leave its
    description as `"does maths"`. If you gave its arguments descriptions,
    delete those too, so that the schema says only that `x` and `y` are
-   numbers. Restart the server. Fresh conversation, **Interactive**, the
+   numbers. Restart the server. Fresh conversation, **Agent**, the
    same prompt. Which tool does it ask for this time?
 6. Keep the name `t4`. Rewrite its description to say precisely what the
    tool does and when to use it. Restart the server. Fresh conversation,
-   **Interactive**, the same prompt.
+   **Agent**, the same prompt.
 
 **What you should have**
 
@@ -374,7 +374,7 @@ client identity in its own `_meta`.
 4. The new specification says a tool needing state should *mint an
    explicit handle and return it*, for the model to pass back as an
    argument. Put into one sentence why that fixes the problem.
-5. Fresh conversation, **Plan**. Give it your two answers and ask:
+5. Fresh conversation, **Ask**. Give it your two answers and ask:
 
    ```text
    Here is my explanation of why MCP removed sessions in 2026. Find what is wrong or missing in it.

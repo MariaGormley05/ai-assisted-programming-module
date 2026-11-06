@@ -36,20 +36,23 @@ limit stops you, use Build mode in
 [Google AI Studio](https://aistudio.google.com/apps) instead, which needs
 a Google account.
 
-Create a `REFLECTION.md` in this folder now; you will write into it
-throughout.
-
-DIY 2 and DIY 4 use the Copilot chat in your Codespace. Open the chat panel
-with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac). Every step that talks to the
-assistant names a **mode**: **Plan** reads and thinks but changes nothing;
-**Interactive** reads your files and asks before it runs a command or
-changes a file. This lab never needs **Autopilot**. *Fresh conversation*
-means press the `+` at the top of the chat panel first.
+DIY 2, DIY 4 and DIY 6 use the Copilot chat in your Codespace. Open the chat panel
+with `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac) and choose **Copilot** as the
+session under the chat input (it may say **Local** currently), as in the
+setup lab. Every step that talks to the assistant then says what to pick
+in the agent picker, the control that first says **Agent**: **Ask** reads
+your files and answers, but cannot edit a file or run a command that
+changes anything; **Agent** edits files straight away and runs commands.
+Leave the mode and permissions controls on their defaults, **Interactive**
+and **Manual permissions**, and **Agent** asks before it runs a command
+(read-only ones such as `ls` excepted). **Autopilot** and **Allow all**
+stop it asking; this lab never needs them. If your picker uses other
+names, look for the read-only one and the one that asks first. *Fresh
+conversation* means press the `+` at the top of the chat panel first.
 
 > **Tool names change.** The three used here are examples of a *category*,
 > not a prescription. If one has changed name, pricing or shut down, pick
-> another prompt-first builder and note which you used. The exercise is
-> about the category.
+> another prompt-first builder. The exercise is about the category.
 
 ---
 
@@ -63,28 +66,27 @@ and the list survives a page refresh.
 
 ### DIY 1: The same app, three ways
 
-1. Write your prompt **once**, before opening any tool, and save it in
-   `REFLECTION.md`. Use the same prompt for all three.
-2. Build the app in tool one. Record how long it took and how many
-   follow-up prompts you needed.
+1. Write your prompt **once**, before opening any tool, in `prompt.md` in
+   this folder. Paste that same prompt into all three.
+2. Build the app in tool one. How many follow-up prompts did it need
+   before it met the brief?
 3. Repeat in tool two.
 4. Repeat in tool three.
 5. Check each app against the brief: add two tasks, tick one, delete the
-   other, refresh the page. Note the first thing each tool got *wrong* — or, if it
-   got nothing wrong, the first thing it decided that your prompt did not
-   say, such as what happens with an empty task or the same task twice.
+   other, refresh the page. Then try what the brief never said: an empty
+   task, and the same task twice.
 
 **What you should have**
 
-Three working to-do apps, one shared prompt, and a table in
-`REFLECTION.md` recording time, number of follow-ups, and for each tool
-the first mistake, or the first decision it made that your prompt did not.
+Three working to-do apps built from one prompt, each checked against the
+brief, and for each tool the first thing it got *wrong* — or, if it got
+nothing wrong, the first thing it decided that your prompt did not say.
 
 <details><summary>Hint</summary>
 
 Using the same prompt for all three is what makes this a comparison rather
-than three anecdotes. Resist improving the prompt between tools — if you
-must, record that you did and why.
+than three anecdotes. Resist improving the prompt between tools: once the
+prompt changes, the comparison has gone.
 
 "Survives a page refresh" is the requirement that separates a demo from an
 app. Check it explicitly in all three. If one fails, that is your first
@@ -108,24 +110,29 @@ Pick **one** of the three and spend fifteen minutes in its source.
 1. Open its code view — the **Code** tab in Lovable, v0 and Google AI
    Studio, the `<>` icon in Bolt.new — and find the file that handles
    **user input** or **data storage**.
-2. Answer in `REFLECTION.md`:
-   - How many dependencies did it add? Do you know what any of them do?
-   - Is user input validated anywhere before being stored or displayed?
-   - If this held real people's data, what would worry you?
-3. Find **one line you genuinely cannot explain.** Paste it.
-4. Fresh conversation, **Plan**, in the Copilot chat: paste the line and
+2. Find where it lists its dependencies (`package.json`, in most
+   builders) and count them. Pick one you have never heard of and find
+   out what it does.
+3. Attack it from the app itself: add an empty task, a very long one
+   (paste a paragraph ten times), and a task that reads
+   `<img src=x onerror=alert(1)>`. Which does it accept? Does the last one
+   show as text, or as a broken image?
+4. Find **one line you genuinely cannot explain**, and decide what you
+   think it does.
+5. Fresh conversation, **Ask**, in the Copilot chat: paste the line and
    ask what it does. Did the explanation match what you had assumed?
-5. Fresh conversation, **Plan**: paste the whole file and ask directly:
+6. Fresh conversation, **Ask**: paste the whole file and ask directly:
 
    > Review this code for security vulnerabilities as a security engineer
    > would.
 
-   Record what it finds.
+   Does it name what your attacks in step 3 found?
 
 **What you should have**
 
-At least one concrete thing you would not ship, the line you could not
-explain, and the security review's findings.
+On screen: what the app accepted when you attacked it, the line you could
+not explain beside Ask's explanation of it, and the security review, with
+what it found and missed of your own results.
 
 <details><summary>Hint</summary>
 
@@ -134,10 +141,11 @@ the base rate is on your side. Unvalidated input is the usual suspect —
 look for anything that goes from a form straight into storage: is there a
 limit on how long a task can be, or a check for an empty one? In plain
 JavaScript, also look for text that goes straight back onto the page
-through `innerHTML`. React escapes text by default, so in a React app that
-one is less likely.
+through `innerHTML`: there the `<img>` task becomes a broken image and its
+`onerror` code runs. React escapes text by default, so in a React app it
+shows as plain text.
 
-Step 4 is the real exercise. The gap between what you *assumed* a line did
+Step 5 is the real exercise. The gap between what you *assumed* a line did
 and what it *does* is comprehension debt, measured directly, on code you
 created an hour ago.
 
@@ -149,27 +157,29 @@ step needs.
 ### DIY 3: Estimate the debt
 
 1. Pick the app you understand least.
-2. Write down what it would take to add one feature: **let a user edit an
-   existing task's text.**
-3. Do not build it. Estimate: which files would you need to understand
-   first, and how long would that take?
-4. Now answer honestly: is that estimate longer or shorter than writing
-   the whole app yourself would have been?
+2. Give yourself five minutes and no assistant. Find every file you would
+   have to change to **let a user edit an existing task's text**, and
+   open them. Change nothing.
+3. When the five minutes are up: did you find them all, and how sure are
+   you?
+4. Now let the tool do it: ask for the feature in one follow-up prompt
+   (if that tool's daily limit stops you, use another of the three). Look
+   at what it changed. Were those the files you found?
 
 **What you should have**
 
-An estimate with reasoning, and an honest comparison against building it
-by hand.
+The files you found in five minutes, beside the tool's own change: the
+files it touched that you missed, and any you found that it never needed.
 
 <details><summary>Hint</summary>
 
-There is no correct answer and the honest one is often "shorter" — these
-tools genuinely save time. The exercise is to make the trade *visible*
-rather than to conclude it is bad.
+There is no correct answer, and the honest result is often that the tool
+was faster — these tools genuinely save time. The exercise is to make the
+trade *visible* rather than to conclude it is bad.
 
-If your answer is "I would just ask the tool to add it", that is a
-legitimate strategy. Note what it depends on: that the tool still
-understands a codebase it wrote and you did not read.
+Asking the tool to add it is a legitimate strategy. Step 4 shows what it
+depends on: that the tool still understands a codebase it wrote and you
+did not read. The files you missed are the debt.
 
 </details>
 
@@ -187,22 +197,23 @@ done both.
    - What it explicitly does **not** do
    - The data it stores, and its shape
    - Three acceptance criteria you could actually test
-2. Open `spec.md`. Fresh conversation, **Plan**, in the Copilot chat:
+2. Open `spec.md`. Fresh conversation, **Ask**, in the Copilot chat:
 
    > Here is spec.md. Give me a plan: which files you will create and what
    > each one does. Do not write code yet.
 
 3. Read the plan against your spec. Correct it where it drifted, in the
    same conversation.
-4. Only now switch the mode to **Interactive**, stay in the same
+4. Only now switch the agent picker to **Agent**, stay in the same
    conversation, and ask it to build the plan in a new folder called
-   `todo-spec` next to this README. Allow the changes it asks for.
+   `todo-spec` next to this README. Allow the commands it asks to run.
 5. Check the result against your three acceptance criteria.
 
 **What you should have**
 
-`spec.md`, the plan you reviewed and corrected, a working app, and a note
-of where the plan drifted from your spec.
+`spec.md`, the plan in the chat with your corrections under it, a working
+app in `todo-spec`, and your three acceptance criteria checked against
+it, one by one.
 
 <details><summary>Hint</summary>
 
@@ -218,37 +229,32 @@ the work is most of the value.
 
 ### DIY 5: Compare, honestly
 
-Record in `REFLECTION.md`:
+Put the spec-first app through exactly what the vibe-coded apps went
+through.
 
-```text
-## Vibe vs spec-driven
-
-Time, vibe coding: ......... [minutes]
-Time, spec-driven: ......... [minutes]
-Which produced code you would defend? ....... [which, and why]
-Which for a throwaway prototype? ............ [which]
-Which for something assessed and demonstrated? [which]
-Where did writing the spec change what you built? [be specific]
-```
-
-1. Fill every line.
-2. Add two sentences on which mode you will actually use for your own
-   work, and why.
+1. DIY 1's check: add two tasks, tick one, delete the other, refresh the
+   page. Then an empty task, and the same task twice.
+2. DIY 2's attacks: a very long task, and `<img src=x onerror=alert(1)>`.
+3. Put it beside the vibe-coded app you read in DIY 2. Find one
+   difference in behaviour you can point at on screen, and the line in
+   `spec.md` that caused it, if one did.
 
 **What you should have**
 
-A completed comparison with a stated preference and a reason that is not
-"it is the responsible choice".
+Both apps through the same checks, and at least one difference you can
+point at with the spec line behind it — or no difference at all, which on
+a to-do app is a real finding.
 
 <details><summary>Hint</summary>
 
 Spec-driven being slower is not a criticism — it is the cost, and the
-question is what the cost buys. If it bought nothing on a to-do app, say
-so. That is a real finding, and it is the argument *for* vibe coding on
-small disposable work.
+question is what the cost buys. If it bought nothing on a to-do app, that
+is a real finding, and it is the argument *for* vibe coding on small
+disposable work.
 
-The last line is the one worth thinking about: what did writing it down
-change about what you built? Usually something.
+Look first at what your spec says the app does **not** do, and at the
+shape of the data it stores: that is where writing it down usually
+changes what gets built.
 
 </details>
 
@@ -256,33 +262,56 @@ change about what you built? Usually something.
 
 ## 4. Choosing a mode
 
-### DIY 6: Write your own rule
+### DIY 6: Pick the mode, then do it
 
-1. Complete this table in `REFLECTION.md` with **your own** examples:
+Three small jobs. For each, choose the mode first: **vibe it** (prompt,
+check it runs, move on), **spec it first** (a line in `spec.md`, the plan
+in **Ask**, then **Agent**), or **no assistant** at all. Then do the job
+that way.
 
-   | Task | Mode I'd choose | Why |
-   |---|---|---|
-   | A weekend prototype | | |
-   | A feature in assessed work | | |
-   | Something a stranger maintains | | |
-   | Code handling other people's data | | |
+1. A page that shows today's date in big letters, for a screenshot you
+   need in five minutes and will then delete.
+2. A button in `todo-spec` that clears every done task. `todo-spec` is
+   the app you are keeping.
+3. The longest text a task in `todo-spec` may have.
+4. Now job 3 on the wrong mode, to see why it is wrong. Commit what you
+   have first:
 
-2. Add one row for a task you would give **no** assistant.
-3. Write two sentences on what would have to change for you to move a task
-   from one mode to the other.
+   ```bash
+   cd "$(git rev-parse --show-toplevel)/lectures-and-labs/week11/vibe_coding_lab"
+   git add spec.md todo-spec && git commit -m "before the wrong mode"
+   ```
 
-**What you should have**
+   Fresh conversation, **Agent**: *"Add a sensible length limit to tasks
+   in todo-spec."* Find the number it chose, then put everything back:
 
-A completed table with concrete tasks, including one you would not
-delegate, and a stated condition for switching modes.
+   ```bash
+   git status --short
+   git diff
+   git restore . && git clean -fd todo-spec
+   ```
+
+**Expected output**
+
+1. **Vibe it**: nobody will maintain it, and one look tells you whether
+   it is right.
+2. **Spec it first**: you are keeping this app, so the change starts as a
+   line and an acceptance criterion in `spec.md`, and a plan you check
+   before any code.
+3. **No assistant.** How long a task may be is a decision about your
+   product, not code. Write the number into `spec.md` yourself; the build
+   follows from it. Step 4 shows the alternative: the assistant picked a
+   number for you, and nothing records why.
 
 <details><summary>Hint</summary>
 
-Useful axes for the last question: how reversible is it, how well can you
-test it, how long will it live, and who pays if it is wrong.
+Four questions decide the mode: how reversible is it, how well can you
+test it, how long will it live, and who pays if it is wrong. A job that
+is cheap on all four is a vibe job; one that will live and be relied on
+is a spec job; and a decision only you can make belongs to no assistant.
 
-If every row says the same mode, you have not found your boundary. Push
-until you do — the boundary is the actual output of this lab.
+If the diff is longer than the terminal, press `q` to get back to the
+prompt (`Esc`, `:q`, Enter if `q` does nothing).
 
 </details>
 

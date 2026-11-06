@@ -42,16 +42,21 @@ guess, watching it go and look, and steering it with what you show it.
    are signed in to the GitHub account with the student developer pack
    applied.
 4. Look at the row of controls under the chat input. Pick which
-   assistant runs the session — choose **Copilot**. It may say **Local** currently. Next pick the **mode**: **Interactive** may read your files and will ask you before
-   it runs a command or changes a file; **Plan** reads and thinks but
-   writes no code; **Autopilot** runs without asking. Stay in
-   **Interactive** unless a step says otherwise. If your picker uses
-   other names, those are the three to look for: the one that asks
-   first, the read-only one, and the one that never asks.
+   assistant runs the session — choose **Copilot**. It may say **Local**
+   currently. Next comes the agent picker, the control that first says
+   **Agent**: **Ask** reads your files and answers, but cannot edit a
+   file or run a command that changes anything; **Agent** edits files
+   straight away and runs commands. Leave the mode and permissions
+   controls on their defaults, **Interactive** and **Manual
+   permissions**, and **Agent** asks before it runs a command (read-only
+   ones such as `ls` excepted); set the mode to **Autopilot** and it runs
+   without asking. Stay in **Agent** unless a step says otherwise. If
+   your picker uses other names, those are the three to look for: the
+   read-only one, the one that asks first, and the one that never asks.
 
-There is no mode in which it cannot look at your files. So when a step
-wants an answer from memory, the prompt says so — and part of the
-exercise is watching whether it obeys.
+Nothing in those controls stops it looking at your files: **Ask** reads
+them too. So when a step wants an answer from memory, the prompt says so
+— and part of the exercise is watching whether it obeys.
 
 Several exercises end with a **hunt**: the same question again in a fresh
 conversation, to see whether you can catch it out on another try. The
@@ -454,15 +459,15 @@ undone with *Discard Changes*.
 
    Wait for the grey text. The name says one thing and the docstring
    says another: which one did it follow? It did not ask.
-2. **Chat.** Switch the mode to **Plan** — it may read but not write —
-   open `validate_a.py` and ask: *"What does this regex accept that it
-   should not?"* Nothing in the file changes. Switch back to
-   **Interactive** afterwards.
+2. **Chat.** Switch the agent picker to **Ask** — it may read but not
+   write — open `validate_a.py` and ask: *"What does this regex accept
+   that it should not?"* Nothing in the file changes. Switch back to
+   **Agent** afterwards.
 3. **Edit.** Select the function in `validate_a.py`, press `Ctrl+I`
    (`Cmd+I` on a Mac) for inline chat, and ask: *"reject any address
    longer than 254 characters"*. Read the diff, then *Keep* or *Undo*.
    Run the harness again to see the row that flipped.
-4. **Agent.** Fresh conversation, **Interactive**:
+4. **Agent.** Fresh conversation, **Agent**:
 
    > Write pytest tests for validate_b.py in test_validate_b.py, covering
    > a normal address, a missing dot, and a 300-character address. Run
@@ -471,9 +476,10 @@ undone with *Discard Changes*.
    It will stop and ask before it runs the tests — that pause is the
    permission model in action. Read what it wants to run, then allow
    it. When it finishes, read what it left behind with `git diff`.
-5. **Autopilot, once.** Fresh conversation, mode **Autopilot**, and ask
-   it to add one more test case and run the tests again. Notice what it
-   no longer asks you. Switch back to **Interactive** when it is done.
+5. **Autopilot, once.** Fresh conversation, **Agent** with the mode set
+   to **Autopilot**, and ask it to add one more test case and run the
+   tests again. Notice what it no longer asks you. Set the mode back to
+   **Interactive** when it is done.
 
 **What you should have**
 
@@ -485,7 +491,7 @@ agent touched, and one run in which nobody asked you anything.
 <details><summary>Hint</summary>
 
 The four shapes differ in what has already changed by the time you see
-anything. A completion changed nothing; a Plan answer changed nothing;
+anything. A completion changed nothing; an Ask answer changed nothing;
 an edit changed the selection, and showed you first; the agent had
 created a file and run commands before there was anything to look at —
 and in Autopilot, without asking. So the thing you review moves too: a
