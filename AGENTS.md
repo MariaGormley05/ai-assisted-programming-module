@@ -219,6 +219,34 @@ materially wrong by 2026.
   coding-agent product) or from METR's published data: rerun or re-read
   them if a claim or the models change. Tool and mode names are dated on
   the slide. Its diagrams are drawn shapes, not pictures.
+- **Security** (a PowerPoint deck since November 2026) — nine coloured
+  sections and six question slides for the room (four options, then a
+  click that marks the right one on the slide; no try-it-now). Part 1 is
+  what goes wrong: the benchmark rate and its condition (no security
+  instruction given), backed by a university study because the benchmark's
+  maker sells security testing, the four ordinary failures, people with and without an
+  assistant on the same tasks (neither group safe by default), stating the requirement,
+  SQL injection and the placeholder fix (binding), hallucinated packages and
+  slopsquatting (names repeat; ask the registry by the name alone before
+  installing), secrets (no default; rotate a logged key), prompt injection
+  (data, never instructions, inside delimiters; defences are provisional),
+  scanners on every push (static analysis; history with `fetch-depth: 0`;
+  ask for an attack in a new conversation), and AI that finds and fixes flaws
+  (Copilot Autofix, DARPA's AI Cyber Challenge, Google's Big Sleep). Part 2 is why the fixes work:
+  the database's parser cannot tell your text from the user's, escaping against
+  a placeholder's separate channel, names that cannot go in a placeholder, the
+  shell's and ping's own parsers, allow-lists, taint tracking and what each
+  scanner cannot see, a prompt with no separate channel (one sequence of tokens,
+  role labels and delimiters included), a document that fakes the closing
+  delimiter, limiting a fooled model, and one install followed step by step.
+  That spine is what the Security questions in MCQ 2 test, so keep it, and keep
+  their terms (parser, channel, delimiter, provisional, binding, static analysis,
+  hallucinated, rotate), each explained in plain words where it first appears. The two comparison slides are there so the
+  lecture does not read as against AI assistance; they quote dated studies and
+  vendor figures, so recheck them when newer ones appear. Every output on a slide is real: the
+  SQLite and shell runs, PyPI's answers, and the counts from sending the
+  lab's prompts and document to hosted models. Rerun them if a claim, the
+  lab or the models change.
 - **CLI Coding Agents** — teach the **configuration model**, not
   a tour of tools: standing instructions (`AGENTS.md`), built-in and
   custom slash commands, and allow/ask/deny permissions, where deny wins
@@ -240,7 +268,14 @@ figures (92% daily use / 29% trust / 48% always review / 1.7× defects /
 other. They are taught as **direction, not decimal points**, and the
 slide that quotes them says so. Do not add a statistic to a deck without
 that caveat on the same slide, and do not sharpen these into false
-precision.
+precision. Write the caveat in plain words that say where the numbers come
+from, for example "Treat these numbers as a rough guide. They come from one
+company's test tasks, not from code like yours." Never put the slogan
+"direction, not decimals" on a slide: students cannot tell what it means.
+Say who produced each figure and what they do. A company that sells security
+tools gains when code looks unsafe, so back its figure with an independent,
+peer-reviewed study where one exists: the Security deck pairs Veracode's
+benchmark with New York University's 2022 study of GitHub Copilot's code.
 
 ## Conventions (guaranteed repo-wide)
 
@@ -285,15 +320,30 @@ precision.
   keypress in the HTML presentation), `- ` = shown immediately. Fragment
   build-up slides; leave reference slides (agendas, summaries, tables)
   immediate.
-### No speaker notes: every slide stands on its own
+### Every slide stands on its own; a plain-English note may sit below it
 
-Decks carry **no speaker notes**, in PowerPoint's notes pane or as
-`<!-- Speaker notes: ... -->` comments in a Marp deck. The module owner
-never used them, and all 393 were removed on 1 October 2026. What a slide
-means is on the slide: a reader with only the slide in front of them,
-student or assistant, must be able to follow it. If a point needs
-explaining, explain it on the slide or give it a slide of its own; do not
-add a note.
+What a slide means is on the slide: a reader with only the slide in front
+of them, student or assistant, must be able to follow it. If a point needs
+explaining, explain it on the slide or give it a slide of its own.
+
+Since 8 November 2026 a PowerPoint deck may also carry a speaker note under
+each slide, at the module owner's request; the Security deck has one under
+every slide. A note says in plain English what the slide is about and the
+point the slide gets across, and a question slide's note also gives the
+answer and why. A note repeats and explains its slide and never holds
+anything the slide needs: the site shows only the slides' own text
+(`scripts/deck_text.py` does not read notes). Notes follow every rule for
+slide text below, portability included. The other decks have no notes: the
+393 older ones went unused and were removed on 1 October 2026, and Marp
+decks carry no `<!-- Speaker notes: ... -->` comments.
+
+Write every slide in plain English for a student who missed the lecture and
+reads the deck alone. The title states the point in plain words. Every
+technical term is explained where it first appears, and never used before
+that. No slogans, riddles or clever metaphors that need the lecturer to decode
+them ("Direction, not decimals" and "The flaws are old; the volume of code is
+new" were both rewritten for that reason). Keep the terms an assessment uses,
+and explain them rather than dropping them.
 
 - Decks are SELF-CONTAINED and reusable: never reference other weeks or
   the module schedule, and never name an institution, a lecturer, a VLE
@@ -304,15 +354,19 @@ add a note.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
-### PowerPoint lectures (since September 2026: the overview, prompting, RAG, MCP and Coding Agents lectures)
+### PowerPoint lectures (since September 2026: the overview, prompting, RAG, MCP, Coding Agents and Security lectures)
 
 A week may be taught from a PowerPoint deck instead of a Marp one,
 `<topic>-lecture.pptx` (the module owner builds most of them with the
 powerpoint-maker skill: code in dark syntax-coloured boxes, prompts and
 replies in labelled boxes. The Coding Agents deck is the exception: it is
 drawn with pptxgenjs, so edit it in PowerPoint rather than rebuilding it
-with the skill). Everything above about content still holds:
-the deck flow below, portability, no speaker notes.
+with the skill. The Security deck is drawn in the design of the module
+owner's reworked MCP deck: its master and dot-grid background, section
+colours, progress bar, gradient icon circles and question slides, all as
+editable shapes, so edit it in PowerPoint too). Everything above about
+content still holds: the deck flow below, portability, and slides that
+stand on their own.
 
 **The deck is the only source, and nothing derived from it is committed.**
 Edit it any way you like (PowerPoint, PowerPoint for the web, or

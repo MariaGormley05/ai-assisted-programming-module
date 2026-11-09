@@ -69,7 +69,7 @@ only.
 ## Module schedule
 
 <!-- current-week:start -->
-> 🗓️ **This week: MCQ 1 (32%)** — held during the lab slot (week beginning 02 Nov 2026). Read [what it covers](mcq/mcq1/README.md) first.
+> 🗓️ **Current teaching week: 8 — Security of AI-Generated Code** (week beginning 09 Nov 2026).
 <!-- current-week:end -->
 
 <!-- schedule-table:start -->
@@ -82,8 +82,8 @@ only.
 | 5 | MCP | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/mcp/) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
 | 6 | Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/agents/) | [lab](lectures-and-labs/week06/agents_lab/README.md) |
 | — | Reading week | [details](lectures-and-labs/week06b-reading-week/README.md) | — |
-| **➡️ 7** | **MCQ 1** (32%) · held during the lab slot | [details](lectures-and-labs/week07/README.md) · [what it covers](mcq/mcq1/README.md) | — |
-| 8 | Security of AI-Generated Code | [slides](lectures-and-labs/week08/security-lecture.md) | [lab](lectures-and-labs/week08/security_lab/README.md) |
+| 7 | **MCQ 1** (32%) · held during the lab slot | [details](lectures-and-labs/week07/README.md) · [what it covers](mcq/mcq1/README.md) | — |
+| **➡️ 8** | Security of AI-Generated Code | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/security/) | [lab](lectures-and-labs/week08/security_lab/README.md) |
 | 9 | CLI Coding Agents | [slides](lectures-and-labs/week09/cli-agents-lecture.md) | [lab](lectures-and-labs/week09/cli_agents_lab/README.md) |
 | 10 | CI/CD & Evals | [slides](lectures-and-labs/week10/cicd-lecture.md) | [lab](lectures-and-labs/week10/cicd_lab/README.md) |
 | 11 | Vibe Coding & Spec-Driven | [slides](lectures-and-labs/week11/vibe-coding-lecture.md) | [lab](lectures-and-labs/week11/vibe_coding_lab/README.md) |
@@ -125,8 +125,8 @@ own. They recur through the labs, so you meet each one more than once:
   markdown) or `<topic>-lecture.pptx`, the PowerPoint deck as the only
   source, with nothing derived from it committed (the site build and the
   gates read it through `scripts/deck_text.py`); the lab is
-  `<topic>_lab/`. Decks carry no speaker notes: every slide stands on its
-  own. The week number names the
+  `<topic>_lab/`. Every slide stands on its own; the Security deck also
+  has a plain-English speaker note under each slide. The week number names the
   folder and nothing else; the site keeps topic addresses, taken from the
   schedule. All ten decks are written. Every deck is
   self-contained and names no lecturer or institution, so any week can be
