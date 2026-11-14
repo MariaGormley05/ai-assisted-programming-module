@@ -42,8 +42,14 @@ def main(argv):
     if len(argv) != 3:
         print("usage: python check_predictions.py POLICY.json PREDICTIONS.txt")
         return 2
-    with open(argv[1], encoding="utf-8") as fh:
-        policy = json.load(fh)
+    try:
+        with open(argv[1], encoding="utf-8") as fh:
+            policy = json.load(fh)
+    except json.JSONDecodeError as err:
+        print("policy error: %s is not valid JSON (line %d, column %d) -- "
+              "often a comma after the last rule in a list"
+              % (argv[1], err.lineno, err.colno))
+        return 2
     try:
         check_policy(policy)
     except ValueError as err:

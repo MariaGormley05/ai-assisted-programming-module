@@ -5,12 +5,14 @@ loudly when it could not.
     git diff origin/main...HEAD | python review_diff.py
     python review_diff.py changes.diff
 
-The starter for DIY 3. It reads LLM_API_KEY, LLM_BASE_URL and LLM_MODEL
-from the environment — the same three the RAG lab uses, with the same free
-defaults — and in GitHub Actions they arrive from repository secrets. It
-prints the findings to stdout, and it exits non-zero on ANY failure: no key,
-no diff, an HTTP error, an empty answer. A review that could not run must go
-red, not green; that is the whole point of the exercise.
+The starter for DIY 3. It reads three settings from the environment:
+LLM_API_KEY, which is required, and LLM_BASE_URL and LLM_MODEL, which
+default to Google's free Gemini endpoint and model. An empty value counts as
+unset, because a repository secret you never created reaches a workflow as
+an empty string. In GitHub Actions all three arrive from repository secrets.
+It prints the findings to stdout, and it exits non-zero on ANY failure: no
+key, no diff, an HTTP error, an empty answer. A review that could not run
+must go red, not green; that is the whole point of the exercise.
 
 Standard library only, so the job has nothing to install.
 """
@@ -61,8 +63,9 @@ def review(diff: str) -> str:
     key = os.getenv("LLM_API_KEY")
     if not key:
         fail("LLM_API_KEY is not set (in Actions it comes from a repository secret, passed in as env)")
-    base = os.getenv("LLM_BASE_URL", DEFAULT_BASE_URL).rstrip("/") + "/"
-    model = os.getenv("LLM_MODEL", DEFAULT_MODEL)
+    # `or`, not a getenv default: an empty secret must fall back too.
+    base = (os.getenv("LLM_BASE_URL") or DEFAULT_BASE_URL).rstrip("/") + "/"
+    model = os.getenv("LLM_MODEL") or DEFAULT_MODEL
 
     body = json.dumps({
         "model": model,

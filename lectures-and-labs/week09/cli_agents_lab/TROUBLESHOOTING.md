@@ -22,10 +22,10 @@ release of Node.
 
 ### On your own Windows machine
 
-The lab works in PowerShell too. `npm install -g @github/copilot` is the
-same, and `winget install GitHub.Copilot` is an alternative. PowerShell
-does not understand `\` at the end of a line, so type multi-line commands
-on one line.
+Run the lab's commands in **Git Bash**, the terminal that comes with Git
+for Windows, not in PowerShell: some of them, such as `grep` and `unset`,
+do not exist there. `npm install -g @github/copilot` works in either, and
+`winget install GitHub.Copilot` is an alternative.
 
 ## Signing in
 
@@ -82,11 +82,12 @@ a key into a command or paste it into code.
 
 ### My command or skill does not appear
 
-- Check the folder: `.github/skills/<name>/SKILL.md` at the root of your
-  repository for Copilot, `.gemini/commands/<name>.toml` in the folder
-  you start Gemini in.
+- Check the folder: `.github/skills/<name>/SKILL.md` for Copilot and
+  `.gemini/commands/<name>.toml` for Gemini, both inside `sample-app`,
+  the folder you start the agent in. Copilot also finds skills in the
+  folders above it, up to the root of your repository.
 - A skill's folder name and its `name:` must match.
-- Copilot: `/skills` lists what it found. Gemini: `/commands reload`.
+- Copilot: `/skills list` lists what it found. Gemini: `/commands reload`.
 
 ### It keeps asking permission — or has stopped asking
 
@@ -122,6 +123,11 @@ or switch to the other agent.
 A rule in this checker names the words a command starts with, so
 `shell(git)` already covers every git command. Write `shell(git)`, not
 `shell(git:*)`.
+
+### `JSONDecodeError`
+
+Your policy file is not valid JSON, usually because of a comma after the
+last rule in a list. The line and column in the message point at it.
 
 ### `No module named 'pytest'`
 

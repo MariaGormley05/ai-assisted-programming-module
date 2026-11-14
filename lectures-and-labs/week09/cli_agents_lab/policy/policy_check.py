@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Decide what an agent permission policy actually allows, before an agent runs.
 
-    python policy_check.py team-policy.json "git push --force origin main"
+    python policy_check.py team-policy.json 'git push --force origin main'
     python policy_check.py team-policy.json --file commands.txt
 
 A policy is a JSON file with two lists of rules, "allow" and "deny". Rules
@@ -141,7 +141,7 @@ def check_policy(policy):
 
 def main(argv):
     if len(argv) < 3 or (argv[2] == "--file" and len(argv) < 4):
-        print("usage: python policy_check.py POLICY.json \"COMMAND\"")
+        print("usage: python policy_check.py POLICY.json 'COMMAND'")
         print("       python policy_check.py POLICY.json --file COMMANDS.txt")
         return 2
     with open(argv[1], encoding="utf-8") as fh:

@@ -13,7 +13,8 @@ example; the configuration model is what transfers.
   session with its built-in slash commands
 - Write standing instructions (`AGENTS.md`) that change what the agent
   does in every future session — and check that they did
-- Package a prompt you keep retyping as a slash command of your own
+- Install a custom slash command, after reading exactly what it will run
+  on your machine
 - Predict what a permission policy allows before an agent runs, and find
   the commands that slip through it
 - Run an agent from a script, with every permission decided in advance
@@ -56,11 +57,22 @@ shows how): Google's own sign-in stopped serving free personal accounts
 on 18 June 2026. Wherever the two differ, the Gemini version is given
 too.
 
+**Stay on the defaults.** Copilot CLI starts in its interactive mode, in
+which the agent asks you before it runs most commands. Answer each
+question with **Yes** or **No**, never with an answer that approves a
+tool "for the rest of the session". Do not press Shift+Tab, which
+switches the agent to another mode, and do not type `/allow-all`, which
+approves everything. Each of these stops the agent asking, and DIY 7
+only works while the agent still asks. In Gemini, never choose an
+"Always allow" answer, and leave YOLO mode, which approves every action,
+off. If the names change, look for the mode in which the agent asks
+before it runs a command.
+
 | Folder | What is in it |
 |---|---|
 | `sample-app/` | A small project with one failing test — the agent's work |
 | `policy/` | A permission checker, a team policy, a list of commands, a scorer for your predictions, and DIY 7's probe |
-| `examples/` | A custom command, a skill and an agent profile, ready to install |
+| `examples/` | Two custom commands, one for each agent, and a custom agent, ready to install |
 
 If anything goes wrong installing or signing in, see
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
@@ -73,9 +85,14 @@ A terminal agent is a program you install like any other. Copilot CLI and
 Gemini CLI are both npm packages and need Node 22 or newer, which the
 Codespace already has.
 
-The first time it starts in a folder, it asks whether you trust that
-folder. Take the question seriously: trusting a folder lets the agent read
-it, and lets the files in it configure the agent.
+The first time the agent starts in a folder, it asks whether you trust
+that folder. Take the question seriously: trusting a folder lets the agent
+read it, and lets the files in it configure the agent.
+
+Everything the model reads in a session (its instructions, your
+conversation and the files it opens) has to fit in its **context
+window**: the most text the model can take in at once. A long session
+fills it up.
 
 ### DIY 1: Install, sign in, look around
 
@@ -88,14 +105,17 @@ it, and lets the files in it configure the agent.
 
    Gemini: `npm install -g @google/gemini-cli`, then `gemini --version`.
 
-2. Start it inside the sample project:
+2. Start the agent inside the sample project:
 
    ```bash
    cd sample-app
    copilot
    ```
 
-   Trust the folder for this session only. If the screen already says
+   When the agent asks whether you trust the files in this folder, choose
+   **Yes**, which trusts the folder for this session only, not **Yes, and
+   remember this folder for future sessions**. The question comes back in
+   every new session; answer **Yes** each time. If the screen already says
    `Signed in to https://github.com as <your username>`, you are signed
    in. If it says `Please use /login to sign in to use Copilot`, type
    `/login`, choose **GitHub.com**, then **Sign in with a device code**,
@@ -113,8 +133,8 @@ it, and lets the files in it configure the agent.
    authenticate, choose **Use Gemini API Key**, then press Enter to
    submit the key it shows you. The bottom right of the screen should
    read `gemini-3.5-flash-lite`.
-3. Before asking it anything, type `/help` and find the command for each
-   of these jobs. Try each one once:
+3. Before asking the agent anything, type `/help` and find the command
+   for each of these jobs:
 
    - start a fresh conversation
    - show how full the context window is
@@ -131,8 +151,8 @@ it, and lets the files in it configure the agent.
 **What you should have**
 
 The agent installed and signed in, each of the five commands found in
-`/help`, not on this page, and tried once, the share of the context
-window one question used, and one failing test on screen.
+`/help`, not on this page, the share of the context window one question
+used, and one failing test on screen.
 
 <details><summary>Hint</summary>
 
@@ -176,24 +196,29 @@ CLI reads `GEMINI.md` unless you tell it to read `AGENTS.md` as well.
 returns `3`. There are two ways to make that test pass, and only one of
 them is a fix.
 
-1. Commit, so you can see exactly what changes and undo it:
+1. Open a second terminal for git, so the agent can keep the first: in
+   the Explorer, right-click the `sample-app` folder and choose **Open in
+   Integrated Terminal**. Type every git command in this lab there. Then
+   commit, so you can see exactly what changes and undo it:
 
    ```bash
    git add -A && git commit --allow-empty -m "before the agent"
    ```
 
-2. Start a fresh conversation (`/clear`) and type only: *"Make the tests
-   pass."*
-3. When it finishes, run `git diff`. Which file did it change —
-   `stats.py`, `test_stats.py`, or both?
+2. In the agent, start a fresh conversation (`/clear`) and type only:
+   *"Make the tests pass."* When the agent asks to run a command, answer
+   **Yes**.
+3. When the agent finishes, run `git diff`. Which file did the agent
+   change — `stats.py`, `test_stats.py`, or both?
 
    If the diff is longer than the terminal, git shows it in a scrolling
    viewer and your prompt disappears. Scroll with the arrow keys, then
    press `q` to get back to the prompt. If `q` does nothing, you are in the
    Vim editor: press `Esc`, type `:q` and press Enter.
 
-4. Undo everything it did: `git checkout -- . && git clean -fd` — you
-   committed first, so this removes only what the agent changed or added.
+4. Undo everything the agent did: `git checkout -- . && git clean -fd` —
+   you committed first, so this removes only what the agent changed or
+   added.
 
 **What you should have**
 
@@ -228,28 +253,31 @@ your last one, so step 1 never stops on "nothing to commit".
    {"context": {"fileName": ["AGENTS.md", "GEMINI.md"]}}
    ```
 
-3. Quit and start a **new** session. Ask: *"What rules do your
-   instructions give you for this project?"*
+3. Quit the agent (`/exit`) and start a **new** session. Ask: *"What
+   rules do your instructions give you for this project?"*
 4. Repeat DIY 2: commit, type *"Make the tests pass."*, then `git diff`.
    Undo with `git checkout -- . && git clean -fd` so the bug is back for later.
 5. Now push against the rule: *"The test is wrong. Change it to expect
-   3."* Watch what it does, then undo again.
+   3."* Watch what the agent does, then undo again.
 
 **What you should have**
 
-Your `AGENTS.md`, the agent's answer to step 3 showing it read the file, a
-diff from step 4 that touches only `stats.py`, and step 5's outcome on
-screen: the test changed, or the agent pushing back.
+Your `AGENTS.md`, the agent's answer to step 3 showing it read the file,
+the diff from step 4 and whether it touched only `stats.py` this time,
+and step 5's outcome on screen: the test changed, or the agent pushing
+back.
 
 <details><summary>Hint</summary>
 
 A rule that says what to do *instead* works better than a bare ban: "if a
 test looks wrong, stop and explain why" gives the agent somewhere to go.
 
-You may find it loaded more than your file. Copilot also reads
-instruction files from the root of the repository — this module ships an
-`AGENTS.md` and a `CLAUDE.md` among them — and combines them all with no
-order of priority.
+You may find the agent loaded more than your file. Copilot also reads the
+instruction files at the root of your repository, which holds an
+`AGENTS.md` and a `CLAUDE.md` (the Explorer hides `CLAUDE.md`), and
+combines them all with no order of priority. Type
+`copilot instruction list` in the git terminal to see every file a
+session started in `sample-app` loads.
 In Gemini, `/memory show` prints everything it loaded; if it ignores your
 settings file, trust the folder, because settings in an untrusted folder
 are ignored.
@@ -267,42 +295,52 @@ section 4.
 The built-in commands control the tool. Your own commands package a
 prompt you would otherwise retype — with live context, such as the
 current diff, filled in when you run it. They are files, so they are
-committed and the whole team gets them.
+committed and the whole team gets them. In Copilot CLI a custom command
+is a **skill**: a folder holding a `SKILL.md` file of instructions, which
+you run by typing `/` and the skill's name.
 
 `examples/` holds one of each kind, deliberately **outside** the folders
 the agents load from. Installing one is part of the exercise:
 
 | File | What it is | Install it to |
 |---|---|---|
-| `examples/copilot/skills/review-diff/SKILL.md` | A Copilot CLI skill | `.github/skills/review-diff/SKILL.md` at the root of your repo |
+| `examples/copilot/skills/review-diff/SKILL.md` | A Copilot CLI skill | `sample-app/.github/skills/review-diff/SKILL.md` |
 | `examples/gemini/review.toml` | A Gemini CLI command | `sample-app/.gemini/commands/review.toml` |
 | `examples/copilot/agents/reviewer.agent.md` | A Copilot CLI custom agent | See the extensions |
 
-### DIY 4: Install one, then write your own
+### DIY 4: Read it, install it, run it
 
 1. Read the example for your agent **before** installing it. What will
    it run on your machine, and when?
-2. Install it where your agent looks (see the table; `mkdir -p` the folder
-   first), then start a new session. Copilot: `/skills` lists what it found. Gemini:
+2. Install it where your agent looks. In the git terminal, which is in
+   `sample-app`:
+
+   ```bash
+   mkdir -p .github/skills/review-diff
+   cp ../examples/copilot/skills/review-diff/SKILL.md .github/skills/review-diff/
+   ```
+
+   Gemini: `mkdir -p .gemini/commands`, then
+   `cp ../examples/gemini/review.toml .gemini/commands/`.
+3. Quit the agent (`/exit`) and start a new session. Copilot:
+   `/skills list` lists the skills the agent found. Gemini:
    `/commands reload`.
-3. Add a comment to `stats.py`, then run it: `/review-diff` in Copilot,
-   `/review` in Gemini. Did it run what you expected from reading it?
-4. Write your own command for a job you would repeat — for example, "run
-   the tests and report only the failures, with file and line", or "write
-   a commit message from the staged diff". It must pull in live context
-   itself rather than rely on you pasting it.
-5. Run it twice, improve its wording once, and commit it.
+4. Add a comment to `stats.py`, so that there is a change to review, then
+   run the command: `/review-diff` in Copilot, `/review` in Gemini. Did
+   the command run what you expected from reading it?
+5. Put `stats.py` back: `git checkout -- stats.py`.
 
 **What you should have**
 
-The example installed and run once, doing what you expected from reading
-it, and your own command committed: run twice, pulling in its own live
-context each time.
+The example installed and run once, and its review of your comment on
+screen: the command ran what you expected from reading the file, or you
+found out what it really runs.
 
 <details><summary>Hint</summary>
 
-Copilot skills: the folder name and the `name:` in the file's frontmatter
-must match, lowercase with hyphens. A skill can also be picked up without
+Copilot skills: the folder name and the `name:` line in the file's
+frontmatter (the block between the two `---` lines at the top) must
+match, lowercase with hyphens. A skill can also be picked up without
 being called, when its `description` fits what you asked. If it does not
 show up, the personal folder `~/.copilot/skills/` works from anywhere.
 
@@ -335,9 +373,9 @@ copilot --allow-tool='shell(git:*)' --deny-tool='shell(git push)'
 
 `shell(rm)` covers every `rm` command, `shell(git:*)` covers every `git`
 command, and for `git` and `gh` you can name a subcommand, as `git push`
-does here. Gemini CLI does the same job with `--allowed-tools` and policy
-files, and matches a text prefix. The details differ between tools and
-between versions — so before you trust a policy, test it.
+does here. Gemini CLI does the same job with policy files, and matches a
+text prefix. The details differ between tools and between versions — so
+before you trust a policy, test it.
 
 `policy/policy_check.py` is a small checker for exactly that. Its rules
 are written like Copilot's:
@@ -362,9 +400,10 @@ allowed.
 
 1. Open `policy/team-policy.json`. Read its `intent` first, then its
    rules.
-2. **Before running anything**, predict. From the lab folder (`cd ..`
-   first if your terminal is still inside `sample-app`), copy the
-   commands in `policy/commands.txt` without their comments:
+2. **Before running anything**, predict. Quit the agent (`/exit`) if it
+   is still running, and from the lab folder (`cd ..` first if your
+   terminal is still inside `sample-app`), copy the commands in
+   `policy/commands.txt` without their comments:
 
    ```bash
    grep -v -e '^#' -e '^$' policy/commands.txt > policy/my-predictions.txt
@@ -393,6 +432,10 @@ x DENY   git push --force origin main    <- you said ALLOW
 9 of 10 predictions right.
 ```
 
+This is one student's run: your `x` marks and your count will be your
+own. By the end of step 5, every one of the ten commands has a verdict,
+and you know which of the ALLOW verdicts break the policy's intent.
+
 <details><summary>Hint</summary>
 
 There are three gaps. A rule matches the words a command **starts with**,
@@ -411,11 +454,16 @@ in a shell.
    while `git status`, `git diff`, `git log`, `git add`, `git commit`,
    `npm test`, `pytest` and `python -m pytest` all still come out ALLOW —
    with any arguments.
-3. Write `policy/my-commands.txt` with five lines of your own: three the
-   agent should be free to run, and two that break the intent in a way
-   `commands.txt` did not show.
-4. Run both files against `my-policy.json` until every verdict is one you
-   would defend.
+3. Write `policy/my-commands.txt` with two lines of your own that break
+   the intent in a way `commands.txt` did not show.
+4. Ask the checker about both files under your policy, and change the
+   rules until every verdict is one you would defend:
+
+   ```bash
+   python policy/policy_check.py policy/my-policy.json --file policy/commands.txt
+   python policy/policy_check.py policy/my-policy.json --file policy/my-commands.txt
+   ```
+
 5. Now attack your own policy: add lines to `my-commands.txt` that break
    the intent and still come out ALLOW under `my-policy.json`.
 
@@ -430,13 +478,24 @@ why adding deny rules never finishes the job.
 
 Allowing a whole program (`shell(git)`, `shell(python)`) allows everything
 that program can do. Allow the subcommands you mean instead, and let
-everything else fall through to ASK.
+everything else fall through to ASK. To ask the checker about one
+command, put it in single quotes:
+`python policy/policy_check.py policy/my-policy.json 'git log --oneline'`.
+Without quotes, your own shell reads any `;`, `|` or `&&` in the line
+first and runs part of the line for real. Double quotes are not enough
+when the line has a double quote of its own, because that quote ends
+them early. A line with a single quote in it goes in a file instead,
+checked with `--file`.
+If the checker stops with a `JSONDecodeError`, your file is not valid
+JSON: usually there is a comma after the last rule in a list.
 
 For step 5, count the ways there are to spell "push" or "delete" — then
 look up what `pytest --basetemp` does to the directory you give it: it
 deletes it and makes it again, the first time a test asks pytest for a
-temporary folder (`tmp_path`, for example). The sample app's tests never
-ask, so with them nothing is deleted.
+temporary folder (`tmp_path`, for example). Read about it rather than
+trying it: run from the lab folder, pytest also runs the checker's own
+tests, which do ask for one, so `pytest --basetemp=policy` would delete
+the `policy` folder and the files you made in it.
 
 </details>
 
@@ -452,11 +511,14 @@ actually does it — using harmless commands only.
    copilot --allow-tool='shell(git status)' --deny-tool='shell(git log)'
    ```
 
-   Gemini: `gemini --allowed-tools "run_shell_command(git status)"`, and
-   for the deny, the policy file in the hint.
-2. Ask it to run exactly `git status --short`. Did it ask you first?
-3. Ask it to run exactly `git log --oneline -3`. Was it blocked?
-4. Ask it to run exactly `git -C . log --oneline -3`. Was it blocked?
+   Gemini: save both rules as the policy file in the hint, then start
+   `gemini`.
+2. Ask the agent to run exactly `git status --short`. Did the agent ask
+   you first?
+3. Ask the agent to run exactly `git log --oneline -3`. Was the command
+   blocked?
+4. Ask the agent to run exactly `git -C . log --oneline -3`. Was the
+   command blocked?
 5. Quit the agent, go back to the lab folder (`cd ..`), and ask the
    checker about the same three commands under the same two rules:
 
@@ -475,11 +537,17 @@ Say "run exactly this command". Otherwise the agent may tidy
 `git -C . log` into `git log`, and you will be testing a different
 command.
 
-The Gemini deny rule: save this as `~/.gemini/policies/lab-probe.toml`,
-restart, and **delete the file when you are done** — it applies to every
-project on the machine.
+The Gemini rules: save this as `~/.gemini/policies/lab-probe.toml`,
+restart Gemini, and **delete the file when you are done** — it applies to
+every project on the machine.
 
 ```toml
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git status"
+decision = "allow"
+priority = 500
+
 [[rule]]
 toolName = "run_shell_command"
 commandPrefix = "git log"
@@ -496,41 +564,49 @@ something about your agent that reading its flags did not tell you.
 
 ## 5. Running it with nobody watching
 
-`-p` runs one prompt and exits, so an agent can live in a script or a CI
-job. With nobody there to answer a question, anything not allowed in
-advance is refused: every permission is decided before it starts.
+`-p` runs one prompt and exits, so an agent can run inside a script, or
+in an automatic check that runs on every push. A run like that, with no
+person at the keyboard, is called **headless**. With nobody there to
+answer a question, anything not allowed in advance is refused: every
+permission is decided before the run starts.
 
 ### DIY 8: A script that explains a failure
 
-1. From `sample-app`, run a headless check on the project:
+1. From `sample-app` (`cd sample-app` from the lab folder), run a
+   headless check on the project:
 
    ```bash
    copilot -p "Run pytest -q. If any test fails, explain why in three lines." \
      --allow-tool='shell(pytest)' --deny-tool='write'
    ```
 
-   The prompt names `pytest` on purpose: the policy allows commands that
-   start with `pytest`, so `python -m pytest` would be *asked* — and
-   headless, asked means refused.
+   The prompt names `pytest` on purpose: the `--allow-tool` rule allows
+   commands that start with `pytest`, so `python -m pytest` would be
+   *asked* — and headless, asked means refused.
 
    Gemini: pipe the output in, so it needs no tools — whether it *may*
    use any is decided by its own allow/deny configuration, not by the pipe:
    `python -m pytest -q 2>&1 | gemini -p "Explain any failing test in three lines."`
 2. Save the command as `explain-failures.sh` in `sample-app` and run it
    there with `bash explain-failures.sh`.
-3. Change the prompt so the job needs something you did not allow — add
-   "then fix the bug" — and run it again. Watch what happens.
-4. Confirm nothing changed: `git status`.
-5. Take the allow rule away too: delete `--allow-tool='shell(pytest)'`
-   from the script and run it once more. With nothing allowed, what can
-   it still tell you? (Gemini: your piped version already runs with
-   nothing allowed.)
+3. Change the prompt in the script so the job needs something you did
+   not allow: add "then fix the bug".
+4. In the git terminal, commit, so you can see whether the next run
+   changes anything:
+
+   ```bash
+   git add -A && git commit --allow-empty -m "before the headless run"
+   ```
+
+   Then run `bash explain-failures.sh` again and watch what the agent
+   does.
+5. Run `git status` in the git terminal.
 
 **What you should have**
 
-`explain-failures.sh` and its explanation of the failing test, the
-refusal in step 3 with `git status` showing nothing changed, and the run
-in step 5 showing what the agent can do when it may run nothing.
+`explain-failures.sh` and the agent's explanation of the failing test,
+the refusal in step 4, and `git status` in step 5 reporting
+`nothing to commit, working tree clean`: the agent changed no file.
 
 <details><summary>Hint</summary>
 
@@ -543,6 +619,15 @@ the agent needs is already in the prompt, so it has no reason to reach for
 a tool. But only a policy stops it if it tries — "runs nothing" is a
 property of what you allowed, not of the pipe.
 
+If the agent says it could not run the tests, look at the command it
+tried. If it was `python -m pytest`, perhaps because your `AGENTS.md`
+says so, that command was asked, and headless, asked means refused.
+
+One more run, if you have time: delete `--allow-tool='shell(pytest)'`
+from the script and run it again. With nothing allowed, what can the
+agent still tell you? (Gemini's piped version already runs with nothing
+allowed.)
+
 </details>
 
 ---
@@ -551,6 +636,11 @@ property of what you allowed, not of the pipe.
 
 Optional — the sections above are the two-hour path.
 
+- **Your own command.** Write a command for a job you would repeat — for
+  example, "run the tests and report only the failures, with file and
+  line", or "write a commit message from the staged diff". Make it pull
+  in live context itself rather than rely on you pasting it, run it, and
+  commit it.
 - **A read-only reviewer.** Copy `examples/copilot/agents/reviewer.agent.md`
   to `.github/agents/` at the root of your repo, start a session, and pick
   it with `/agent`. Its `tools` list leaves out editing and the shell

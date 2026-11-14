@@ -247,25 +247,64 @@ materially wrong by 2026.
   SQLite and shell runs, PyPI's answers, and the counts from sending the
   lab's prompts and document to hosted models. Rerun them if a claim, the
   lab or the models change.
-- **CLI Coding Agents** — teach the **configuration model**, not
+- **CLI Coding Agents** (a PowerPoint deck since November 2026, in the
+  Security deck's design) — teach the **configuration model**, not
   a tour of tools: standing instructions (`AGENTS.md`), built-in and
   custom slash commands, and allow/ask/deny permissions, where deny wins
   and anything unlisted is asked. Tool names, plans and matching rules
   change every few months, so the deck teaches the columns and dates the
   cells. The hook is the July 2025 Gemini CLI incident: a failed `mkdir`
-  nobody checked, then moves that overwrote the files one by one.
-- **Vibe Coding** — run vibe coding **against**
-  spec-driven development rather than demonstrating one. Carry the cost
-  data (see below) and the two terms students will meet everywhere:
-  **comprehension debt** and **haunted codebases**.
+  nobody checked, then moves that overwrote the files one by one. Part 1
+  also keeps what the CLI Coding Agents questions in MCQ 2 test: the eras
+  from autocomplete to agents (the 2022-23 chatbot never saw your
+  project), tool use as the change that made agents, copilot against
+  assistant against agent, an agent's traits (autonomy, multi-step
+  reasoning, tool use, context awareness, memory), an IDE assistant
+  against a terminal agent, the four terminal agents and which fits which
+  team (two of them open source), Codex's three permission modes,
+  invented APIs, and the shift from writing code to reviewing it, with
+  over-reliance as the learning risk. Part 2 judges commands with the
+  lab's `policy_check.py`, follows one headless run step by step, and
+  covers the context window, `/compact` and how a custom command is
+  assembled. Every verdict and output on a slide comes from the lab's
+  checker and sample app: rerun them if either changes.
+- **CI/CD & Evals** (a PowerPoint deck since November 2026, in the Security deck's design) — part 1 keeps
+  what the CI/CD questions in MCQ 2 test: CI against delivery against deployment (one human approval), a
+  workflow as one YAML file in `.github/workflows/` with a trigger, jobs, steps and a fresh runner, checks
+  ordered by what you cannot undo, GitHub's secret scanning, Dependabot and CodeQL with Copilot Autofix, and
+  Copilot around a pipeline (writing the workflow, explaining a failed run, reviewing a pull request, the
+  cloud agent). AI steps inside a workflow are taught with the date: `actions/ai-inference@v1` called GitHub
+  Models, retired on 30 July 2026. Then evals: a rate not a result, the assertion ladder, properties first and
+  the judge last with its biases. Part 2 follows one push step by step, shows why first runs fail and why green
+  proves only exit codes, and scores a real extraction eval. Every output on a slide is real: the lab's own
+  test, red then green, and GLM runs on the lab's articles and twelve support messages (0/36 JSON with the
+  plain prompt, 27/36 with the strict one). Rerun them if the lab or the models change.
+- **Vibe Coding** (a PowerPoint deck since November 2026, in the Security deck's design) — run vibe coding
+  **against** spec-driven development rather than demonstrating one. Carry the cost data (see below) and the
+  two terms students will meet everywhere: **comprehension debt** and **haunted codebases**. Part 1 keeps what
+  the Vibe Coding questions in MCQ 2 test: the definition and its loop (describe, generate, run, refine,
+  accepting output without deep review), the two 2025 changes that made it workable (fewer logic errors,
+  whole-codebase context) and the compiler analogy, where it fits, prompt-first builders against an
+  agent-first IDE (Antigravity: you manage agents and approve their artifacts), Firebase Studio's exportable
+  output and Data Connect, taught with the date (closed to new users June 2026, shuts 22 March 2027), the four
+  risks of keeping vibe-coded code, spec-driven development as the counter-trend, what each mode verifies,
+  choosing the mode per task, and the developer's role moving from typing code to directing it. Part 2 shows
+  why every unstated decision still gets made, follows one feature down two routes step by step, and measures
+  the debt. The gap counts and plan checks on its slides are real GLM runs on the lab's to-do app and spec
+  (21 to 38 open decisions for "add a due date"; 10 of 10 plans kept old tasks loading): rerun them if the lab
+  or the models change.
 - **Every deck** — the assessment is in-person, so decks may be blunt
   about the limits of AI-generated code. See `module/module-overview.md`
   under "Currency" for the module's stated position.
 
-**On the statistics.** The introduction and the vibe-coding lab quote 2026 industry
-figures (92% daily use / 29% trust / 48% always review / 1.7× defects /
-~45% OWASP). These come from surveys of varying rigour that recycle each
-other. They are taught as **direction, not decimal points**, and the
+**On the statistics.** The Vibe Coding deck quotes industry figures, each
+with its source: Stack Overflow's 2025 survey (84% use or plan to use AI
+tools, 51% of professionals daily, 33% trust the accuracy), Sonar's 2026
+survey (48% always check AI code before committing), CodeRabbit's 2025 study
+(1.7 times the issues per pull request) and Veracode (~45% of tasks with a
+security flaw). The introduction's "92% daily use" is GitHub's 2023 survey
+of 500 US developers, and it counts any use, not daily use. Such figures come
+from surveys of varying rigour that recycle each other. They are taught as **direction, not decimal points**, and the
 slide that quotes them says so. Do not add a statistic to a deck without
 that caveat on the same slide, and do not sharpen these into false
 precision. Write the caveat in plain words that say where the numbers come
@@ -327,8 +366,8 @@ of them, student or assistant, must be able to follow it. If a point needs
 explaining, explain it on the slide or give it a slide of its own.
 
 Since 8 November 2026 a PowerPoint deck may also carry a speaker note under
-each slide, at the module owner's request; the Security deck has one under
-every slide. A note says in plain English what the slide is about and the
+each slide, at the module owner's request; the Security, CLI Coding
+Agents, CI/CD & Evals and Vibe Coding decks have one under every slide. A note says in plain English what the slide is about and the
 point the slide gets across, and a question slide's note also gives the
 answer and why. A note repeats and explains its slide and never holds
 anything the slide needs: the site shows only the slides' own text
@@ -354,17 +393,17 @@ and explain them rather than dropping them.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
-### PowerPoint lectures (since September 2026: the overview, prompting, RAG, MCP, Coding Agents and Security lectures)
+### PowerPoint lectures (since September 2026: the overview, prompting, RAG, MCP, Coding Agents, Security, CLI Coding Agents, CI/CD & Evals and Vibe Coding lectures)
 
 A week may be taught from a PowerPoint deck instead of a Marp one,
 `<topic>-lecture.pptx` (the module owner builds most of them with the
 powerpoint-maker skill: code in dark syntax-coloured boxes, prompts and
 replies in labelled boxes. The Coding Agents deck is the exception: it is
 drawn with pptxgenjs, so edit it in PowerPoint rather than rebuilding it
-with the skill. The Security deck is drawn in the design of the module
-owner's reworked MCP deck: its master and dot-grid background, section
-colours, progress bar, gradient icon circles and question slides, all as
-editable shapes, so edit it in PowerPoint too). Everything above about
+with the skill. The Security, CLI Coding Agents, CI/CD & Evals and Vibe Coding decks are drawn in the
+design of the module owner's reworked MCP deck: its master and dot-grid
+background, section colours, progress bar, gradient icon circles and
+question slides, all as editable shapes, so edit them in PowerPoint too). Everything above about
 content still holds: the deck flow below, portability, and slides that
 stand on their own.
 

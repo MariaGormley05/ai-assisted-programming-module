@@ -1,8 +1,4 @@
-"""Tests for stats.py. One of them fails, and that failure is the lab's task.
-
-Fix the code so this file passes. Do not change what a test expects -- if a
-test looks wrong to you, say so and explain why, rather than editing it.
-"""
+"""Tests for stats.py. One of them fails, and that failure is the lab's task."""
 import pytest
 
 from stats import mean, median, mode, spread

@@ -84,9 +84,9 @@ only.
 | — | Reading week | [details](lectures-and-labs/week06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (32%) · held during the lab slot | [details](lectures-and-labs/week07/README.md) · [what it covers](mcq/mcq1/README.md) | — |
 | **➡️ 8** | Security of AI-Generated Code | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/security/) | [lab](lectures-and-labs/week08/security_lab/README.md) |
-| 9 | CLI Coding Agents | [slides](lectures-and-labs/week09/cli-agents-lecture.md) | [lab](lectures-and-labs/week09/cli_agents_lab/README.md) |
-| 10 | CI/CD & Evals | [slides](lectures-and-labs/week10/cicd-lecture.md) | [lab](lectures-and-labs/week10/cicd_lab/README.md) |
-| 11 | Vibe Coding & Spec-Driven | [slides](lectures-and-labs/week11/vibe-coding-lecture.md) | [lab](lectures-and-labs/week11/vibe_coding_lab/README.md) |
+| 9 | CLI Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/cli-agents/) | [lab](lectures-and-labs/week09/cli_agents_lab/README.md) |
+| 10 | CI/CD & Evals | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/cicd/) | [lab](lectures-and-labs/week10/cicd_lab/README.md) |
+| 11 | Vibe Coding & Spec-Driven | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/vibe-coding/) | [lab](lectures-and-labs/week11/vibe_coding_lab/README.md) |
 | 12 | **MCQ 2** (32%) · held during the lab slot | [details](lectures-and-labs/week12/README.md) · [what it covers](mcq/mcq2/README.md) | — |
 <!-- schedule-table:end -->
 
@@ -125,8 +125,8 @@ own. They recur through the labs, so you meet each one more than once:
   markdown) or `<topic>-lecture.pptx`, the PowerPoint deck as the only
   source, with nothing derived from it committed (the site build and the
   gates read it through `scripts/deck_text.py`); the lab is
-  `<topic>_lab/`. Every slide stands on its own; the Security deck also
-  has a plain-English speaker note under each slide. The week number names the
+  `<topic>_lab/`. Every slide stands on its own; the Security, CLI Coding
+  Agents, CI/CD & Evals and Vibe Coding decks also have a plain-English speaker note under each slide. The week number names the
   folder and nothing else; the site keeps topic addresses, taken from the
   schedule. All ten decks are written. Every deck is
   self-contained and names no lecturer or institution, so any week can be
