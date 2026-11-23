@@ -1,12 +1,15 @@
-# Your eval suite goes here
+# The eval for `summarise.py`
 
-DIY 5 asks you to build:
+- `cases.json`: the test cases. Each case is an article, and the rules a
+  good summary of it must follow: the key figure, the direction (a rise or
+  a fall), and the most words. DIY 5 asks you to add one case of your own.
+- `run_evals.py`: the eval script. It runs `summarise.py` on every case,
+  checks every summary against the case's rules, and prints the pass rate.
+  DIY 7 sets its two numbers, `RUNS` and `MIN_PASS_RATE`, and runs it in
+  your CI pipeline.
 
-- `cases.json`: six cases, each an input plus the properties its output
-  must satisfy. The lab's README shows the first one.
-- `run_evals.py`: scores the set and prints a **pass rate**. Copilot's
-  **Agent** writes it from the prompt in the lab's README.
+Run it from the lab folder:
 
-The cases are yours to write, deliberately. Deciding what "acceptable"
-means for output that is different every time is the actual skill, and a
-supplied set would remove it.
+```bash
+python evals/run_evals.py
+```

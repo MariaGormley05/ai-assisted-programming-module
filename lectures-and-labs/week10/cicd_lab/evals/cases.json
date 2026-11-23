@@ -1,0 +1,44 @@
+[
+  {
+    "id": "case-01",
+    "input_file": "samples/article_1.txt",
+    "figure": "12%",
+    "direction": "up",
+    "max_words": 25
+  },
+  {
+    "id": "case-02",
+    "input_file": "samples/article_2.txt",
+    "figure": "40%",
+    "direction": "up",
+    "max_words": 25
+  },
+  {
+    "id": "case-03",
+    "input": "Signups rose 30% after the redesign.",
+    "figure": "30%",
+    "direction": "up",
+    "max_words": 25
+  },
+  {
+    "id": "case-04",
+    "input": "Downloads rose 18% in the first week of the new release.",
+    "figure": "18%",
+    "direction": "up",
+    "max_words": 25
+  },
+  {
+    "id": "case-05",
+    "input": "Sales rose 7% in March, led by the new kettles.",
+    "figure": "7%",
+    "direction": "up",
+    "max_words": 25
+  },
+  {
+    "id": "case-06",
+    "input": "Visitors rose 25% after the site moved to a faster host.",
+    "figure": "25%",
+    "direction": "up",
+    "max_words": 25
+  }
+]

@@ -16,6 +16,8 @@ does. An app with an AI feature in it needs both.
   not run
 - Test a feature whose output changes on every run with an eval: a set of
   cases, scored as a pass rate
+- Run the eval in your pipeline, so that a pass rate below a minimum you
+  choose turns the build red
 - Pick the most exact check that still accepts every good answer, using
   the assertion ladder (a ranking of checks from exact match to asking
   another model)
@@ -71,6 +73,10 @@ in your copy of the repo as a **repository secret** named `LLM_API_KEY`;
 DIY 3 shows how. Nothing in this lab costs money, but on the free tier
 Google may use what you send to improve its products, so send it nothing
 personal. Sections 1, 2 and 4 need no key.
+
+**Time:** about 90 minutes. Section 1 takes about 15 minutes, section 2
+about 20, section 3 about 20 and section 4 about 35. Every step says exactly
+what to type, click or look for.
 
 ---
 
@@ -543,51 +549,48 @@ Do not fix this test; DIY 5 replaces it.
 
 ### DIY 5: Climb the assertion ladder
 
-Replace the equality test with checks that are true of **every** acceptable
-summary.
+The lab gives you an eval to start from. `evals/cases.json` holds six test
+cases, and `evals/run_evals.py` checks every summary against them, each
+check on the highest rung that still passes every good summary.
 
 1. Delete `tests/test_summary.py`. The test has done its job, and left in
    place it would turn your **ci** run red on most pushes.
-2. Create `evals/cases.json` with six cases: `samples/article_1.txt`,
-   `samples/article_2.txt`, and four short articles of your own about
-   something that rose. Start from this case:
+2. Open `evals/cases.json` and read the first case. If the file is
+   missing, run `git pull` to fetch the newest lab files.
 
    ```json
-   [
-     {
-       "id": "case-01",
-       "input_file": "samples/article_1.txt",
-       "figure": "12%",
-       "direction": "up",
-       "max_words": 25
-     }
-   ]
+   {
+     "id": "case-01",
+     "input_file": "samples/article_1.txt",
+     "figure": "12%",
+     "direction": "up",
+     "max_words": 25
+   }
    ```
 
-   For your own articles, put the text itself in `"input"` instead of
-   `"input_file"`. Write them so the stand-in can read them: the thing that
-   changed as the first word, and the figure that matters as the first
-   number, as in *"Signups rose 30% after the redesign."*
-3. Fresh conversation, **Agent**. Type:
-
-   ```text
-   Write evals/run_evals.py. It reads evals/cases.json, calls summarise()
-   from summarise.py once for each case, and checks the summary in this
-   order: it is not empty; it has at most max_words words; it contains the
-   case's figure; if direction is "up" it contains none of fell, dropped,
-   was down, and if "down" none of rose, grew, increased, was up; it does
-   not contain PROMPT from summarise.py. Print one line per case, such as
-   "case-01  PASS" or "case-02  FAIL  (missing key figure: "40%")", then a
-   last line such as "Pass rate: 5/6 (83.3%)". It must run from the lab
-   folder with: python evals/run_evals.py
-   ```
-
+   `input_file` names the article to summarise; the other cases put the
+   article's text itself in `input`. The last three fields are the rules
+   a good summary must follow: it contains the key figure `12%`, it
+   describes a rise (`up`), and it has at most 25 words.
+3. Open `evals/run_evals.py` and find the function `check`. It tests one
+   summary in this order: not empty; at most `max_words` words; contains
+   the figure; no word for the opposite direction, such as "fell" for a
+   rise; does not repeat the prompt. The first check that fails gives the
+   reason.
 4. Run the set from the lab folder three times. Does the rate stay the
    same?
 
    ```bash
    python evals/run_evals.py
    ```
+
+5. Add a seventh case of your own at the end of `evals/cases.json`: an
+   article of one sentence about something that rose. Write it the way the
+   stand-in reads it, with the thing that changed as the first word and the
+   figure that matters as the first number, as in *"Bookings rose 15% after
+   the price cut."* Copy the last case, put a comma after the case before
+   it, and change `id` to `case-07` and the `input` and `figure`. Run the
+   set again.
 
 **Expected output**
 
@@ -600,8 +603,8 @@ Your lines and your rate will differ, and they change from run to run:
   case-04  FAIL  (wrong direction: "fell")
   case-05  PASS
   case-06  PASS
-
-Pass rate: 4/6 (66.7%)
+  case-07  PASS
+Pass rate: 5/7 (71.4%)
 ```
 
 <details><summary>Hint</summary>
@@ -617,25 +620,14 @@ article said "rose".
 The stand-in is simple on purpose. It takes the first word of the article
 as the subject and the first number as the key figure, and it writes every
 change as a rise; when it slips, it writes fell, dropped or was down
-instead. That is why your own articles start with the thing that changed,
-put the figure first, and rose.
+instead. That is why your own case starts with the thing that changed, puts
+the figure first, and rose.
 
 With the prompt as shipped, each case passes about five runs in eight, so
-most runs land between 3/6 and 5/6. A rate from one run is a single
-sample.
+the rate moves from run to run. A rate from one run is a single sample.
 
-If `python evals/run_evals.py` stops with
-`ModuleNotFoundError: No module named 'summarise'`, the runner is looking
-in the wrong folder: Python puts the script's own folder, `evals/`, on the
-import path, not the lab folder. These lines at the top of `run_evals.py`
-fix it:
-
-```python
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-```
+If the script stops with `Expecting ',' delimiter`, the comma between
+your case and the one before it is missing.
 
 Now run the stand-in on `samples/article_3.txt` a few times. You will see
 summaries such as *"The main point is that The increased by 23 across all
@@ -710,9 +702,98 @@ direction: a case that got worse while the others improved. Finding a
 failure that no prompt fixes is what an eval set is for. A set that every
 case passes has stopped telling you anything.
 
-Five runs of six cases is a small sample. If before and after look close,
+Five runs of seven cases is a small sample. If before and after look close,
 run 20 of each:
 `for run in $(seq 20); do python evals/run_evals.py; done > before.txt`.
+
+</details>
+
+### DIY 7: Run the eval in CI
+
+So far you have run the eval by hand. In a team, the pipeline runs the eval
+on every push, like the tests, and a pass rate below a minimum the team
+chooses turns the build red. The eval script decides with its exit code: 0
+keeps the step green, 1 turns it red. The demo repository
+[github.com/danielcregg/ci-cd-evals-demo](https://github.com/danielcregg/ci-cd-evals-demo)
+shows the same idea in a small, complete project, and its README explains
+every file.
+
+1. At the top of `evals/run_evals.py`, change the two numbers:
+
+   ```python
+   RUNS = 10            # run the whole set ten times and use the average
+   MIN_PASS_RATE = 0.4  # an average below 40% turns the build red
+   ```
+
+2. Run the script from the lab folder, then print its exit code:
+
+   ```bash
+   python evals/run_evals.py
+   echo $?
+   ```
+
+   You should see ten pass rates, their average, and then `0`.
+3. Add the eval to your pipeline. Put this step at the end of
+   `.github/workflows/ci.yml`, after the pytest step and indented the same
+   way:
+
+   ```yaml
+         - name: Evals
+           run: python evals/run_evals.py
+           working-directory: lectures-and-labs/week10/cicd_lab
+   ```
+
+   Commit and push (`git commit -am "Run the eval in CI"`, then
+   `git push`). In the new **ci** run, open the **Evals** step. The step
+   should be green, and its log should show the ten pass rates and their
+   average.
+4. Make the step go red on purpose: set `MIN_PASS_RATE = 1.0`, a 100%
+   minimum that the stand-in never reaches. Commit and push, and confirm
+   that the **Evals** step is red and that its log says the average is
+   below the minimum.
+5. Set `MIN_PASS_RATE` back to `0.4`, commit and push, and confirm that the
+   next **ci** run is green again.
+
+**Expected output**
+
+The **Evals** step of the green run (your numbers will differ):
+
+```text
+Run python evals/run_evals.py
+Run 1 pass rate: 5/7 (71.4%)
+Run 2 pass rate: 4/7 (57.1%)
+...
+Run 10 pass rate: 3/7 (42.9%)
+Average pass rate: 62.9%. The minimum is 40%.
+```
+
+And after step 4:
+
+```text
+Average pass rate: 61.4%. The minimum is 100%.
+Below the minimum: this step fails, so the build goes red.
+Error: Process completed with exit code 1.
+```
+
+<details><summary>Hint</summary>
+
+Why ten runs and the average: each case passes about five runs in eight,
+so one run on its own can land anywhere from about 2/7 to 7/7. A build
+decided on one run would go red by chance now and then. The average of ten
+runs moves far less, so with a 40% minimum the build goes red only when the
+summariser really got worse.
+
+Why 40%: set the minimum from what you measured in DIY 6. Put it below the
+usual average, about 60% with the prompt as shipped, so that an ordinary
+push stays green, but high enough that a broken summariser turns the build
+red. A team raises the minimum as the feature improves.
+
+If the **Evals** step never ran, an earlier step failed: the job stops at
+the first red step and skips the rest. Read the first red step.
+
+If the step fails with `No such file or directory`, check its
+`working-directory` line: GitHub Actions starts in the repo root, not in
+the lab folder.
 
 </details>
 
@@ -731,6 +812,8 @@ run 20 of each:
 - **Reaching for a model-as-judge** where a property check would have been
   exact, cheap and repeatable.
 - Tuning a prompt against the few cases you happened to look at.
+- **Deciding an eval in CI on one run.** One run is a single sample:
+  average several runs, and set the minimum below the usual rate.
 
 ## Summary
 
@@ -746,3 +829,5 @@ run 20 of each:
   good answer: exact match, contains, structural, property, then a
   model-as-judge.
 - Without a measured set, you cannot tell whether a prompt change helped.
+- Run the eval in the pipeline too. The script's exit code turns an
+  average pass rate below your minimum into a red build.

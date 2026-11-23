@@ -69,7 +69,7 @@ only.
 ## Module schedule
 
 <!-- current-week:start -->
-> 🗓️ **Current teaching week: 9 — CLI Coding Agents** (week beginning 16 Nov 2026).
+> 🗓️ **Current teaching week: 10 — CI/CD & Evals** (week beginning 23 Nov 2026).
 <!-- current-week:end -->
 
 <!-- schedule-table:start -->
@@ -84,8 +84,8 @@ only.
 | — | Reading week | [details](lectures-and-labs/week06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (32%) · held during the lab slot | [details](lectures-and-labs/week07/README.md) · [what it covers](mcq/mcq1/README.md) | — |
 | 8 | Security of AI-Generated Code | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/security/) | [lab](lectures-and-labs/week08/security_lab/README.md) |
-| **➡️ 9** | CLI Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/cli-agents/) | [lab](lectures-and-labs/week09/cli_agents_lab/README.md) |
-| 10 | CI/CD & Evals | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/cicd/) | [lab](lectures-and-labs/week10/cicd_lab/README.md) |
+| 9 | CLI Coding Agents | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/cli-agents/) | [lab](lectures-and-labs/week09/cli_agents_lab/README.md) |
+| **➡️ 10** | CI/CD & Evals | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/cicd/) | [lab](lectures-and-labs/week10/cicd_lab/README.md) |
 | 11 | Vibe Coding & Spec-Driven | [slides](https://danielcregg.is-a.dev/ai-assisted-programming/vibe-coding/) | [lab](lectures-and-labs/week11/vibe_coding_lab/README.md) |
 | 12 | **MCQ 2** (32%) · held during the lab slot | [details](lectures-and-labs/week12/README.md) · [what it covers](mcq/mcq2/README.md) | — |
 <!-- schedule-table:end -->
