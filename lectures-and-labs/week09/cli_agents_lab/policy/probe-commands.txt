@@ -1,0 +1,10 @@
+# DIY 7: the three commands you ask the agent to run, in the same order.
+# Ask the checker what the same two rules decide, from the lab folder:
+#
+#     python policy/policy_check.py policy/probe-policy.json --file policy/probe-commands.txt
+#
+# Lines starting with # are ignored.
+
+git status --short
+git log --oneline -3
+git -C . log --oneline -3

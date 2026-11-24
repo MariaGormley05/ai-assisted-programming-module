@@ -1,0 +1,14 @@
+{
+  "intent": "Let the agent read the code, run the tests and use git on this machine. It must never push, and it must never delete files.",
+  "allow": [
+    "read",
+    "shell(git)",
+    "shell(npm test)",
+    "shell(python)",
+    "shell(pytest)"
+  ],
+  "deny": [
+    "shell(git push)",
+    "shell(rm)"
+  ]
+}

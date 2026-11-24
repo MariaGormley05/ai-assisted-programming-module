@@ -1,0 +1,15 @@
+# PINNED, deliberately. This lab was verified against 1.26.0.
+#
+# MCP is a moving target: the 2026-07-28 specification removed the
+# initialize/initialized handshake and Mcp-Session-Id entirely, and
+# deprecated the HTTP+SSE transport on a year-long offramp. An unpinned
+# `mcp>=1.0.0` means a student who installs in week 5 can get a different
+# protocol from one who installed in week 4, and the lab's worked examples
+# stop matching what they see.
+#
+# When you unpin this, re-run the lab end to end first -- the README's
+# JSON-RPC traces are teaching material and must match reality. The 2.x
+# SDK (2.0.0 shipped with the 2026-07-28 specification) speaks the new
+# protocol on stdio too, renames FastMCP to MCPServer, and rebuilds the
+# low-level Server this lab uses; the traces in the README would change.
+mcp==1.26.0

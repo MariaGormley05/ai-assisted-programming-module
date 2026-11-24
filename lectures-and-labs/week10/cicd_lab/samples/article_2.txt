@@ -1,0 +1,4 @@
+Deployment frequency rose 40% after the team adopted trunk-based development.
+
+Change failure rate held steady at 8%. The team attributes the improvement
+to smaller batches rather than to any new tooling.

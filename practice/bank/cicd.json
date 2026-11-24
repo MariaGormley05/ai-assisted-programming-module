@@ -1,0 +1,426 @@
+{
+  "topic": "cicd",
+  "title": "CI/CD & Evals",
+  "questions": [
+    {
+      "id": "cicd-001",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A pipeline runs the same commands you could type into a terminal. What is the one real difference between the two?",
+      "code": null,
+      "options": [
+        "The pipeline runs on a bigger machine, so the same checks finish sooner",
+        "The pipeline can catch classes of bug that the same checks miss when run locally",
+        "The pipeline makes non-deterministic checks give repeatable results",
+        "The pipeline runs the checks whether or not you remembered to run them"
+      ],
+      "answer": 3,
+      "explanation": "A pipeline is a script with a trigger: you push, a clean machine appears, it runs your checks, and it passes or fails visibly. The checks are no smarter than they are on your laptop; the value is that they run every time, including the times you forgot."
+    },
+    {
+      "id": "cicd-002",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A team stops reading every line of generated code and relies on automated checks instead. Why are those checks called the other half of that trade?",
+      "code": null,
+      "options": [
+        "They are what makes shipping code nobody read defensible rather than negligent",
+        "They satisfy the process requirements that employers and code reviewers impose",
+        "They remove the need for the team to write or maintain any tests of its own by hand",
+        "They produce the documentation that reading the code line by line would have given"
+      ],
+      "answer": 0,
+      "explanation": "If review moved from your eyes to your checks, the checks are now load-bearing. Without them you did not move up a level; you stopped checking. Treating CI as administration is the misconception; it is the thing that makes the trade defensible."
+    },
+    {
+      "id": "cicd-003",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Your first pipeline goes green on its first push. Why deliberately break a test and push again?",
+      "code": null,
+      "options": [
+        "To measure how much longer a failing run takes than a passing one does",
+        "To confirm that the failure notification actually reaches your inbox in time",
+        "To prove it can fail, since a workflow you have never seen fail may run nothing",
+        "To check that the runner can still install the dependencies from a clean start"
+      ],
+      "answer": 2,
+      "explanation": "A pipeline you have never seen fail is a pipeline you have no evidence works: plenty of workflows pass because they silently run nothing. The red run is the evidence, and it matters more than the green one."
+    },
+    {
+      "id": "cicd-004",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "The tests live in `myapp/tests/`, and locally `python -m pytest tests/` passes. In this workflow the same step fails with `file or directory not found: tests/`. What is the most likely cause?",
+      "code": "on: push\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r myapp/requirements.txt\n      - run: python -m pytest tests/",
+      "options": [
+        "The `on: push` trigger fires only for the default branch, so the checkout was skipped",
+        "The `run` steps all start at the repository root, where there is no `tests/` directory",
+        "The `setup-python` step selected 3.12, which uses a different `pytest` path convention",
+        "The `pip install` step needs `--user` on a hosted runner, so `pytest` never installed"
+      ],
+      "answer": 1,
+      "explanation": "Every `run` step starts at the repository root, not where you were when you ran the tests locally, so `tests/` does not exist there. Use `myapp/tests/` or set the step's working directory. If a run cannot find your tests, check the working directory before suspecting anything else."
+    },
+    {
+      "id": "cicd-005",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A project has a handful of tests and no pipeline yet. What is worth adding first?",
+      "code": null,
+      "options": [
+        "A full test suite, because a pipeline with few tests has almost nothing to run",
+        "A deployment step, so that every green push reaches the staging environment automatically",
+        "Secret scanning and dependency checks, which cost minutes and catch the worst mistake",
+        "Nothing yet, because a pipeline is pointless until the test suite is actually worth running"
+      ],
+      "answer": 2,
+      "explanation": "The misconception is that CI means tests, so a project without good tests gets nothing from it. The highest value per minute is secret scanning: free to enable, and it catches the one failure that cannot be undone by fixing the code. Tests cost real effort and come after the nearly-free checks."
+    },
+    {
+      "id": "cicd-006",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A pipeline runs four checks: tests, a linter, dependency alerts and secret scanning. Which failure can you not undo by pushing a fix?",
+      "code": null,
+      "options": [
+        "A linter finding, because style drift has already spread to files that copied it",
+        "A dependency alert, because only an upstream release can remove the vulnerability",
+        "A test failure, because the broken commit remains in the repository history",
+        "A secret-scanning alert, because the key is already out and has to be rotated"
+      ],
+      "answer": 3,
+      "explanation": "A failing test or a lint finding costs you a red build; push a fix and it is gone. A leaked credential is not undone by pushing a fix: the key is out, and it must be rotated. That asymmetry is why irreversibility, not sophistication, orders what you automate."
+    },
+    {
+      "id": "cicd-007",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "Which of these is a good job for an AI step in a pipeline, rather than for a compiler, linter or scanner?",
+      "code": null,
+      "options": [
+        "Confirming that the code compiles without errors before the tests run",
+        "Checking whether the README still describes what the code now does",
+        "Checking that imports are sorted and no line exceeds the length limit",
+        "Checking whether any pinned dependency has a known vulnerability"
+      ],
+      "answer": 1,
+      "explanation": "Ask a model what a compiler cannot check: naming that no longer matches behaviour, documentation drift, missing edge cases. Never ask it whether the code compiles; a compiler answers that exactly and a model guesses. Formatting and known vulnerabilities already have exact tools."
+    },
+    {
+      "id": "cicd-008",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "A pipeline job sends each pull request's diff to a model for review. On one run the model call raises an error. What should the job's result be?",
+      "code": null,
+      "options": [
+        "A failure, because a check that never ran has not found anything",
+        "A pass with no findings, because nothing was reported for this diff",
+        "A pass, with the error text posted as the review comment for visibility",
+        "A pass, provided the previous run on the same branch was green"
+      ],
+      "answer": 0,
+      "explanation": "A failed call is a failure, not a finding. Reporting it as 'no findings' produces the worst outcome available: a green tick over a check that never ran, after which green stops meaning anything."
+    },
+    {
+      "id": "cicd-009",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "This is the core of a pull-request review job. You break the API key on purpose and push. What will you see, and what does it show?",
+      "code": "try:\n    findings = review(diff)\nexcept Exception as e:\n    findings = f\"Review error: {e}\"\npost_comment(findings)\nsys.exit(0)",
+      "options": [
+        "A red run, because `post_comment` refuses to post text that begins with an error",
+        "A green run with no comment at all, showing that the job skips any diff it cannot review",
+        "A green run with the error posted as a comment, showing the job cannot be trusted to fail",
+        "A red run, because `sys.exit(0)` is reached only when the review call succeeded"
+      ],
+      "answer": 2,
+      "explanation": "The job catches its own exception, writes the error text into the report and exits zero, which is exactly the failure mode to design out: a green tick over a check that never ran. A failed call must fail the job, so let the exception propagate or exit non-zero."
+    },
+    {
+      "id": "cicd-010",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Why does an app with an AI feature need both a conventional test suite and an eval suite?",
+      "code": null,
+      "options": [
+        "Because evals replace the test suite once any part of the app makes a model call",
+        "Because the app holds code that behaves the same every time and a feature that does not",
+        "Because a test suite cannot be run inside a pipeline, whereas an eval suite can be",
+        "Because tests check your own code while evals check that the model provider is reachable"
+      ],
+      "answer": 1,
+      "explanation": "Same input, same output holds for ordinary application code and fails for the model call. `assertEqual` is right for the first and wrong for the second, so the feature needs a set and a rate alongside ordinary tests for everything else."
+    },
+    {
+      "id": "cicd-011",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "A test asserts that a summariser returns a fixed string captured from one run. It passed twice, then produced this failure. What does the failure tell you?",
+      "code": "FAILED tests/test_summary.py::test_exact\n  AssertionError: assert 'Revenue rose 12% on renewals.'\n                      == 'Revenue grew 12%, driven by renewals.'",
+      "options": [
+        "The summariser regressed on the third run, and the changed wording is the bug to fix",
+        "The sample article changed on disk between runs, so the expected string went stale",
+        "The comparison is too strict about punctuation and should ignore commas and stops",
+        "Nothing about the feature: both strings are fine, and the test assumed a fixed output"
+      ],
+      "answer": 3,
+      "explanation": "Same input, different output is what a non-deterministic feature does. Both summaries are correct, so the test is not detecting a bug; it is asserting something that was never true. Concluding the feature is broken is the classic mistake here."
+    },
+    {
+      "id": "cicd-012",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What does an eval suite measure, compared with a single unit test?",
+      "code": null,
+      "options": [
+        "How often, across a set of cases, the output is acceptable, and whether that moves",
+        "Whether the model gives the same answer when called twice with the same input",
+        "Whether one representative call returns exactly the expected reference string",
+        "How long each call takes to answer, compared with the previous release of the model"
+      ],
+      "answer": 0,
+      "explanation": "The shift is from a test to a test set, and from pass/fail to a rate. One case tells you almost nothing about a feature that answers differently every time; twenty cases tell you whether a change helped."
+    },
+    {
+      "id": "cicd-013",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "A feature sorts support messages into one of five fixed labels, and this is one of its eval cases. Which rung of the assertion ladder should score it?",
+      "code": "{\n  \"input\": \"I was charged twice for the same order.\",\n  \"expected\": \"refund\"\n}",
+      "options": [
+        "LLM-as-judge, because deciding what a message is about is a subjective call",
+        "Contains or regex, checking that the word `refund` appears somewhere in the output",
+        "Property, checking that the output is non-empty and under a sensible length limit",
+        "Exact match, because the output can only be one label from a fixed set of five"
+      ],
+      "answer": 3,
+      "explanation": "Classification and extraction are exactly where `output == expected` applies: the answer space is fixed, so the strongest rung is available and it is deterministic. Reaching for a judge here trades an exact check for a guessed one."
+    },
+    {
+      "id": "cicd-014",
+      "difficulty": "easy",
+      "type": "code",
+      "question": "An eval scores a feature's output with this function. Which rung of the assertion ladder is it, and what kind of output is it right for?",
+      "code": "def check(output):\n    data = json.loads(output)\n    return {\"title\", \"score\"} <= data.keys()",
+      "options": [
+        "Exact match; right for classification, where the output is one of a fixed set of labels",
+        "Structural; right for output that feeds other code and must be valid JSON with set fields",
+        "Property; right for any output at all, because length and field checks are always cheap",
+        "Contains or regex; right when the answer has to mention one particular key fact"
+      ],
+      "answer": 1,
+      "explanation": "Parsing the output and checking for required fields is the structural rung: exact, deterministic, and the right check when another piece of code will consume the result. No judge can say more reliably than `json.loads` whether the output parses."
+    },
+    {
+      "id": "cicd-015",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Your feature summarises articles. Which check do you build first?",
+      "code": null,
+      "options": [
+        "LLM-as-judge, because summary quality is subjective and needs a subjective check",
+        "Exact match against a reference summary written by hand for each article",
+        "Property checks: mentions the key figure, stays under 50 words, and is non-empty",
+        "No automated check at all; ship it and watch how users react to the summaries"
+      ],
+      "answer": 2,
+      "explanation": "The faulty model is that subjective output needs subjective checking. Several exact, deterministic properties are available and they catch the failures that actually happen: empty output, prompt echo, runaway length, a dropped figure. Keep the judge for the residue no property can express."
+    },
+    {
+      "id": "cicd-016",
+      "difficulty": "medium",
+      "type": "code",
+      "question": "This is one case from a summariser's eval set. What failure is the `must_not_contain` property there to catch?",
+      "code": "{\n  \"id\": \"case-03\",\n  \"input\": \"samples/article_3.txt\",\n  \"non_empty\": true,\n  \"max_words\": 50,\n  \"must_mention\": \"12%\",\n  \"must_not_contain\": \"Summarise the following article\"\n}",
+      "options": [
+        "The model echoing the instruction it was given back into its output",
+        "The model copying the article verbatim instead of shortening it",
+        "The model refusing the task and replying with a request for more context",
+        "The model exceeding the length limit by restating the question first"
+      ],
+      "answer": 0,
+      "explanation": "Prompt echo, where the instruction text turns up in the output, is one of the failures that actually happens, and a plain string check catches it exactly. Length is already covered by `max_words`, and a verbatim copy would need a different check."
+    },
+    {
+      "id": "cicd-017",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "A feature's output is already parsed as JSON and checked for its required fields. Is it worth adding property checks such as a length limit and no leaked prompt?",
+      "code": null,
+      "options": [
+        "No, because structural is the higher rung and a passing structural check subsumes them",
+        "Yes, but only as a stand-in until a judge can be added to score the fields properly",
+        "Only if the output is free text; for JSON the structural check is the last rung you need",
+        "Yes, because valid structure says nothing about an empty, runaway or prompt-echoing field"
+      ],
+      "answer": 3,
+      "explanation": "Property checks are always worth adding. A response can parse perfectly and still carry an empty field, a runaway one, or the prompt echoed back, and each of those is caught cheaply and deterministically without going anywhere near a judge."
+    },
+    {
+      "id": "cicd-018",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "Four of these five checks can be scored deterministically. Which one cannot, and how should it be scored?",
+      "code": "{\n  \"id\": \"case-05\",\n  \"input\": \"samples/article_5.txt\",\n  \"checks\": [\n    \"non_empty\",\n    \"max_words: 50\",\n    \"mentions: 3.4 million\",\n    \"no_prompt_echo\",\n    \"tone_suits_a_board_report\"\n  ]\n}",
+      "options": [
+        "`max_words: 50`, because word counts vary with the tokeniser, so leave length to a judge",
+        "`tone_suits_a_board_report`, because no string check expresses it, so a judge scores it",
+        "`mentions: 3.4 million`, because the figure might be written as `3,400,000`, so use a judge",
+        "`no_prompt_echo`, because the prompt text differs on every run, so only a judge can compare them"
+      ],
+      "answer": 1,
+      "explanation": "Tone is the part no property can express, which is exactly what LLM-as-judge is for, asked for a reason as well as a score. The other four are cheap deterministic checks; a figure with alternative spellings is a regex, not a reason to give up the rung."
+    },
+    {
+      "id": "cicd-019",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "When you use another model as a judge to score an output against a rubric, what should you ask it to return alongside the score?",
+      "code": null,
+      "options": [
+        "A confidence percentage, so that low-confidence scores can be discarded from the set",
+        "A corrected version of the output, so that the fix is available straight away",
+        "The reason for the score, so an unjustifiable score is visibly unjustifiable",
+        "A second score from the same model, so that the two scores can be averaged"
+      ],
+      "answer": 2,
+      "explanation": "A bare number cannot be checked. A score with a stated reason usually reveals when it is unjustifiable, which is the cheapest defence against the judge's known biases."
+    },
+    {
+      "id": "cicd-020",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "A judge model compares two summaries and prefers A. You swap their order and run it again; now it prefers B. Which known bias is this?",
+      "code": null,
+      "options": [
+        "Position, because in an A/B comparison the order of the pair changes the verdict",
+        "Self-preference, because one of the summaries came from the judge's own model family",
+        "Verbosity, because the judge rewards whichever answer reads as the longer one",
+        "Non-determinism, because the judge is a model and answers differently each call"
+      ],
+      "answer": 0,
+      "explanation": "Position bias is measurable and real: the same pair judged in the other order gets a different verdict. Self-preference is about model family and verbosity about length; neither is triggered by swapping the order."
+    },
+    {
+      "id": "cicd-021",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "You use the same model that generates your summaries to judge them against a rubric. What is the known risk?",
+      "code": null,
+      "options": [
+        "Position bias: it will always prefer whichever summary it happens to be shown first",
+        "Self-preference: it tends to rate output from its own family higher than deserved",
+        "Verbosity bias: it will score the longer of any two summaries higher regardless of content",
+        "There is none: a model scores its own output as reliably as it scores anyone else's"
+      ],
+      "answer": 1,
+      "explanation": "Self-preference is the bias to name first: a model scoring output from the same family tends to rate it higher. The judge still works, but you should know which way it leans and ask for reasons, not just scores."
+    },
+    {
+      "id": "cicd-022",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "After a prompt change, a judge-scored eval rate rises from 70% to 85%, and the summaries are on average twice as long. What should you check before believing the improvement?",
+      "code": null,
+      "options": [
+        "Whether the judge's scores repeat across two runs, since a model judge is non-deterministic",
+        "Whether the model version changed, since a newer model would explain the rise on its own",
+        "Whether the cases were reordered, since position bias would otherwise explain the change",
+        "Whether the judge is rewarding length, since longer answers score better than they deserve"
+      ],
+      "answer": 3,
+      "explanation": "Verbosity bias is one of the judge's known failure modes: longer answers score better than they deserve. A deterministic length property alongside the judge, plus the judge's stated reasons, tells you whether the rise is quality or bulk."
+    },
+    {
+      "id": "cicd-023",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "You tweak a summariser's prompt and the three test cases you were watching all improve. Is the feature better?",
+      "code": null,
+      "options": [
+        "Yes, provided the three cases were representative of the real inputs",
+        "Only if the underlying model version stayed the same between the runs",
+        "Unknown until you measure the whole set before and after the change",
+        "Yes, because the evidence of improvement is right there in the outputs"
+      ],
+      "answer": 2,
+      "explanation": "You improved the cases you were looking at and have no idea what happened to the ones you were not. Tuning against two or three examples routinely regresses the rest, which is invisible without a measured set. Without one, 'better' is a feeling."
+    },
+    {
+      "id": "cicd-024",
+      "difficulty": "hard",
+      "type": "code",
+      "question": "You changed the prompt to fix `case-03` and re-ran the whole set. What is the honest verdict?",
+      "code": "Before the prompt change\n  case-01  PASS\n  case-02  PASS\n  case-03  FAIL  (missing key figure: \"12%\")\n  case-04  PASS\n  case-05  PASS\n  case-06  PASS\n  case-07  PASS\n  case-08  PASS\nPass rate: 7/8 (87.5%)\n\nAfter the prompt change\n  case-01  PASS\n  case-02  PASS\n  case-03  PASS\n  case-04  PASS\n  case-05  PASS\n  case-06  PASS\n  case-07  FAIL  (over 50 words)\n  case-08  PASS\nPass rate: 7/8 (87.5%)",
+      "options": [
+        "It moved cases around: fixing `case-03` broke `case-07`, which the rate alone hides",
+        "It improved: `case-03` was the target and it now passes, so the change did exactly its job",
+        "It got worse: `case-07` regressed, so the change should be reverted straight away",
+        "It made no difference: the rate is unchanged, so the two prompts are equivalent"
+      ],
+      "answer": 0,
+      "explanation": "The rate is unchanged but different cases fail, which is exactly what tuning against the example you were looking at does to the ones you were not. Only the full set makes that visible; reverting or celebrating are both decisions the rate alone cannot support."
+    },
+    {
+      "id": "cicd-025",
+      "difficulty": "hard",
+      "type": "concept",
+      "question": "The first run of a new eval set prints `Pass rate: 7/8 (87.5%)`. What does that number mean on its own?",
+      "code": null,
+      "options": [
+        "That the feature is correct 87.5% of the time in production, give or take a small margin",
+        "A baseline: it becomes informative once the rate after a change is compared with it",
+        "That `case-03` is a bad case and should be dropped so the set reflects the feature fairly",
+        "That the feature is acceptable, because a rate above 50% counts as a pass for a model"
+      ],
+      "answer": 1,
+      "explanation": "An eval asks whether the number is moving, so the first rate is the before in a before-and-after. The real information arrives when the set is re-run after a change; a failing case is a data point to keep, not one to delete."
+    },
+    {
+      "id": "cicd-026",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "After a prompt change your eval set passes 8 of 8. What should you do next?",
+      "code": null,
+      "options": [
+        "Freeze the prompt, because any further change can only lower the rate",
+        "Retire the eval script and rely on the unit tests, since the feature is now proven",
+        "Switch the scorer to LLM-as-judge so the cases can be graded more finely",
+        "Keep it as a regression guard and add harder cases, so the rate can move again"
+      ],
+      "answer": 3,
+      "explanation": "A set everything passes has stopped telling you anything new, but it has not become useless: it still catches a regression, so keep running it. Add the cases that fail today, drawn from real failures rather than invented to move the score, and the rate becomes informative again. A perfect score is a ceiling, not a verdict."
+    },
+    {
+      "id": "cicd-027",
+      "difficulty": "medium",
+      "type": "concept",
+      "question": "Why run the eval script inside the pipeline and record its pass rate, rather than running it by hand before a release?",
+      "code": null,
+      "options": [
+        "The rate gets recorded on every change, so you can see whether it is moving",
+        "The pipeline's clean machine makes the model's output repeatable between runs",
+        "A hosted runner can call the model more cheaply and faster than a laptop can",
+        "The pipeline can retry the failing cases until the rate climbs back to 100%"
+      ],
+      "answer": 0,
+      "explanation": "The recipe is twenty real inputs in a file, the properties each must satisfy, a script that scores the set, and a run in CI that records the rate. Scoring on every change is what turns prompt tuning from folklore into engineering, and the pipeline runs whether or not you remembered."
+    },
+    {
+      "id": "cicd-028",
+      "difficulty": "easy",
+      "type": "concept",
+      "question": "What does a real, achievable eval suite look like for a small project with one AI feature?",
+      "code": null,
+      "options": [
+        "A pluggable evaluation framework with scorers, dashboards and a judge, built before any cases",
+        "One golden reference output per input, stored beside it and compared by exact match on every run",
+        "Twenty real inputs in a file, the properties each must satisfy, and a script that scores the set",
+        "A rubric prompt that asks a judge model to rate whatever outputs appear, with no fixed set of inputs"
+      ],
+      "answer": 2,
+      "explanation": "Twenty cases in a JSON file is a real eval suite and takes an afternoon. Build the file, not a framework: the value is in running the same set on every change and recording the rate."
+    }
+  ]
+}

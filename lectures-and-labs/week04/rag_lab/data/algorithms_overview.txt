@@ -1,0 +1,21 @@
+Algorithms Overview
+
+An algorithm is a step-by-step procedure for solving a problem or accomplishing a task. In computer science, we design algorithms to process data efficiently and correctly. Good algorithms can make the difference between a program that runs in seconds versus one that takes hours.
+
+What Makes a Good Algorithm?
+Algorithms are evaluated on several criteria. Correctness means it produces the right answer for all valid inputs. Efficiency considers both time complexity (how long it takes) and space complexity (how much memory it uses). We use Big O notation to describe these complexities. For example, O(n) means the time grows linearly with input size, while O(log n) means it grows logarithmically - much slower.
+
+Searching Algorithms:
+Linear search is the simplest - check each element one by one until you find what you're looking for. It's O(n) time complexity. Binary search is much faster at O(log n) but requires sorted data. It works by repeatedly dividing the search space in half, eliminating the half that can't contain the target. Binary search is like finding a name in a phone book by opening to the middle and deciding which half to search next.
+
+Sorting Algorithms:
+Sorting arranges data in a specific order. Bubble sort is simple but slow at O(n²) - it repeatedly swaps adjacent elements if they're in the wrong order. Merge sort is faster at O(n log n) and uses a divide-and-conquer approach. Quick sort is often the fastest in practice, also O(n log n) on average. It picks a pivot element and partitions data around it.
+
+Graph Algorithms:
+Graphs represent relationships between objects. Breadth-First Search (BFS) explores a graph level by level, useful for finding shortest paths in unweighted graphs. Depth-First Search (DFS) explores as far as possible down each branch before backtracking. Dijkstra's algorithm finds shortest paths in weighted graphs. These algorithms are fundamental to navigation systems, social networks, and recommendation engines.
+
+Dynamic Programming:
+Dynamic programming solves complex problems by breaking them into simpler subproblems and storing results to avoid redundant calculations. It's used when a problem has optimal substructure and overlapping subproblems. Classic examples include calculating Fibonacci numbers efficiently, finding longest common subsequences, and solving the knapsack problem.
+
+Greedy Algorithms:
+Greedy algorithms make locally optimal choices at each step, hoping to find a global optimum. They're simple and fast but don't always give the best solution. Examples include Huffman coding for data compression and Prim's algorithm for minimum spanning trees. The key is knowing when a greedy approach will work.

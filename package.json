@@ -1,0 +1,13 @@
+{
+  "name": "ai-assisted-programming",
+  "private": true,
+  "description": "Local Marp preview/build tooling for the AIAP module repo (same pinned marp-cli as CI)",
+  "devDependencies": {
+    "@marp-team/marp-cli": "4.5.0"
+  },
+  "scripts": {
+    "preview": "marp -s --html . --theme-set themes/aiap.css",
+    "preview:intro": "marp --preview --html --allow-local-files lectures-and-labs/week01/introduction-lecture.md --theme-set themes/aiap.css",
+    "export:intro": "marp --html --allow-local-files lectures-and-labs/week01/introduction-lecture.md -o build/introduction/slides.pdf --theme-set themes/aiap.css"
+  }
+}

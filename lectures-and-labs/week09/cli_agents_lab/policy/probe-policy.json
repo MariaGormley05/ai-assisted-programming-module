@@ -1,0 +1,9 @@
+{
+  "intent": "DIY 7: the two rules the agent is started with, so the checker can be asked about the same three commands.",
+  "allow": [
+    "shell(git status)"
+  ],
+  "deny": [
+    "shell(git log)"
+  ]
+}

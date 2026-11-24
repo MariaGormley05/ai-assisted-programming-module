@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCQ Practice — AI-Assisted Programming</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23FBFAF7'/%3E%3Ctext x='16' y='25' font-family='Consolas,monospace' font-size='26' font-weight='700' fill='%23E76F00' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper:#FBFAF7; --ink:#1E2833; --blue:#33698C; --orange:#6741D9;
+    --slate:#46536B; --rule:#DED8C9; --muted:#8B8471; --tint:#F3EFE5;
+    --good:#1E7A34; --goodbg:#EAF6EC; --bad:#C0392B; --badbg:#FBEDEB;
+    --codebg:#16222E;
+    --mono:'Cascadia Code','SF Mono',Menlo,Consolas,'Courier New',monospace;
+    --sans:'Segoe UI','Helvetica Neue',Arial,sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:var(--sans); color:var(--ink); background:var(--paper); line-height:1.5; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 34px 20px 80px; }
+  .kicker { font-family:var(--mono); font-size:14px; color:var(--muted); }
+  .kicker::before { content:'// '; color:var(--orange); }
+  .kicker a { color:var(--muted); }
+  h1 { font-family:var(--mono); font-size:clamp(28px,5vw,40px); margin:8px 0 6px; letter-spacing:-0.01em; }
+  h1::after { content:';'; color:var(--orange); }
+  h2 { font-family:var(--mono); font-size:21px; margin:28px 0 12px; }
+  .standfirst { color:var(--slate); font-size:16px; max-width:56ch; margin:0 0 8px; }
+  button { font-family:var(--mono); cursor:pointer; }
+  .btn {
+    background:var(--blue); color:#fff; border:none; border-radius:9px;
+    padding:12px 26px; font-size:16.5px; font-weight:600;
+  }
+  .btn:hover { background:#27526E; }
+  .btn[disabled] { background:#B9C4CC; cursor:not-allowed; }
+  .btn.ghost { background:transparent; color:var(--blue); border:1.5px solid var(--blue); font-weight:400; }
+  .btn.ghost:hover { background:var(--tint); }
+  .btn.small { padding:7px 16px; font-size:14px; }
+  .hidden { display:none !important; }
+
+  /* picker */
+  .topics { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; margin:12px 0 4px; }
+  .topic-card {
+    display:flex; align-items:center; gap:12px; border:1.5px solid var(--rule);
+    border-radius:11px; background:#fff; padding:13px 15px; cursor:pointer; user-select:none;
+  }
+  .topic-card input { width:19px; height:19px; accent-color:var(--orange); flex:none; }
+  .topic-card.on { border-color:var(--orange); background:#FFF8EE; }
+  .tc-name { font-family:var(--mono); font-weight:600; font-size:15.5px; }
+  .tc-sub { font-size:12.5px; color:var(--muted); }
+  .tc-sub .pct { font-weight:700; }
+  .pct.hi { color:var(--good); } .pct.mid { color:#B96A00; } .pct.lo { color:var(--bad); }
+  .modes { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:14px 0; }
+  .mode-btn {
+    border:1.5px solid var(--rule); background:#fff; border-radius:999px;
+    padding:9px 20px; font-size:14.5px; color:var(--slate);
+  }
+  .mode-btn.on { border-color:var(--blue); color:var(--blue); background:#EDF3F7; font-weight:600; }
+  .nudge { font-size:14px; color:var(--muted); margin:6px 0 14px; }
+  .nudge b { color:var(--bad); }
+  .histwrap { margin-top:34px; border-top:1px solid var(--rule); padding-top:18px; }
+  .hist { width:100%; border-collapse:collapse; font-size:14px; }
+  .hist th { text-align:left; font-family:var(--mono); color:var(--muted); font-weight:400;
+             border-bottom:1px solid var(--rule); padding:5px 8px 5px 0; }
+  .hist td { border-bottom:1px solid var(--rule); padding:7px 8px 7px 0; }
+  .reset { margin-top:14px; font-size:13px; color:var(--muted); background:none; border:none; text-decoration:underline; }
+
+  /* quiz */
+  .quizbar { position:sticky; top:0; background:var(--paper); z-index:5;
+             display:flex; align-items:center; gap:14px; padding:10px 0;
+             border-bottom:1px solid var(--rule); }
+  .qcount { font-family:var(--mono); font-size:15px; color:var(--slate); }
+  .timer { font-family:var(--mono); font-size:19px; font-weight:700; color:var(--blue);
+           margin-left:auto; padding:4px 14px; border:1.5px solid var(--blue); border-radius:999px; }
+  .timer.warn { color:var(--orange); border-color:var(--orange); }
+  .timer.crit { color:var(--bad); border-color:var(--bad); animation:pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity:0.55; } }
+  .progress { height:4px; background:var(--rule); border-radius:2px; margin:10px 0 18px; }
+  .progress i { display:block; height:100%; background:var(--orange); border-radius:2px; transition:width .2s; }
+  .topic-tag { font-family:var(--mono); font-size:13px; color:var(--muted); }
+  .qtext { font-size:18.5px; font-weight:600; margin:6px 0 12px; }
+  pre.code { background:var(--codebg); color:#E8ECF1; font-family:var(--mono); font-size:14.5px;
+             border-radius:10px; padding:14px 18px; overflow-x:auto; line-height:1.5; }
+  .opts { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+  .opt { display:flex; gap:12px; align-items:flex-start; text-align:left; width:100%;
+         border:1.5px solid var(--rule); border-radius:10px; background:#fff;
+         padding:12px 14px; font-size:15.5px; font-family:var(--sans); }
+  .opt:hover { border-color:var(--blue); }
+  .opt .key { font-family:var(--mono); color:var(--muted); flex:none; font-size:14px; padding-top:1px; }
+  .opt.sel { border-color:var(--blue); background:#EDF3F7; }
+  .opt.right { border-color:var(--good); background:var(--goodbg); }
+  .opt.wrong { border-color:var(--bad); background:var(--badbg); }
+  .opt code, .expl code, .qtext code { font-family:var(--mono); background:#EFECE3; color:#4C2FB0;
+        padding:0.05em 0.3em; border-radius:4px; font-size:0.92em; }
+  .expl { border-left:4px solid var(--orange); background:var(--tint);
+          padding:10px 16px; margin:12px 0; font-size:14.5px; color:var(--slate); }
+  .qnav { display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; }
+  .kbd-hint { font-size:12.5px; color:var(--muted); margin-top:10px; }
+  kbd { font-family:var(--mono); border:1px solid var(--rule); border-radius:4px; padding:0 5px; background:#fff; }
+
+  /* results */
+  .score-line { font-family:var(--mono); font-size:clamp(30px,6vw,44px); font-weight:700; margin:10px 0 2px; }
+  .score-line .of { color:var(--muted); font-size:0.6em; font-weight:400; }
+  .verdict { color:var(--slate); margin:0 0 18px; }
+  .tbars { display:flex; flex-direction:column; gap:9px; margin:16px 0 24px; }
+  .tbar { display:grid; grid-template-columns:170px 1fr 62px; gap:12px; align-items:center; font-size:14px; }
+  .tbar .n { font-family:var(--mono); }
+  .bar { height:10px; background:var(--rule); border-radius:5px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--blue); }
+  .review-item { border:1px solid var(--rule); border-radius:11px; background:#fff; padding:16px 18px; margin:12px 0; }
+  .review-item.wrong { border-color:#E5B8B2; }
+  .ritag { font-family:var(--mono); font-size:12.5px; color:var(--muted); }
+  .ranswer { font-size:14.5px; margin:8px 0 2px; }
+  .ranswer .y { color:var(--good); font-weight:600; } .ranswer .n { color:var(--bad); font-weight:600; }
+  @media (max-width:640px) {
+    .tbar { grid-template-columns:110px 1fr 52px; }
+    .btn { width:100%; }
+    .qnav .btn { width:auto; flex:1; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker"><a href="../">ai-assisted programming</a> · mcq practice</p>
+
+  <!-- ═══════════ PICKER ═══════════ -->
+  <section id="view-picker">
+    <h1>MCQ Practice</h1>
+    <p class="standfirst">Pick your topics, pick a mode, and test yourself.
+    Your per-topic record is stored in this browser only.</p>
+    <p class="nudge" id="nudge"></p>
+
+    <h2>Topics</h2>
+    <div class="topics" id="topics"></div>
+    <div class="modes">
+      <button class="btn ghost small" id="select-all">select all</button>
+    </div>
+
+    <h2>Mode</h2>
+    <div class="modes" id="modes">
+      <button class="mode-btn on" data-mode="exam">Exam — 30 questions (or the whole topic, if smaller) · 60:00 · results at the end</button>
+      <button class="mode-btn" data-mode="practice">Practice — untimed · instant feedback</button>
+      <button class="mode-btn hidden lenbtn" data-len="10">10 Qs</button>
+      <button class="mode-btn hidden lenbtn on" data-len="20">20 Qs</button>
+      <button class="mode-btn hidden lenbtn" data-len="30">30 Qs</button>
+    </div>
+
+    <p style="margin-top:20px"><button class="btn" id="start" disabled>Start quiz</button></p>
+
+    <div class="histwrap">
+      <h2>Recent quizzes</h2>
+      <table class="hist" id="hist"></table>
+      <button class="reset" id="reset">reset all my stats and history</button>
+    </div>
+  </section>
+
+  <!-- ═══════════ QUIZ ═══════════ -->
+  <section id="view-quiz" class="hidden">
+    <div class="quizbar">
+      <span class="qcount" id="qcount"></span>
+      <span class="timer hidden" id="timer"></span>
+    </div>
+    <div class="progress"><i id="pbar"></i></div>
+    <div id="qbox"></div>
+    <div class="qnav">
+      <button class="btn" id="next">next →</button>
+    </div>
+    <p class="kbd-hint"><kbd>1</kbd>–<kbd>4</kbd> answer · <kbd>→</kbd> next — sequential, like the real quiz: no going back</p>
+    <p><button class="reset" id="abandon">abandon this quiz</button></p>
+  </section>
+
+  <!-- ═══════════ RESULTS ═══════════ -->
+  <section id="view-results" class="hidden">
+    <h1>Results</h1>
+    <div class="score-line" id="score"></div>
+    <p class="verdict" id="verdict"></p>
+    <div class="tbars" id="tbars"></div>
+    <p>
+      <button class="btn" id="again">New quiz</button>
+      <button class="btn ghost" id="toggle-wrong">show incorrect only</button>
+    </p>
+    <div id="review"></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const S_STATS='aiapmcq.v1.stats', S_HIST='aiapmcq.v1.history', S_SESS='aiapmcq.v1.session';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=s=>{const t=esc(s);return t.replace(/`([^`]+)`/g,'<code>$1</code>');};
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;}};
+/* Saving progress must never break the quiz. localStorage.setItem throws in
+   private-browsing modes and when the quota is full, and save() is called on
+   every answer -- unguarded, that exception propagates out of the click
+   handler and the quiz stops responding. Losing the saved session is a fair
+   trade; losing the quiz is not. load() has always been guarded this way. */
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{/* progress not saved */}};
+
+let BANK={}, TOPICS=[], sess=null, tick=null, wrongOnly=false;
+
+/* ── boot ─────────────────────────────────────────────── */
+(async function(){
+  let man;
+  try{ man=await (await fetch('bank/manifest.json')).json(); }
+  catch(e){
+    /* Opened as a file:// page (a clone or download) rather than served
+       over HTTP, so fetch is blocked and no question ever loads. Say so
+       instead of showing an empty picker that looks broken. */
+    document.body.innerHTML='<main style="max-width:34rem;margin:12vh auto;'
+      +'padding:0 1.25rem;font:16px/1.6 system-ui,sans-serif">'
+      +'<h1 style="font-size:1.4rem">This page needs a web server</h1>'
+      +'<p>It loads its questions from <code>bank/</code>, which a browser '
+      +'blocks when the page is opened straight from disk.</p>'
+      +'<p><strong><a href="https://danielcregg.is-a.dev/ai-assisted-programming/practice/">'
+      +'Open the practice app on the module site</a></strong> — same app, '
+      +'nothing to install.</p></main>';
+    return;
+  }
+  TOPICS=man.topics;
+  await Promise.all(TOPICS.map(async t=>{
+    try{ BANK[t.slug]=(await (await fetch('bank/'+t.slug+'.json')).json()).questions; }
+    catch{ BANK[t.slug]=[]; }
+  }));
+  TOPICS=TOPICS.filter(t=>BANK[t.slug].length);
+  renderPicker();
+  const old=load(S_SESS,null);
+  if(old && old.qs && old.qs.length){
+    if(confirm('You have an unfinished quiz ('+old.qs.filter(q=>q.chosen!=null).length+'/'+old.qs.length+' answered). Resume it?')){
+      sess=old; startView(); return;
+    }
+    localStorage.removeItem(S_SESS);
+  }
+})();
+
+/* ── picker ───────────────────────────────────────────── */
+function mastery(slug){
+  const st=load(S_STATS,{})[slug];
+  if(!st||!st.attempted) return null;
+  return Math.round(100*st.correct/st.attempted);
+}
+function renderPicker(){
+  const box=$('topics'); box.innerHTML='';
+  TOPICS.forEach(t=>{
+    const m=mastery(t.slug);
+    const lab=document.createElement('label');
+    lab.className='topic-card'; lab.dataset.slug=t.slug;
+    lab.innerHTML='<input type="checkbox"><span><span class="tc-name">'+esc(t.title)+'</span><br>'+
+      '<span class="tc-sub">'+BANK[t.slug].length+' questions · '+
+      (m==null?'not attempted':'<span class="pct '+(m>=75?'hi':m>=50?'mid':'lo')+'">'+m+'%</span> mastery')+'</span></span>';
+    lab.querySelector('input').addEventListener('change',e=>{
+      lab.classList.toggle('on',e.target.checked); updateStart();
+    });
+    box.appendChild(lab);
+  });
+  const worst=TOPICS.map(t=>({t,m:mastery(t.slug)})).filter(x=>x.m!=null).sort((a,b)=>a.m-b.m)[0];
+  $('nudge').innerHTML = worst && worst.m<75 ? 'Suggestion: your weakest topic is <b>'+esc(worst.t.title)+' ('+worst.m+'%)</b> — worth a practice round.' : '';
+  renderHist();
+  updateStart();
+}
+function selectedSlugs(){ return [...document.querySelectorAll('.topic-card input:checked')].map(i=>i.closest('.topic-card').dataset.slug); }
+function updateStart(){ $('start').disabled = selectedSlugs().length===0; }
+$('select-all').addEventListener('click',()=>{
+  const all=[...document.querySelectorAll('.topic-card input')];
+  const on=all.every(i=>i.checked);
+  all.forEach(i=>{ i.checked=!on; i.closest('.topic-card').classList.toggle('on',!on); });
+  updateStart();
+});
+let mode='exam', plen=20;
+$('modes').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.mode){ mode=b.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('on',x===b));
+    document.querySelectorAll('.lenbtn').forEach(x=>x.classList.toggle('hidden',mode!=='practice'));
+  }
+  if(b.dataset.len){ plen=+b.dataset.len;
+    document.querySelectorAll('.lenbtn').forEach(x=>x.classList.toggle('on',x===b)); }
+});
+function renderHist(){
+  const h=load(S_HIST,[]);
+  $('hist').innerHTML = '<tr><th>date</th><th>mode</th><th>topics</th><th>score</th></tr>' +
+    (h.slice(0,8).map(r=>'<tr><td>'+esc(r.date)+'</td><td>'+r.mode+'</td><td>'+esc(r.topics)+'</td><td>'+r.score+'/'+r.total+'</td></tr>').join('')||'<tr><td colspan="4" style="color:var(--muted)">none yet</td></tr>');
+}
+$('reset').addEventListener('click',()=>{
+  if(confirm('Wipe all stored stats, history and any unfinished quiz?')){
+    [S_STATS,S_HIST,S_SESS].forEach(k=>localStorage.removeItem(k)); renderPicker();
+  }
+});
+
+/* ── build & start quiz ───────────────────────────────── */
+$('start').addEventListener('click',()=>{
+  const slugs=selectedSlugs();
+  if(!slugs.length){ updateStart(); return; }   // the picker was rebuilt with nothing ticked
+  const available=slugs.reduce((n,s)=>n+(BANK[s]||[]).length,0);
+  const want=Math.min(mode==='exam'?30:plen, available);   // one small topic cannot fill 30
+  const pools=slugs.map(s=>shuffle([...(BANK[s]||[])]).map(q=>({...q,topic:s})));
+  const qs=[]; let i=0;
+  while(qs.length<want && pools.some(p=>p.length)){
+    const p=pools[i%pools.length]; i++;
+    if(p.length) qs.push(p.pop());
+  }
+  if(!qs.length){ updateStart(); return; }      // no questions in the chosen topics
+  shuffle(qs);
+  qs.forEach(q=>{
+    const order=shuffle([0,1,2,3]);
+    q.opts=order.map(o=>q.options[o]);
+    q.right=order.indexOf(q.answer);
+    q.chosen=null; q.revealed=false;
+    delete q.options; delete q.answer;
+  });
+  sess={mode, qs, idx:0, created:new Date().toISOString(),
+        endTime: mode==='exam' ? Date.now()+60*60*1000 : null};
+  save(S_SESS,sess);
+  startView();
+});
+function startView(){
+  $('view-picker').classList.add('hidden'); $('view-results').classList.add('hidden');
+  $('view-quiz').classList.remove('hidden');
+  $('timer').classList.toggle('hidden', sess.mode!=='exam');
+  if(sess.mode==='exam'){ tick=setInterval(tickTimer,500); tickTimer(); }
+  renderQ();
+  window.scrollTo(0,0);
+}
+function tickTimer(){
+  const left=sess.endTime-Date.now();
+  if(left<=0){ finish(true); return; }
+  const m=Math.floor(left/60000), s=Math.floor(left%60000/1000);
+  const el=$('timer');
+  el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  el.classList.toggle('warn',left<10*60*1000&&left>=2*60*1000);
+  el.classList.toggle('crit',left<2*60*1000);
+}
+
+/* ── question rendering ───────────────────────────────── */
+function titleOf(slug){ const t=TOPICS.find(t=>t.slug===slug); return t?t.title:slug; }
+function renderQ(){
+  const q=sess.qs[sess.idx];
+  $('qcount').textContent='Question '+(sess.idx+1)+' of '+sess.qs.length;
+  $('pbar').style.width=(100*(sess.idx)/sess.qs.length)+'%';
+  let h='<p class="topic-tag">'+esc(titleOf(q.topic))+' · '+esc(q.difficulty)+'</p>';
+  h+='<p class="qtext">'+fmt(q.question)+'</p>';
+  if(q.code) h+='<pre class="code">'+esc(q.code)+'</pre>';
+  h+='<div class="opts">'+q.opts.map((o,i)=>{
+    let cls='opt';
+    if(sess.mode==='practice'&&q.revealed){
+      if(i===q.right) cls+=' right'; else if(i===q.chosen) cls+=' wrong';
+    } else if(i===q.chosen) cls+=' sel';
+    return '<button class="'+cls+'" data-i="'+i+'"><span class="key">'+(i+1)+'</span><span>'+fmt(o)+'</span></button>';
+  }).join('')+'</div>';
+  if(sess.mode==='practice'&&q.revealed)
+    h+='<div class="expl">'+(q.chosen===q.right?'✔ Correct. ':'✘ Not quite. ')+fmt(q.explanation)+'</div>';
+  $('qbox').innerHTML=h;
+  $('qbox').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>choose(+b.dataset.i)));
+  $('next').textContent = sess.idx===sess.qs.length-1 ? 'finish' : 'next →';
+}
+function choose(i){
+  const q=sess.qs[sess.idx];
+  if(sess.mode==='practice'){
+    if(q.revealed) return;
+    q.chosen=i; q.revealed=true; bumpStats(q);
+  } else q.chosen=i;
+  save(S_SESS,sess); renderQ();
+}
+function bumpStats(q){
+  const st=load(S_STATS,{});
+  st[q.topic]=st[q.topic]||{attempted:0,correct:0};
+  st[q.topic].attempted++; if(q.chosen===q.right) st[q.topic].correct++;
+  save(S_STATS,st);
+}
+$('next').addEventListener('click',()=>{
+  const q=sess.qs[sess.idx];
+  if(q.chosen==null && !confirm('No answer chosen — you cannot come back to this question. Continue?')) return;
+  if(sess.idx<sess.qs.length-1){ sess.idx++; save(S_SESS,sess); renderQ(); window.scrollTo(0,0); }
+  else finish(false);
+});
+$('abandon').addEventListener('click',()=>{
+  if(confirm('Abandon this quiz? It will not be scored.')){
+    clearInterval(tick); localStorage.removeItem(S_SESS); sess=null;
+    $('view-quiz').classList.add('hidden'); $('view-picker').classList.remove('hidden'); renderPicker();
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(!sess||$('view-quiz').classList.contains('hidden')) return;
+  if(e.key>='1'&&e.key<='4') choose(+e.key-1);
+  else if(e.key==='ArrowRight') $('next').click();
+});
+
+/* ── finish & results ─────────────────────────────────── */
+function finish(timedOut){
+  clearInterval(tick);
+  if(sess.mode==='exam') sess.qs.forEach(bumpStats);
+  const right=sess.qs.filter(q=>q.chosen===q.right).length, total=sess.qs.length;
+  const slugs=[...new Set(sess.qs.map(q=>q.topic))];
+  const hist=load(S_HIST,[]);
+  hist.unshift({date:new Date().toISOString().slice(0,10), mode:sess.mode,
+    topics: slugs.length===TOPICS.length?'all':slugs.map(titleOf).join(', '),
+    score:right, total});
+  save(S_HIST,hist.slice(0,25));
+  localStorage.removeItem(S_SESS);
+
+  $('view-quiz').classList.add('hidden'); $('view-results').classList.remove('hidden');
+  $('score').innerHTML=right+'<span class="of"> / '+total+'</span>';
+  const pct=Math.round(100*right/total);
+  $('verdict').textContent=(timedOut?'Time up — auto-submitted. ':'')+
+    (pct>=80?'Excellent — MCQ-ready on these topics.':pct>=60?'Solid — review the misses below and go again.':
+     pct>=40?'Getting there — work through every explanation below.':'Early days — reread the topic, redo its lab, then retry.');
+  $('tbars').innerHTML=slugs.map(s=>{
+    const qs=sess.qs.filter(q=>q.topic===s), r=qs.filter(q=>q.chosen===q.right).length;
+    const p=Math.round(100*r/qs.length);
+    return '<div class="tbar"><span class="n">'+esc(titleOf(s))+'</span><span class="bar"><i style="width:'+p+'%"></i></span><span>'+r+'/'+qs.length+'</span></div>';
+  }).join('');
+  wrongOnly=false; renderReview();
+  window.scrollTo(0,0);
+}
+function renderReview(){
+  $('toggle-wrong').textContent=wrongOnly?'show all questions':'show incorrect only';
+  $('review').innerHTML=sess.qs.map((q,n)=>{
+    const ok=q.chosen===q.right;
+    if(wrongOnly&&ok) return '';
+    return '<div class="review-item'+(ok?'':' wrong')+'">'+
+      '<p class="ritag">Q'+(n+1)+' · '+esc(titleOf(q.topic))+' · '+esc(q.difficulty)+'</p>'+
+      '<p class="qtext" style="font-size:16px">'+fmt(q.question)+'</p>'+
+      (q.code?'<pre class="code">'+esc(q.code)+'</pre>':'')+
+      '<p class="ranswer">'+(ok
+        ? '<span class="y">✔ You answered correctly:</span> '+fmt(q.opts[q.right])
+        : '<span class="n">✘ Your answer:</span> '+(q.chosen!=null?fmt(q.opts[q.chosen]):'<i>unanswered</i>')+
+          '<br><span class="y">✔ Correct answer:</span> '+fmt(q.opts[q.right]))+'</p>'+
+      '<div class="expl">'+fmt(q.explanation)+'</div></div>';
+  }).join('')||'<p style="color:var(--muted)">Nothing to show — all correct! 🎉</p>';
+}
+$('toggle-wrong').addEventListener('click',()=>{wrongOnly=!wrongOnly; renderReview();});
+$('again').addEventListener('click',()=>{
+  sess=null; $('view-results').classList.add('hidden');
+  $('view-picker').classList.remove('hidden'); renderPicker(); window.scrollTo(0,0);
+});
+</script>
+</body>
+</html>
