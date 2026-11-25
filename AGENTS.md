@@ -279,30 +279,35 @@ materially wrong by 2026.
   proves only exit codes, and scores a real extraction eval. Every output on a slide is real: the lab's own
   test, red then green, and GLM runs on the lab's articles and twelve support messages (0/36 JSON with the
   plain prompt, 27/36 with the strict one). Rerun them if the lab or the models change.
-- **Vibe Coding** (a PowerPoint deck since November 2026, in the Security deck's design) — run vibe coding
-  **against** spec-driven development rather than demonstrating one. Carry the cost data (see below) and the
-  two terms students will meet everywhere: **comprehension debt** and **haunted codebases**. Part 1 keeps what
-  the Vibe Coding questions in MCQ 2 test: the definition and its loop (describe, generate, run, refine,
-  accepting output without deep review), the two 2025 changes that made it workable (fewer logic errors,
-  whole-codebase context) and the compiler analogy, where it fits, prompt-first builders against an
-  agent-first IDE (Antigravity: you manage agents and approve their artifacts), Firebase Studio's exportable
-  output and Data Connect, taught with the date (closed to new users June 2026, shuts 22 March 2027), the four
-  risks of keeping vibe-coded code, spec-driven development as the counter-trend, what each mode verifies,
-  choosing the mode per task, and the developer's role moving from typing code to directing it. Part 2 shows
-  why every unstated decision still gets made, follows one feature down two routes step by step, and measures
-  the debt. The gap counts and plan checks on its slides are real GLM runs on the lab's to-do app and spec
-  (21 to 38 open decisions for "add a due date"; 10 of 10 plans kept old tasks loading): rerun them if the lab
-  or the models change.
+- **Vibe Coding** (since November 2026 the module owner's own deck, "From Vibes to Agents", drawn with
+  pptxgenjs and fixed in place: edit the .pptx in PowerPoint, and do not rebuild it from its old build.js) —
+  follow coding with AI from vibe coding, through agents, to the dark factory. Keep what the Vibe Coding
+  questions in MCQ 2 test: the definition and its loop (describe, accept without reading, run, paste the error
+  back; the only check is whether the app runs), **comprehension debt** and **haunted codebases**, the security
+  cost (see below), agentic engineering, the five-rung ladder with pull requests explained, METR's time horizon
+  taught correctly (the length of task, timed on a skilled person, that a model finishes half the time; not how
+  long an agent works alone), cheaper tokens paying for long agent runs, hallucination rates that are better but
+  not solved, the parts of a coding agent (model, tools, context, loop, guardrails), spec-driven development with
+  the plan review (a misunderstanding costs one sentence to fix in a plan and a patch in code), the waterfall
+  charge and the supporters' reply, every unstated decision still being made and a spec's "Done when" line,
+  choosing the approach per task (explore by building, then specify; behaviour against intent), context
+  engineering and AGENTS.md, background agents and review as the bottleneck, the Ralph loop (Huntley's
+  `while :` never stops; the `until pytest` version does), why companies want spec-to-code pipelines, human in,
+  on and out of the loop, the dark factory and who answers for it, and hallucinated packages and slopsquatting.
+  The seven-step agent walkthrough is an illustration built on the lab's own SPEC.md and says so on its
+  slides; the 21 to 38 open decisions on the mini-spec slide are real GLM runs on a to-do app request: rerun
+  them if the models change. Dated stories (the Millennium Prize claims) carry their date on the slide.
 - **Every deck** — the assessment is in-person, so decks may be blunt
   about the limits of AI-generated code. See `module/module-overview.md`
   under "Currency" for the module's stated position.
 
 **On the statistics.** The Vibe Coding deck quotes industry figures, each
-with its source: Stack Overflow's 2025 survey (84% use or plan to use AI
-tools, 51% of professionals daily, 33% trust the accuracy), Sonar's 2026
-survey (48% always check AI code before committing), CodeRabbit's 2025 study
-(1.7 times the issues per pull request) and Veracode (~45% of tasks with a
-security flaw). The introduction's "92% daily use" is GitHub's 2023 survey
+with its source: Veracode's October 2026 update (about 38% of tasks with a
+security flaw), backed by New York University's 2022 study of GitHub
+Copilot's code (40%); Stack Overflow's 2026 survey (6.6% trust AI for
+important decisions; 66% use AI assistants or agents, 73% of them daily);
+METR's time horizons; Epoch AI's price trend; and Vectara's hallucination
+leaderboard. The introduction's "92% daily use" is GitHub's 2023 survey
 of 500 US developers, and it counts any use, not daily use. Such figures come
 from surveys of varying rigour that recycle each other. They are taught as **direction, not decimal points**, and the
 slide that quotes them says so. Do not add a statistic to a deck without
@@ -400,10 +405,11 @@ A week may be taught from a PowerPoint deck instead of a Marp one,
 powerpoint-maker skill: code in dark syntax-coloured boxes, prompts and
 replies in labelled boxes. The Coding Agents deck is the exception: it is
 drawn with pptxgenjs, so edit it in PowerPoint rather than rebuilding it
-with the skill. The Security, CLI Coding Agents, CI/CD & Evals and Vibe Coding decks are drawn in the
+with the skill. The Security, CLI Coding Agents and CI/CD & Evals decks are drawn in the
 design of the module owner's reworked MCP deck: its master and dot-grid
 background, section colours, progress bar, gradient icon circles and
-question slides, all as editable shapes, so edit them in PowerPoint too). Everything above about
+question slides, all as editable shapes, so edit them in PowerPoint too. The Vibe Coding deck is the
+module owner's own pptxgenjs deck, edited in place since: edit it in PowerPoint too). Everything above about
 content still holds: the deck flow below, portability, and slides that
 stand on their own.
 
@@ -564,7 +570,8 @@ example.
 Every lab now follows this rule. The prompting lab was rewritten to it
 after the setup lab, with one `check.py` that makes every comparison in
 the lab; the agents lab followed on 20 October 2026, and the security,
-CLI agents, CI/CD and vibe coding labs on 5 November 2026. A new lab, or
+CLI agents, CI/CD and vibe coding labs on 5 November 2026. The vibe coding lab was replaced in
+November 2026 by one built the same way around the From Vibes to Agents deck. A new lab, or
 an edit to an old one, keeps to it and keeps `check_lab_structure.py`
 green.
 
@@ -632,7 +639,8 @@ Nine run on every push. Before any push, all must pass:
   `PLACEHOLDER_TESTS` names test files that are *expected to fail* —
   student scaffolding (`prompting`'s tests-first placeholder), or a real
   test over a planted bug (`prompting`'s order test, and `cli-agents`,
-  where an agent is pointed at it). If one starts passing,
+  where an agent is pointed at it), or tests run against a stub (`vibe-coding`'s
+  `tests/test_todo.py`, red until an agent writes `todo.py`). If one starts passing,
   a worked solution has reached the public repo and the gate says so.
 - `check_links.py` matters more here than in OOC: the lab READMEs run
   10k–30k characters with their own tables of contents, and they arrived

@@ -40,13 +40,16 @@ now stand rather than quietly ageing:
 - **MCP became a standard and then changed shape.** The 2026-07-28
   specification removed the `initialize` handshake and session header for
   a stateless core. The MCP deck teaches both models and why the change happened.
-- **Spec-driven development is the counter-trend to vibe coding**, and
-  the vibe-coding deck runs them against each other rather than demonstrating one.
+- **Coding with AI moved from vibes to agents.** The vibe-coding deck follows
+  the change from vibe coding (accepting AI code nobody read), through specs
+  and coding agents checked by tests, to companies trying to take people out
+  of the code altogether.
 - **Security of AI-generated code** has a week of its own. Around 45% of
   AI-generated samples carry an OWASP Top-10 vulnerability, and
   slopsquatting — registering the package names models hallucinate — is
-  an attack with no pre-AI equivalent. The vibe-coding lab still audits an app
-  the students vibe-coded, and still reliably finds something.
+  an attack with no pre-AI equivalent. The vibe-coding lab builds one small app
+  three ways (vibe-coded, from a spec, by an agent) and gives all three the
+  same exam; the vibe-coded version usually fails it.
 - **Licensing and confidentiality are taught in the introduction**, before
   the first tool is installed. A licence follows the code, not the typist, so
   generated code is treated as code of unknown origin; and what goes into
@@ -83,7 +86,7 @@ topic covers.
 | Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../lectures-and-labs/week08/security_lab/) |
 | CLI Coding Agents | Agents in the terminal, configured before they are trusted: standing instructions (`AGENTS.md`), built-in and custom slash commands, allow/ask/deny permission policies, and running an agent from a script | [cli-agents](../lectures-and-labs/week09/cli_agents_lab/) |
 | CI/CD &amp; Evals | Pipelines with GitHub Actions, and putting AI inside them (review, triage); evals as a ladder of checks | [cicd](../lectures-and-labs/week10/cicd_lab/) |
-| Vibe Coding &amp; Spec-Driven | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../lectures-and-labs/week11/vibe_coding_lab/) |
+| Vibe Coding &amp; Spec-Driven | From vibe coding to agents: comprehension debt, specs and plan review, coding agents and their guardrails, background agents, and the dark factory | [vibe-coding](../lectures-and-labs/week11/vibe_coding_lab/) |
 
 **MCQ 1** (32%) covers everything before the reading week and **MCQ 2**
 (32%) everything after it; both are sat in person during the lab slot.

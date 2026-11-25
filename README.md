@@ -102,10 +102,10 @@ own. They recur through the labs, so you meet each one more than once:
 
 | You want to… | Practised in |
 |---|---|
-| **Explain** code you did not write | [setup DIY 4](lectures-and-labs/week02/setup_lab/README.md#diy-4-the-file-it-has-never-read), [setup DIY 8](lectures-and-labs/week02/setup_lab/README.md#diy-8-break-a-regex-with-its-help), [agents DIY 1](lectures-and-labs/week06/agents_lab/README.md#diy-1-understand-code-you-did-not-write) |
+| **Explain** code you did not write | [setup DIY 4](lectures-and-labs/week02/setup_lab/README.md#diy-4-the-file-it-has-never-read), [setup DIY 8](lectures-and-labs/week02/setup_lab/README.md#diy-8-break-a-regex-with-its-help), [agents DIY 1](lectures-and-labs/week06/agents_lab/README.md#diy-1-understand-code-you-did-not-write), [vibe-coding DIY 2](lectures-and-labs/week11/vibe_coding_lab/README.md#diy-2-explain-it-without-running-it) |
 | **Debug** from an error or a failing test | [prompting DIY 8](lectures-and-labs/week03/prompting_lab/README.md#diy-8-the-error-without-the-code), [cli-agents DIY 8](lectures-and-labs/week09/cli_agents_lab/README.md#diy-8-a-script-that-explains-a-failure) |
-| **Write tests**, before or after the code | [prompting DIY 7](lectures-and-labs/week03/prompting_lab/README.md#diy-7-tests-first), [cicd DIY 1](lectures-and-labs/week10/cicd_lab/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](lectures-and-labs/week10/cicd_lab/README.md#diy-5-climb-the-assertion-ladder) |
-| **Review** a change you did not watch being made | [agents DIY 2](lectures-and-labs/week06/agents_lab/README.md#diy-2-refactor-with-the-diff-open), [cicd DIY 3](lectures-and-labs/week10/cicd_lab/README.md#diy-3-a-review-step-that-cannot-lie), [vibe-coding DIY 2](lectures-and-labs/week11/vibe_coding_lab/README.md#diy-2-find-something-you-would-not-ship) |
+| **Write tests**, before or after the code | [prompting DIY 7](lectures-and-labs/week03/prompting_lab/README.md#diy-7-tests-first), [cicd DIY 1](lectures-and-labs/week10/cicd_lab/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](lectures-and-labs/week10/cicd_lab/README.md#diy-5-climb-the-assertion-ladder), [vibe-coding DIY 9](lectures-and-labs/week11/vibe_coding_lab/README.md#diy-9-find-what-the-tests-do-not-check) |
+| **Review** a change you did not watch being made | [agents DIY 2](lectures-and-labs/week06/agents_lab/README.md#diy-2-refactor-with-the-diff-open), [cicd DIY 3](lectures-and-labs/week10/cicd_lab/README.md#diy-3-a-review-step-that-cannot-lie), [vibe-coding DIY 7](lectures-and-labs/week11/vibe_coding_lab/README.md#diy-7-check-the-agents-work) |
 
 ## Module info
 
